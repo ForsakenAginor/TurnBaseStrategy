@@ -10,7 +10,7 @@ namespace UnityEditor.Tilemaps
     [CustomGridBrush(true, false, false, "Test Brush")]
     public class TestBrush : GridBrushBase
     {
-        private const float ScaleFactor = 0.8659766f;
+        private const float ScaleFactor = 0.863f;
 
         [SerializeField] private BrushCell[] m_Cells;
 
@@ -420,7 +420,7 @@ namespace UnityEditor.Tilemaps
         /// <param name="offset">Offset to set in the brush.</param>
         public void SetOffset(Vector3Int position, Vector3 offset)
         {
-            Vector3 correctOffset = new Vector3(offset.x, offset.z, offset.y);
+            Vector3 correctOffset = new Vector3(-0.5f, offset.z, offset.y);
 
             if (ValidateCellPosition(position))
                 m_Cells[GetCellIndex(position)].offset = correctOffset;
@@ -446,7 +446,7 @@ namespace UnityEditor.Tilemaps
         public void SetScale(Vector3Int position, Vector3 scale)
         {
             if (ValidateCellPosition(position))
-                m_Cells[GetCellIndex(position)].scale = scale * ScaleFactor;
+                m_Cells[GetCellIndex(position)].scale = new Vector3(scale.x, scale.y, scale.z * ScaleFactor);
         }
 
         /// <summary>Gets the index to the GameObjectBrush::ref::BrushCell based on the position of the BrushCell.</summary>
@@ -622,7 +622,7 @@ namespace UnityEditor.Tilemaps
             hiddenGridLayout.cellSwizzle = grid.cellSwizzle;
             hiddenGridLayout.cellLayout = grid.cellLayout;
         }
-
+        
         [Serializable]
         internal class HiddenGridLayout
         {
@@ -631,7 +631,7 @@ namespace UnityEditor.Tilemaps
             public GridLayout.CellLayout cellLayout = GridLayout.CellLayout.Rectangle;
             public GridLayout.CellSwizzle cellSwizzle = GridLayout.CellSwizzle.XYZ;
         }
-
+        
         /// <summary>
         ///     Brush Cell stores the data to be painted in a grid cell.
         /// </summary>
