@@ -10,7 +10,7 @@ namespace UnityEditor.Tilemaps
     [CustomGridBrush(true, false, false, "Test Brush")]
     public class TestBrush : GridBrushBase
     {
-        private const float ScaleFactor = 0.863f;
+        private const float ScaleFactor = 0.8659766f;
 
         [SerializeField] private BrushCell[] m_Cells;
 
