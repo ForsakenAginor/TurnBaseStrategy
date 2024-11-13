@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.HexGrid;
+using HexPathfinding;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -14,11 +15,17 @@ public class HexGridCreator : MonoBehaviour
 
     private HexGridXZ<HexOnScene> _hexesOnScene;
     private HexGridXZ<CellSprite> _hexGrid;
+    //private HexGridXZ<CellPathStatus> _pathfindingGrid;
+    private HexPathFinder _pathFinder;
     private HexOnScene[] _views;
 
     public HexGridXZ<HexOnScene> HexGridView => _hexesOnScene;
 
     public HexGridXZ<CellSprite> HexGrid => _hexGrid;
+
+    //public HexGridXZ<CellPathStatus> PathfindingGrid => _pathfindingGrid;
+
+    public HexPathFinder PathFinder => _pathFinder;
 
     private void Awake()
     {
@@ -29,10 +36,15 @@ public class HexGridCreator : MonoBehaviour
     {
         Vector3 position = new Vector3(0, _height, 0);
         _hexGrid = new(_gridWidth, _gridHeight, _gridCellSize, position);
-
+        //_pathfindingGrid = new(_gridWidth, _gridHeight, _gridCellSize, position);
         _hexesOnScene = new HexGridXZ<HexOnScene>(_gridWidth, _gridHeight, _gridCellSize, position);
+        _pathFinder = new HexPathFinder(_gridWidth, _gridHeight, _gridCellSize);
 
         for (int i = 0; i < _views.Length; i++)
             _hexesOnScene.SetGridObject(_views[i].transform.position, _views[i]);
+
+        for (int i = 0; i < _gridWidth; i++)
+            for (int j = 0; j < _gridHeight; j++)
+                _pathFinder.MakeNodWalkable(new Vector2Int(i, j));
     }
 }
