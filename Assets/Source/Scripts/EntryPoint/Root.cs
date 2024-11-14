@@ -14,7 +14,7 @@ public class Root : MonoBehaviour
     [Header("Player")]
     [SerializeField] private Mover _mover;
 
-    private void Awake()
+    private void Start()
     {
         _gridCreator.Init();
         _meshUpdater.Init(_gridCreator.HexGrid);
