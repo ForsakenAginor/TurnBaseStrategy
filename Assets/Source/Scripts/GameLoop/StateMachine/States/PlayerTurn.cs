@@ -9,11 +9,11 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
     public class PlayerTurn : State
     {
         private readonly Button _nextTurnButton;
-        private readonly List<IResetable> _resetables;
-        private readonly IControllable[] _controllables;
+        private readonly IEnumerable<IResetable> _resetables;
+        private readonly IEnumerable<IControllable> _controllables;
 
-        public PlayerTurn(Button nextTurnButton, List<IResetable> resetables,
-            IControllable[] controllables, Transition[] transitions)
+        public PlayerTurn(Button nextTurnButton, IEnumerable<IResetable> resetables,
+            IEnumerable<IControllable> controllables, Transition[] transitions)
             : base(transitions)
         {
             _nextTurnButton = nextTurnButton != null ?
@@ -35,11 +35,11 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
             _nextTurnButton.interactable = true;
             _nextTurnButton.onClick.AddListener(OnNextTurnButtonClick);
 
-            for (int i = 0; i < _resetables.Count; i++)
-                _resetables[i].Reset();
+            foreach (var controllable in _controllables)
+                controllable.EnableControl();
 
-            for (int i = 0; i < _controllables.Length; i++)
-                _controllables[i].EnableControl();
+            foreach (var resetable in _resetables)
+                resetable.Reset();
         }
 
         private void OnNextTurnButtonClick()
@@ -47,8 +47,8 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
             _nextTurnButton.interactable = false;
             _nextTurnButton.onClick.RemoveListener(OnNextTurnButtonClick);
 
-            for (int i = 0; i < _controllables.Length; i++)
-                _controllables[i].DisableControl();
+            foreach (var controllable in _controllables)
+                controllable.DisableControl();
 
             Transitions.First(o => o is ToEnemyTurnTransition).SetIsReady(true);
             CallBecomeReadyToTransitEvent();

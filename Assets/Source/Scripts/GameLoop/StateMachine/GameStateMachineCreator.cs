@@ -15,12 +15,13 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine
         [Header("Debug")]
         [SerializeField] private Button _enemyTurnSkipButton;
 
-        private readonly List<IControllable> _controllables = new();
-
-        public GameStateMachine Create(List<IResetable> resetables)
+        public GameStateMachine Create(IEnumerable<IResetable> resetables, IEnumerable<IControllable> controllables)
         {
             if (resetables == null)
                 throw new System.ArgumentNullException(nameof(resetables));
+
+            if (controllables == null)
+                throw new System.ArgumentNullException(nameof(controllables));
 
             //transitions
             ToEnemyTurnTransition toEnemyTurnTransition = new ToEnemyTurnTransition();
@@ -32,7 +33,7 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine
             PlayerTurn playerTurn = new PlayerTurn(
                 _nextTurnButton,
                 resetables,
-                _controllables.ToArray(),
+                controllables,
                 new Transition[]
                 {
                 toEnemyTurnTransition,toLoseTransition,toWinTransition

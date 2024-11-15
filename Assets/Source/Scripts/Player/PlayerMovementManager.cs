@@ -24,8 +24,8 @@ public class PlayerMovementManager
     }
 
     private void OnCellClicked(Vector3 position, Vector2Int _)
-    {
+    {/*
         if (_mover != null)
-            _mover.Move(position);
+            _mover.Move(position);*/
     }
 }

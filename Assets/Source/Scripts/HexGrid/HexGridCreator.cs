@@ -15,7 +15,7 @@ public class HexGridCreator : MonoBehaviour
 
     private HexGridXZ<HexOnScene> _hexesOnScene;
     private HexGridXZ<CellSprite> _hexGrid;
-    //private HexGridXZ<CellPathStatus> _pathfindingGrid;
+    private HexGridXZ<WalkableUnit> _unitsGrid;
     private HexPathFinder _pathFinder;
     private HexOnScene[] _views;
 
@@ -23,7 +23,7 @@ public class HexGridCreator : MonoBehaviour
 
     public HexGridXZ<CellSprite> HexGrid => _hexGrid;
 
-    //public HexGridXZ<CellPathStatus> PathfindingGrid => _pathfindingGrid;
+    public HexGridXZ<WalkableUnit> UnitsGrid => _unitsGrid;
 
     public HexPathFinder PathFinder => _pathFinder;
 
@@ -36,7 +36,7 @@ public class HexGridCreator : MonoBehaviour
     {
         Vector3 position = new Vector3(0, _height, 0);
         _hexGrid = new(_gridWidth, _gridHeight, _gridCellSize, position);
-        //_pathfindingGrid = new(_gridWidth, _gridHeight, _gridCellSize, position);
+        _unitsGrid = new(_gridWidth, _gridHeight, _gridCellSize, position);
         _hexesOnScene = new HexGridXZ<HexOnScene>(_gridWidth, _gridHeight, _gridCellSize, position);
         _pathFinder = new HexPathFinder(_gridWidth, _gridHeight, _gridCellSize);
 

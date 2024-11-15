@@ -1,3 +1,5 @@
+using System;
+
 public class WalkableUnit : IResetable
 {
     private readonly int _maxSteps;
@@ -14,12 +16,17 @@ public class WalkableUnit : IResetable
         _remainingSteps = _maxSteps;
     }
 
-    public bool TryMoveToNextPoint()
+    public int RemainingSteps => _remainingSteps;
+
+    public bool TryMoving(int steps)
     {
-        if (_remainingSteps == 0)
+        if(steps <= 0)
+            throw new ArgumentOutOfRangeException(nameof(steps));
+
+        if (_remainingSteps < steps)
             return false;
 
-        _remainingSteps--;
+        _remainingSteps -= steps;
         return true;
     }
 }

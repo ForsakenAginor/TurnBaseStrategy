@@ -3,12 +3,13 @@
 public class GridRaycaster : MonoBehaviour
 {
     [SerializeField] private Camera _camera;
+    [SerializeField] private float _planeHeight;
 
     private Plane _plane;
 
     private void Awake()
     {
-        _plane = new Plane(Vector3.up, 0);
+        _plane = new Plane(Vector3.up, _planeHeight);
     }
 
     public bool TryGetPointerPosition(out Vector3 worldPosition)

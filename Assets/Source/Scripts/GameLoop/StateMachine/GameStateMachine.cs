@@ -1,5 +1,4 @@
 ﻿using Assets.Source.Scripts.GameLoop.StateMachine.States;
-using Assets.Source.Scripts.InteractionStateMachine;
 using System;
 
 namespace Assets.Source.Scripts.GameLoop.StateMachine
@@ -14,6 +13,8 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine
         public GameStateMachine(State state)
         {
             _state = state != null ? state : throw new ArgumentNullException(nameof(state));
+            _state.DoThing();
+            _state.BecomeReadyToTransit += OnStateBecomeReadyToTransit;
         }
 
         private void SetState(Transition transition)

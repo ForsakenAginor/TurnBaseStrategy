@@ -19,26 +19,20 @@ namespace Assets.Source.Scripts.InteractionStateMachine
     public class SelectionState : State
     {
         private readonly IControllable _cellHighlighter;
-        private readonly UnitSelector _selector;
 
-        public SelectionState(IControllable cellHighlighter, UnitSelector unitSelector, Transition[] transitions) : base(transitions)
+        public SelectionState(IControllable cellHighlighter, Transition[] transitions) : base(transitions)
         {
             _cellHighlighter = cellHighlighter != null ? cellHighlighter : throw new ArgumentNullException(nameof(cellHighlighter));
-            _selector = unitSelector != null ? unitSelector : throw new ArgumentNullException(nameof(unitSelector));
         }
 
         public override void DoThing()
         {
-            _selector.EnableControl();
             _cellHighlighter.EnableControl();
-            _selector.UnitSelected += OnUnitSelected;
         }
 
         private void OnUnitSelected(WalkableUnit _)
         {
-            _selector.DisableControl();
             _cellHighlighter.DisableControl();
-            _selector.UnitSelected -= OnUnitSelected;
             Transitions.First(o => o is ToMovingStateTransition).SetIsReady(true);
             CallBecomeReadyToTransitEvent();
         }
@@ -72,13 +66,11 @@ namespace Assets.Source.Scripts.InteractionStateMachine
 
     public class InteractionStateMachineCreator
     {
-        public StateMachine Create(IControllable cellHighlighter, UnitSelector unitSelector)
+        public StateMachine Create(IControllable cellHighlighter)
         {
             if (cellHighlighter == null)
                 throw new ArgumentNullException(nameof(cellHighlighter));
 
-            if (unitSelector == null)
-                throw new ArgumentNullException(nameof(unitSelector));
 
             //transitions
             ToMovingStateTransition toMoving = new ToMovingStateTransition();
@@ -86,7 +78,7 @@ namespace Assets.Source.Scripts.InteractionStateMachine
 
             //states
             SelectionState selectionState = new SelectionState(
-                cellHighlighter, unitSelector,
+                cellHighlighter, 
                 new Transition[]
                 {
                 toMoving

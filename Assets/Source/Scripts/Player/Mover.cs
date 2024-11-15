@@ -1,49 +1,36 @@
-using DG.Tweening;
-using HexPathfinding;
-using System;
 using System.Collections.Generic;
-using System.Linq;
+using DG.Tweening;
 using UnityEngine;
 
 public class Mover : MonoBehaviour
 {
-    [SerializeField] private Transform _movableObject;
     [SerializeField] private float _movingTimePerCell;
 
-    private HexPathFinder _pathFinder;
     private List<Vector3> _path;
     private int _index;
-    private bool _isMoving;
+    private bool _isWorking = false;
 
-    public void Init(HexPathFinder pathFinder)
+    public void Move(List<Vector3> path)
     {
-        _pathFinder = pathFinder != null ? pathFinder : throw new ArgumentNullException(nameof(pathFinder));
-    }
-
-    public void Move(Vector3 position)
-    {
-        if (_isMoving == true)
-            return;
-
-        _path = _pathFinder.FindPath(_movableObject.position, position);
-
-        if (_path != null)
+        if (_isWorking)
         {
-            _isMoving = true;
-            _path = _path.Select(o => new Vector3(o.x, _movableObject.position.y, o.z)).ToList();
+            _path.AddRange(path);
+            return;
         }
 
+        _path = path;
+        _isWorking = true;
         _index = 0;
         StartAnimation();
     }
 
     private void StartAnimation()
     {
-        _index++;
-
         if (_index != _path.Count)
-            _movableObject.DOMove(_path[_index], _movingTimePerCell).SetEase(Ease.Linear).OnComplete(() => StartAnimation());
+            transform.DOMove(_path[_index], _movingTimePerCell).SetEase(Ease.Linear).OnComplete(() => StartAnimation());
         else
-            _isMoving = false;
+            _isWorking = false;
+
+        _index++;
     }
 }
