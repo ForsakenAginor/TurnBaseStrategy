@@ -1,7 +1,12 @@
-﻿public class ToPlayerTurnTransition : Transition
+﻿using Assets.Source.Scripts.GameLoop.StateMachine.States;
+
+namespace Assets.Source.Scripts.GameLoop.StateMachine.Transitions
 {
-    public void SetTargetState(PlayerTurn target)
+    public class ToPlayerTurnTransition : Transition
     {
-        base.SetTargetState(target);
+        public void SetTargetState(PlayerTurn target)
+        {
+            base.SetTargetState(target);
+        }
     }
 }

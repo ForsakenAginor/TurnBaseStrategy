@@ -2,7 +2,7 @@ using Assets.Scripts.HexGrid;
 using System;
 using UnityEngine;
 
-public class CellHighlighter : MonoBehaviour
+public class CellHighlighter : MonoBehaviour, IControllable
 {
     [SerializeField] private CellSprite _highlightedColor = CellSprite.ContestedYellow;
 
@@ -16,7 +16,7 @@ public class CellHighlighter : MonoBehaviour
         if (_isWorking == false)
             return;
 
-        if(_gridRaycaster.TryGetPointerPosition(out Vector3 worldPosition))
+        if (_gridRaycaster.TryGetPointerPosition(out Vector3 worldPosition))
         {
             var position = _hexGrid.GetXZ(worldPosition);
 
@@ -35,7 +35,16 @@ public class CellHighlighter : MonoBehaviour
     {
         _hexGrid = hexGrid != null ? hexGrid : throw new ArgumentNullException(nameof(hexGrid));
         _gridRaycaster = gridRaycaster != null ? gridRaycaster : throw new ArgumentNullException(nameof(gridRaycaster));
+    }
+
+    public void EnableControl()
+    {
         _isWorking = true;
     }
-}
 
+    public void DisableControl()
+    {
+        _hexGrid.SetGridObject(_lastCell.x, _lastCell.y, CellSprite.Empty);
+        _isWorking = false;
+    }
+}

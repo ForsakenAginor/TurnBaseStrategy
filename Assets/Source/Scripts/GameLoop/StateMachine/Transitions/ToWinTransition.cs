@@ -1,7 +1,12 @@
-﻿public class ToWinTransition : Transition
+﻿using Assets.Source.Scripts.GameLoop.StateMachine.States;
+
+namespace Assets.Source.Scripts.GameLoop.StateMachine.Transitions
 {
-    public void SetTargetState(PlayerWon target)
+    public class ToWinTransition : Transition
     {
-        base.SetTargetState(target);
+        public void SetTargetState(PlayerWon target)
+        {
+            base.SetTargetState(target);
+        }
     }
 }

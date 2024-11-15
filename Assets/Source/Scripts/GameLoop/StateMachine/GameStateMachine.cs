@@ -1,36 +1,41 @@
-﻿using System;
+﻿using Assets.Source.Scripts.GameLoop.StateMachine.States;
+using Assets.Source.Scripts.InteractionStateMachine;
+using System;
 
-public class GameStateMachine
+namespace Assets.Source.Scripts.GameLoop.StateMachine
 {
-    private State _state;
-
-    public event Action PlayerWon;
-    public event Action PlayerLose;
-
-    public GameStateMachine(State state)
+    public class GameStateMachine
     {
-        _state = state != null ? state : throw new System.ArgumentNullException(nameof(state));
-    }
+        private State _state;
 
-    private void SetState(Transition transition)
-    {
-        _state.BecomeReadyToTransit -= OnStateBecomeReadyToTransit;
-        transition.SetIsReady(false);
-        _state = transition.TargetState;
-        _state.BecomeReadyToTransit += OnStateBecomeReadyToTransit;
-        _state.DoThing();
+        public event Action PlayerWon;
+        public event Action PlayerLose;
 
-        if (_state is PlayerWon)
-            PlayerWon?.Invoke();
+        public GameStateMachine(State state)
+        {
+            _state = state != null ? state : throw new ArgumentNullException(nameof(state));
+        }
 
-        if (_state is PlayerLose)
-            PlayerLose?.Invoke();
-    }
+        private void SetState(Transition transition)
+        {
+            _state.BecomeReadyToTransit -= OnStateBecomeReadyToTransit;
+            transition.SetIsReady(false);
+            _state = transition.TargetState;
+            _state.BecomeReadyToTransit += OnStateBecomeReadyToTransit;
+            _state.DoThing();
 
-    private void OnStateBecomeReadyToTransit()
-    {
-        foreach (Transition transition in _state.Transitions)
-            if (transition.IsReadyToTransit)
-                SetState(transition);
+            if (_state is PlayerWon)
+                PlayerWon?.Invoke();
+
+            if (_state is PlayerLose)
+                PlayerLose?.Invoke();
+        }
+
+        private void OnStateBecomeReadyToTransit()
+        {
+            foreach (Transition transition in _state.Transitions)
+                if (transition.IsReadyToTransit)
+                    SetState(transition);
+        }
     }
 }

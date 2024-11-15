@@ -4,12 +4,11 @@ using UnityEngine;
 public class PlayerMovementManager
 {
     private readonly CellSelector _cellSelector;
-    private readonly Mover _mover;
+    private Mover _mover;
 
-    public PlayerMovementManager(CellSelector cellSelector, Mover mover)
+    public PlayerMovementManager(CellSelector cellSelector)
     {
         _cellSelector = cellSelector != null ? cellSelector : throw new ArgumentNullException(nameof(cellSelector));
-        _mover = mover != null ? mover : throw new ArgumentNullException(nameof(_mover));
 
         _cellSelector.CellClicked += OnCellClicked;
     }
@@ -19,8 +18,14 @@ public class PlayerMovementManager
         _cellSelector.CellClicked -= OnCellClicked;
     }
 
-    private void OnCellClicked(Vector3 position)
+    public void SetMover(Mover mover)
     {
-        _mover.Move(position);
+        _mover = mover;
+    }
+
+    private void OnCellClicked(Vector3 position, Vector2Int _)
+    {
+        if (_mover != null)
+            _mover.Move(position);
     }
 }

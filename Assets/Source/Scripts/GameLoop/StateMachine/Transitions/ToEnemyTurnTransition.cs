@@ -1,7 +1,12 @@
-﻿public class ToEnemyTurnTransition : Transition
+﻿using Assets.Source.Scripts.GameLoop.StateMachine.States;
+
+namespace Assets.Source.Scripts.GameLoop.StateMachine.Transitions
 {
-    public void SetTargetState(EnemyTurn target)
+    public class ToEnemyTurnTransition : Transition
     {
-        base.SetTargetState(target);
+        public void SetTargetState(EnemyTurn target)
+        {
+            base.SetTargetState(target);
+        }
     }
 }

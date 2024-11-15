@@ -8,7 +8,7 @@ public class CellSelector : MonoBehaviour
     private GridRaycaster _gridRaycaster;
     private bool _isWorking = false;
 
-    public event Action<Vector3> CellClicked;
+    public event Action<Vector3, Vector2Int> CellClicked;
 
     private void FixedUpdate()
     {
@@ -20,7 +20,7 @@ public class CellSelector : MonoBehaviour
             var position = _hexGrid.GetXZ(worldPosition);
 
             if (_hexGrid.IsValidGridPosition(position))
-                CellClicked?.Invoke(worldPosition);
+                CellClicked?.Invoke(worldPosition, position);
         }
     }
 

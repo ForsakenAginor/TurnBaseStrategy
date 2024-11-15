@@ -1,7 +1,12 @@
-﻿public class ToLoseTransition : Transition
+﻿using Assets.Source.Scripts.GameLoop.StateMachine.States;
+
+namespace Assets.Source.Scripts.GameLoop.StateMachine.Transitions
 {
-    public void SetTargetState(PlayerLose target)
+    public class ToLoseTransition : Transition
     {
-        base.SetTargetState(target);
+        public void SetTargetState(PlayerLose target)
+        {
+            base.SetTargetState(target);
+        }
     }
 }
