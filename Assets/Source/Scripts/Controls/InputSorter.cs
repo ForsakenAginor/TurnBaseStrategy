@@ -62,6 +62,15 @@ public class InputSorter : IControllable
             return;
         }
 
+        var endPosition = _rout.ClosePartOfPath.Last();
+
+        if(_hexGrid.GetGridObject(endPosition) != null)
+        {
+            _lastClickedCell = _fakeCell;
+            SelectionChanged?.Invoke(_selectedCell);
+            return;
+        }
+
         RoutSubmited?.Invoke(_rout);
         _selectedCell = _fakeCell;
         _lastClickedCell = _fakeCell;
