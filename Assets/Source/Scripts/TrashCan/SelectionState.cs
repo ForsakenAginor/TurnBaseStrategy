@@ -30,7 +30,7 @@ namespace Assets.Source.Scripts.InteractionStateMachine
             _cellHighlighter.EnableControl();
         }
 
-        private void OnUnitSelected(WalkableUnit _)
+        private void OnUnitSelected(UnitMover _)
         {
             _cellHighlighter.DisableControl();
             Transitions.First(o => o is ToMovingStateTransition).SetIsReady(true);

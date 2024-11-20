@@ -7,13 +7,12 @@ public class CellHighlighter
 {
     private readonly CellSprite _unitColor = CellSprite.ContestedBlue;
     private readonly CellSprite _availableColor = CellSprite.ContestedGreen;
-    private readonly CellSprite _notAvailableColor = CellSprite.ContestedRed;
-    private readonly CellSprite _blockedColor = CellSprite.ContestedYellow;
-    private readonly CellSprite _highlightedColor = CellSprite.ContestedYellow;
+    private readonly CellSprite _notAvailableColor = CellSprite.ContestedOrange;
+    private readonly CellSprite _enemyColor = CellSprite.ContestedRed;
+
     private readonly InputSorter _inputSorter;
     private readonly HexGridXZ<CellSprite> _hexGrid;
     private readonly List<Vector2Int> _coloredCells = new List<Vector2Int>();
-
 
     public CellHighlighter(InputSorter inputSorter, HexGridXZ<CellSprite> grid)
     {
@@ -60,19 +59,22 @@ public class CellHighlighter
             _coloredCells.Add(rout.FarawayPartOfPath[i]);
         }
 
-        ColorizeSelectedCell(rout.SelectedCell);
+        ColorizeSelectedCell(rout.SelectedCell, _unitColor);
     }
 
-    private void OnSelectionChanged(Vector2Int position)
+    private void OnSelectionChanged(Vector2Int position, Side side)
     {
         ClearGrid();
-        ColorizeSelectedCell(position);
+
+        CellSprite color = side == Side.Player ? _unitColor : _enemyColor;
+
+        ColorizeSelectedCell(position, color);
     }
 
-    private void ColorizeSelectedCell(Vector2Int position)
+    private void ColorizeSelectedCell(Vector2Int position, CellSprite color)
     {
         _coloredCells.Add(position);
-        _hexGrid.SetGridObject(position.x, position.y, _unitColor);
+        _hexGrid.SetGridObject(position.x, position.y, color);
     }
 
     private void ClearGrid()

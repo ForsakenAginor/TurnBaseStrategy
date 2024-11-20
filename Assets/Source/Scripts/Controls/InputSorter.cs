@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class InputSorter : IControllable
 {
-    private readonly HexGridXZ<WalkableUnit> _hexGrid;
+    private readonly HexGridXZ<Unit> _hexGrid;
     private readonly CellSelector _cellSelector;
     private readonly HexPathFinder _pathFinder;
     private readonly Vector2Int _fakeCell = new Vector2Int(-10000, -10000);
@@ -15,8 +15,9 @@ public class InputSorter : IControllable
     private Vector2Int _selectedCell;
     private Vector2Int _lastClickedCell;
     private Rout _rout;
+    private Unit _selectedUnit;
 
-    public InputSorter(HexGridXZ<WalkableUnit> grid, CellSelector selector, HexPathFinder pathFinder)
+    public InputSorter(HexGridXZ<Unit> grid, CellSelector selector, HexPathFinder pathFinder)
     {
         _hexGrid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
         _cellSelector = selector != null ? selector : throw new ArgumentNullException(nameof(selector));
@@ -24,7 +25,7 @@ public class InputSorter : IControllable
     }
 
     public event Action<Rout> PathCreated;
-    public event Action<Vector2Int> SelectionChanged;
+    public event Action<Vector2Int, Side> SelectionChanged;
     public event Action<Rout> RoutSubmited;
     public event Action BecomeInactive;
 
@@ -51,9 +52,13 @@ public class InputSorter : IControllable
         if (unit != null)
         {
             _selectedCell = position;
-            SelectionChanged?.Invoke(_selectedCell);
+            _selectedUnit = unit;
+            SelectionChanged?.Invoke(_selectedCell, _selectedUnit.Side);
             return;
         }
+
+        if (_selectedUnit.Side == Side.Enemy)
+            return;
 
         if (_lastClickedCell != position)
         {
@@ -62,12 +67,18 @@ public class InputSorter : IControllable
             return;
         }
 
-        var endPosition = _rout.ClosePartOfPath.Last();
+        var closePath = _rout.ClosePartOfPath;
 
-        if(_hexGrid.GetGridObject(endPosition) != null)
+        if (closePath.Count == 0)
+            return;
+
+        var endPosition = closePath.Last();
+        unit = _hexGrid.GetGridObject(endPosition);
+
+        if (unit != null)
         {
             _lastClickedCell = _fakeCell;
-            SelectionChanged?.Invoke(_selectedCell);
+            SelectionChanged?.Invoke(_selectedCell, unit.Side);
             return;
         }
 
@@ -85,7 +96,7 @@ public class InputSorter : IControllable
 
         path = path.Skip(1).ToList();
         List<Vector2Int> farawayPartOfPath = new List<Vector2Int>();
-        WalkableUnit activeUnit = _hexGrid.GetGridObject(_selectedCell);
+        WalkableUnit activeUnit = _hexGrid.GetGridObject(_selectedCell) as WalkableUnit;
 
         if (activeUnit.RemainingSteps < path.Count)
         {

@@ -1,6 +1,5 @@
 using Assets.Scripts.HexGrid;
 using Assets.Source.Scripts.GameLoop.StateMachine;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,8 +14,9 @@ public class Root : MonoBehaviour
     [SerializeField] private GameStateMachineCreator _gameStateMachineCreator;
 
     [Header("Debug")]
-    [SerializeField] private Mover _firstWarriot;
-    [SerializeField] private Mover _secondWarriot;
+    [SerializeField] private Transform _firstWarrior;
+    [SerializeField] private Transform _secondWarrior;
+    [SerializeField] private Transform _castle;
 
     private void Start()
     {
@@ -26,9 +26,14 @@ public class Root : MonoBehaviour
         var unitsGrid = _gridCreator.UnitsGrid;
         InputSorter inputSorter = new InputSorter(unitsGrid, _cellSelector, _gridCreator.PathFinder);
         _cellHighlighter = new (inputSorter, _gridCreator.HexGrid);
-        UnitManager unitManager = new UnitManager(inputSorter, _gridCreator.UnitsGrid);
-        unitManager.AddUnit(new(6), _firstWarriot);
-        unitManager.AddUnit(new(6), _secondWarriot);
+
+        //********  Unit creation  ***********
+        UnitManager unitManager = new UnitManager(inputSorter, _gridCreator.UnitsGrid, _gridCreator.PathFinder);
+        UnitFactory factory = new();
+        unitManager.AddUnit(factory.CreateInfantry(Side.Player), _firstWarrior);
+        unitManager.AddUnit(factory.CreateInfantry(Side.Player), _secondWarrior);
+        unitManager.AddUnit(factory.CreateCity(Side.Enemy), _castle);
+        //************************************
 
         var stateMachine = _gameStateMachineCreator.Create(unitManager.Units, new List<IControllable>() { inputSorter });
 
