@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
@@ -22,6 +23,12 @@ public class Mover : MonoBehaviour
         _isWorking = true;
         _index = 0;
         StartAnimation();
+    }
+
+    public void Move(Vector3 target, Action onComleteCallback)
+    {
+        transform.LookAt(target);
+        transform.DOMove(target, _movingTimePerCell).SetEase(Ease.Linear).OnComplete(()=> onComleteCallback.Invoke());
     }
 
     private void StartAnimation()

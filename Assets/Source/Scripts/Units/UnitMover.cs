@@ -60,7 +60,7 @@ public class Unit
     }
 
     public event Action HealthChanged;
-    public event Action UnitDied;
+    public event Action<Unit> UnitDied;
 
     public int Health => _health.Amount;
 
@@ -72,7 +72,7 @@ public class Unit
 
     public void TakeDamage(int amount) => _health.Spent(amount);
 
-    private void OnResourceOver() => UnitDied?.Invoke();
+    private void OnResourceOver() => UnitDied?.Invoke(this);
 
     private void OnHealthChanged() => HealthChanged?.Invoke();
 }
@@ -81,6 +81,7 @@ public class WalkableUnit : Unit, IResetable
 {
     private readonly UnitMover _mover;
     private readonly int _attackPower;
+    private bool _canAttack = true;
 
     public WalkableUnit(UnitMover mover, int attackPower,
         Side side, Resource health, int counterAttackPower) : base(side, health, counterAttackPower)
@@ -91,21 +92,35 @@ public class WalkableUnit : Unit, IResetable
 
     public void Reset()
     {
+        _canAttack = true;
         _mover.Reset();
     }
+
+    public bool CanAttack => _canAttack;
 
     public int RemainingSteps => _mover.RemainingSteps;
 
     public int AttackPower => _attackPower;
 
     public bool TryMoving(int steps) => _mover.TryMoving(steps);
+
+    public bool TryAttack(Unit target)
+    {
+        if (_canAttack == false)
+            return false;
+
+        _canAttack = false;
+        target.TakeDamage(_attackPower);
+        TakeDamage(target.CounterAttackPower);
+        return true;
+    }
 }
 
 public class UnitFactory
 {
     public WalkableUnit CreateInfantry(Side side)
     {
-        UnitMover mover = new(2);
+        UnitMover mover = new(10);
         Resource health = new(10);
         return new WalkableUnit(mover, 5, side, health, 4);
     }

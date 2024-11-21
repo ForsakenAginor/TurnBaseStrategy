@@ -14,15 +14,19 @@ public class CellHighlighter
     private readonly HexGridXZ<CellSprite> _hexGrid;
     private readonly List<Vector2Int> _coloredCells = new List<Vector2Int>();
 
-    public CellHighlighter(InputSorter inputSorter, HexGridXZ<CellSprite> grid)
+    public CellHighlighter(InputSorter inputSorter, TestInputSorter testInputSorter, HexGridXZ<CellSprite> grid)
     {
         _inputSorter = inputSorter != null ? inputSorter : throw new ArgumentNullException(nameof(inputSorter));
         _hexGrid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
-
+        /*
         _inputSorter.SelectionChanged += OnSelectionChanged;
         _inputSorter.PathCreated += OnPathCreated;
         _inputSorter.RoutSubmited += OnRoutSubmited;
         _inputSorter.BecomeInactive += OnBecameInactive;
+        */
+        testInputSorter.MovableUnitSelected += OnMovableUnitSelected;
+        testInputSorter.EnemySelected += OnEnemySelected;
+        testInputSorter.BecomeInactive += OnBecameInactive;
     }
 
     ~CellHighlighter()
@@ -31,6 +35,31 @@ public class CellHighlighter
         _inputSorter.PathCreated -= OnPathCreated;
         _inputSorter.RoutSubmited -= OnRoutSubmited;
         _inputSorter.BecomeInactive -= OnBecameInactive;
+    }
+
+    private void OnEnemySelected(Vector2Int position)
+    {
+        ClearGrid();
+        ColorizeSelectedCell(position, _enemyColor);
+    }
+
+    private void OnMovableUnitSelected(
+        IEnumerable<Vector2Int> possibleWays, IEnumerable<Vector2Int> blockedCells,
+        IEnumerable<Vector2Int> friendlyCells, IEnumerable<Vector2Int> possiblesAttacks)
+    {
+        ClearGrid();
+
+        foreach (var cell in possibleWays)
+            ColorizeSelectedCell(cell, _availableColor);
+
+        foreach (var cell in blockedCells)
+            ColorizeSelectedCell(cell, _notAvailableColor); 
+
+        foreach (var cell in friendlyCells)
+            ColorizeSelectedCell(cell, _unitColor);
+
+        foreach (var cell in possiblesAttacks)
+            ColorizeSelectedCell(cell, _enemyColor);
     }
 
     private void OnBecameInactive()

@@ -25,17 +25,18 @@ public class Root : MonoBehaviour
         _cellSelector.Init(_gridCreator.HexGrid, _gridRaycaster);
         var unitsGrid = _gridCreator.UnitsGrid;
         InputSorter inputSorter = new InputSorter(unitsGrid, _cellSelector, _gridCreator.PathFinder);
-        _cellHighlighter = new (inputSorter, _gridCreator.HexGrid);
+        TestInputSorter test = new TestInputSorter(unitsGrid, _cellSelector, _gridCreator.HexGridView);
+        _cellHighlighter = new (inputSorter, test, _gridCreator.HexGrid);
 
         //********  Unit creation  ***********
-        UnitManager unitManager = new UnitManager(inputSorter, _gridCreator.UnitsGrid, _gridCreator.PathFinder);
+        UnitManager unitManager = new UnitManager(inputSorter, test, _gridCreator.UnitsGrid, _gridCreator.PathFinder);
         UnitFactory factory = new();
         unitManager.AddUnit(factory.CreateInfantry(Side.Player), _firstWarrior);
         unitManager.AddUnit(factory.CreateInfantry(Side.Player), _secondWarrior);
         unitManager.AddUnit(factory.CreateCity(Side.Enemy), _castle);
         //************************************
 
-        var stateMachine = _gameStateMachineCreator.Create(unitManager.Units, new List<IControllable>() { inputSorter });
+        var stateMachine = _gameStateMachineCreator.Create(unitManager.Units, new List<IControllable>() { inputSorter, test });
 
         TextureAtlasReader atlas = _meshUpdater.GetComponent<TextureAtlasReader>();
     }

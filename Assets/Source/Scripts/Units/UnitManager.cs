@@ -12,13 +12,16 @@ public class UnitManager
     private readonly HexGridXZ<Unit> _grid;
     private readonly HexPathFinder _pathfinder;
 
-    public UnitManager(InputSorter inputSorter, HexGridXZ<Unit> grid, HexPathFinder pathfinder)
+    public UnitManager(InputSorter inputSorter,TestInputSorter testInputSorter, HexGridXZ<Unit> grid, HexPathFinder pathfinder)
     {
         _inputSorter = inputSorter != null ? inputSorter : throw new System.ArgumentNullException(nameof(inputSorter));
         _grid = grid != null ? grid : throw new System.ArgumentNullException(nameof(grid));
         _pathfinder = pathfinder != null ? pathfinder : throw new ArgumentNullException(nameof(pathfinder));
 
-        _inputSorter.RoutSubmited += OnRoutSubmited;
+        //_inputSorter.RoutSubmited += OnRoutSubmited;
+
+        testInputSorter.UnitIsMoving += OnUnitMoving;
+        testInputSorter.UnitIsAttacking += OnUnitAttacking;
     }
 
     ~UnitManager()
@@ -45,6 +48,49 @@ public class UnitManager
 
         if (unit.Side == Side.Enemy)
             _pathfinder.MakeNodUnwalkable(coordinates);
+
+        unit.UnitDied += OnUnitDied;
+    }
+
+    private void OnUnitDied(Unit unit)
+    {
+        Vector3 position = _units[unit].position;
+        _grid.SetGridObject(position, null);
+
+        //todo: create destroyobject system
+        _units[unit].gameObject.SetActive(false);
+        //***********************
+
+        _units.Remove(unit);
+    }
+
+    private void OnUnitAttacking(WalkableUnit unit1, Unit unit2, Action callback)
+    {
+        if(unit1.TryAttack(unit2) == false)
+        {
+            callback.Invoke();
+            return;
+        }
+
+        //todo: wait animation end
+        callback.Invoke();
+    }
+
+    private void OnUnitMoving(WalkableUnit unit, Vector2Int target, Action callback)
+    {
+        int step = 1;
+
+        if(unit.TryMoving(step))
+        {
+            _units[unit].GetComponent<Mover>().Move(_grid.GetCellWorldPosition(target), callback);
+            Vector3 position = _units[unit].position;
+            _grid.SetGridObject(position, null);
+            _grid.SetGridObject(target.x, target.y, unit);
+        }
+        else
+        {
+            callback.Invoke();
+        }
     }
 
     private void OnRoutSubmited(Rout rout)
