@@ -10,30 +10,24 @@ public class CellHighlighter
     private readonly CellSprite _notAvailableColor = CellSprite.ContestedOrange;
     private readonly CellSprite _enemyColor = CellSprite.ContestedRed;
 
-    private readonly InputSorter _inputSorter;
+    private readonly NewInputSorter _inputSorter;
     private readonly HexGridXZ<CellSprite> _hexGrid;
     private readonly List<Vector2Int> _coloredCells = new List<Vector2Int>();
 
-    public CellHighlighter(InputSorter inputSorter, TestInputSorter testInputSorter, HexGridXZ<CellSprite> grid)
+    public CellHighlighter(NewInputSorter inputSorter, HexGridXZ<CellSprite> grid)
     {
         _inputSorter = inputSorter != null ? inputSorter : throw new ArgumentNullException(nameof(inputSorter));
         _hexGrid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
-        /*
-        _inputSorter.SelectionChanged += OnSelectionChanged;
-        _inputSorter.PathCreated += OnPathCreated;
-        _inputSorter.RoutSubmited += OnRoutSubmited;
+
+        _inputSorter.MovableUnitSelected += OnMovableUnitSelected;
+        _inputSorter.EnemySelected += OnEnemySelected;
         _inputSorter.BecomeInactive += OnBecameInactive;
-        */
-        testInputSorter.MovableUnitSelected += OnMovableUnitSelected;
-        testInputSorter.EnemySelected += OnEnemySelected;
-        testInputSorter.BecomeInactive += OnBecameInactive;
     }
 
     ~CellHighlighter()
     {
-        _inputSorter.SelectionChanged -= OnSelectionChanged;
-        _inputSorter.PathCreated -= OnPathCreated;
-        _inputSorter.RoutSubmited -= OnRoutSubmited;
+        _inputSorter.MovableUnitSelected -= OnMovableUnitSelected;
+        _inputSorter.EnemySelected -= OnEnemySelected;
         _inputSorter.BecomeInactive -= OnBecameInactive;
     }
 
@@ -65,39 +59,6 @@ public class CellHighlighter
     private void OnBecameInactive()
     {
         ClearGrid();
-    }
-
-    private void OnRoutSubmited(Rout _)
-    {
-        ClearGrid();
-    }
-
-    private void OnPathCreated(Rout rout)
-    {
-        ClearGrid();
-
-        for (int i = 0; i < rout.ClosePartOfPath.Count; i++)
-        {
-            _hexGrid.SetGridObject(rout.ClosePartOfPath[i].x, rout.ClosePartOfPath[i].y, _availableColor);
-            _coloredCells.Add(rout.ClosePartOfPath[i]);
-        }
-
-        for (int i = 0; i < rout.FarawayPartOfPath.Count; i++)
-        {
-            _hexGrid.SetGridObject(rout.FarawayPartOfPath[i].x, rout.FarawayPartOfPath[i].y, _notAvailableColor);
-            _coloredCells.Add(rout.FarawayPartOfPath[i]);
-        }
-
-        ColorizeSelectedCell(rout.SelectedCell, _unitColor);
-    }
-
-    private void OnSelectionChanged(Vector2Int position, Side side)
-    {
-        ClearGrid();
-
-        CellSprite color = side == Side.Player ? _unitColor : _enemyColor;
-
-        ColorizeSelectedCell(position, color);
     }
 
     private void ColorizeSelectedCell(Vector2Int position, CellSprite color)

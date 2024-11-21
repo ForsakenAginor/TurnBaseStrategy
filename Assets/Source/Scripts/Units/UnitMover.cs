@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 public class UnitMover : IResetable
 {
@@ -28,6 +29,11 @@ public class UnitMover : IResetable
 
         _remainingSteps -= steps;
         return true;
+    }
+
+    public void SpentAllSteps()
+    {
+        _remainingSteps = 0;
     }
 }
 
@@ -60,7 +66,7 @@ public class Unit
     }
 
     public event Action HealthChanged;
-    public event Action<Unit> UnitDied;
+    public event Action<Unit> Died;
 
     public int Health => _health.Amount;
 
@@ -72,7 +78,7 @@ public class Unit
 
     public void TakeDamage(int amount) => _health.Spent(amount);
 
-    private void OnResourceOver() => UnitDied?.Invoke(this);
+    private void OnResourceOver() => Died?.Invoke(this);
 
     private void OnHealthChanged() => HealthChanged?.Invoke();
 }
@@ -90,10 +96,13 @@ public class WalkableUnit : Unit, IResetable
         _attackPower = attackPower > 0 ? attackPower : throw new ArgumentOutOfRangeException(nameof(attackPower));
     }
 
+    public event Action Moved;
+
     public void Reset()
     {
         _canAttack = true;
         _mover.Reset();
+        Moved?.Invoke();
     }
 
     public bool CanAttack => _canAttack;
@@ -102,7 +111,14 @@ public class WalkableUnit : Unit, IResetable
 
     public int AttackPower => _attackPower;
 
-    public bool TryMoving(int steps) => _mover.TryMoving(steps);
+    public bool TryMoving(int steps)
+    {
+        if(_mover.TryMoving(steps) == false)
+            return false;
+
+        Moved?.Invoke();
+        return true;
+    }
 
     public bool TryAttack(Unit target)
     {
@@ -110,10 +126,24 @@ public class WalkableUnit : Unit, IResetable
             return false;
 
         _canAttack = false;
+        _mover.SpentAllSteps();
+        Moved?.Invoke();
         target.TakeDamage(_attackPower);
         TakeDamage(target.CounterAttackPower);
         return true;
     }
+}
+
+public interface IUnitFacade
+{
+    public Vector3 Position { get;}
+
+    public UnitView UnitView { get; }
+}
+
+public interface IWalkableUnitFacade : IUnitFacade
+{
+    public Mover Mover { get; }
 }
 
 public class UnitFactory
@@ -130,4 +160,9 @@ public class UnitFactory
         Resource health = new(10);
         return new Unit(side, health, 4);
     }
+}
+
+public class UnitSpawner
+{
+
 }
