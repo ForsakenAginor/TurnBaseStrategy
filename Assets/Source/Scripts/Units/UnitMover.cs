@@ -148,11 +148,20 @@ public interface IWalkableUnitFacade : IUnitFacade
 
 public class UnitFactory
 {
+    private readonly IUnitInfoGetter _configuration;
+
+    public UnitFactory(IUnitInfoGetter configuration)
+    {
+        _configuration = configuration != null ? configuration : throw new ArgumentNullException(nameof(configuration));
+    }
+
     public WalkableUnit CreateInfantry(Side side)
     {
-        UnitMover mover = new(10);
-        Resource health = new(10);
-        return new WalkableUnit(mover, 5, side, health, 4);
+        UnitType infantry = UnitType.Infantry;
+        var tuple = _configuration.GetUnitInfo(infantry);
+        UnitMover mover = new(tuple.steps);
+        Resource health = new(tuple.health);
+        return new WalkableUnit(mover, tuple.attack, side, health, tuple.counterAttack);
     }
 
     public Unit CreateCity(Side side)
@@ -160,9 +169,4 @@ public class UnitFactory
         Resource health = new(10);
         return new Unit(side, health, 4);
     }
-}
-
-public class UnitSpawner
-{
-
 }

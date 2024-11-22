@@ -3,6 +3,7 @@ using Assets.Source.Scripts.GameLoop.StateMachine;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Root : MonoBehaviour
 {
@@ -18,8 +19,10 @@ public class Root : MonoBehaviour
 
     [Header("Game progress")]
     [SerializeField] private GameStateMachineCreator _gameStateMachineCreator;
+    [SerializeField] private UnitSpawner _unitSpawner;
 
     [Header("Debug")]
+    [SerializeField] private Button _testButton;
     [SerializeField] private UnitFacade _firstWarrior;
     [SerializeField] private UnitFacade _secondWarrior;
     [SerializeField] private UnitFacade _castle;
@@ -35,15 +38,24 @@ public class Root : MonoBehaviour
 
         //********  Unit creation  ***********
         UnitsManager unitManager = new UnitsManager(inputSorter, _gridCreator.UnitsGrid, _gridCreator.PathFinder);
+        _unitSpawner.Init(unitManager, _unitConfiguration, unitsGrid, _gridCreator.HexGridView);
+        //************************************
+        _testButton.onClick.AddListener(OnTestButtonClick);
+        /*
         UnitFactory factory = new();
         unitManager.AddUnit(factory.CreateInfantry(Side.Player), _firstWarrior);
         unitManager.AddUnit(factory.CreateInfantry(Side.Player), _secondWarrior);
         unitManager.AddUnit(factory.CreateCity(Side.Enemy), _castle);
-        //************************************
+        */
 
         var stateMachine = _gameStateMachineCreator.Create(unitManager.Units, new List<IControllable>() { inputSorter });
 
         TextureAtlasReader atlas = _meshUpdater.GetComponent<TextureAtlasReader>();
 
+    }
+
+    private void OnTestButtonClick()
+    {
+        _unitSpawner.TrySpawnUnit(new Vector2Int(5, 0), UnitType.Infantry, Side.Player);
     }
 }
