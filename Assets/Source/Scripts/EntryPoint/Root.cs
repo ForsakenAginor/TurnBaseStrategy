@@ -1,16 +1,22 @@
 using Assets.Scripts.HexGrid;
 using Assets.Source.Scripts.GameLoop.StateMachine;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Root : MonoBehaviour
 {
+    [Header("Configurations")]
+    [SerializeField] private UnitsConfiguration _unitConfiguration;
+
     [Header("Grid")]
     [SerializeField] private HexGridCreator _gridCreator;
     [SerializeField] private MeshUpdater _meshUpdater;
     [SerializeField] private CellHighlighter _cellHighlighter;
     [SerializeField] private GridRaycaster _gridRaycaster;
     [SerializeField] private CellSelector _cellSelector;
+
+    [Header("Game progress")]
     [SerializeField] private GameStateMachineCreator _gameStateMachineCreator;
 
     [Header("Debug")]
@@ -38,5 +44,6 @@ public class Root : MonoBehaviour
         var stateMachine = _gameStateMachineCreator.Create(unitManager.Units, new List<IControllable>() { inputSorter });
 
         TextureAtlasReader atlas = _meshUpdater.GetComponent<TextureAtlasReader>();
+
     }
 }
