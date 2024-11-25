@@ -64,7 +64,7 @@ public class NewInputSorter : IControllable
             return;
         }
         // Friendly City chosen
-        else if (unit != null && unit.Side == Side.Player)
+        else if (unit != null && unit.Side == Side.Player && unit is WalkableUnit == false)
         {
             _selectedCell = position;
             _possibleWays = null;

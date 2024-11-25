@@ -39,7 +39,7 @@ public class Root : MonoBehaviour
         UnitsActionsManager unitManager = new UnitsActionsManager(inputSorter, unitsGrid);
         _unitSpawner.Init(unitManager, _unitConfiguration, unitsGrid, _gridCreator.HexGridView);
         CitiesActionsManager cityManager = new CitiesActionsManager(inputSorter, unitsGrid);
-        _citySpawner.Init(cityManager, _cityConfiguration, unitsGrid);
+        _citySpawner.Init(cityManager, _unitSpawner, _cityConfiguration, unitsGrid);
 
         _citySpawner.SpawnCity(new Vector2Int(0, 0), CitySize.Village, Side.Player);
         _citySpawner.SpawnCity(new Vector2Int(5, 5), CitySize.Village, Side.Enemy);

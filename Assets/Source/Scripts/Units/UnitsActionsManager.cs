@@ -49,7 +49,6 @@ public class UnitsActionsManager
             throw new ArgumentException("Unit already added");
 
         _units.Add(unit, facade);
-        facade.UnitView.Init(unit);
         _grid.SetGridObject(facade.Position, unit);
 
         unit.Died += OnUnitDied;
@@ -118,11 +117,12 @@ public class UnitsActionsManager
 
 public class CitiesActionsManager
 {
-    private readonly Dictionary<Unit, IUnitFacade> _cities = new Dictionary<Unit, IUnitFacade>();
+    private readonly Dictionary<Unit, ICityFacade> _cities = new Dictionary<Unit, ICityFacade>();
     private readonly NewInputSorter _inputSorter;
     private readonly HexGridXZ<Unit> _grid;
 
     private IUIElement _selectedUnit;
+    private IUIElement _selectedUnitMenu;
 
     public CitiesActionsManager(NewInputSorter inputSorter, HexGridXZ<Unit> grid)
     {
@@ -144,7 +144,7 @@ public class CitiesActionsManager
     }
 
 
-    public void AddCity(Unit unit, IUnitFacade facade)
+    public void AddCity(Unit unit, ICityFacade facade)
     {
         if (unit == null)
             throw new ArgumentNullException(nameof(unit));
@@ -156,7 +156,6 @@ public class CitiesActionsManager
             throw new ArgumentException("Unit already added");
 
         _cities.Add(unit, facade);
-        facade.UnitView.Init(unit);
         _grid.SetGridObject(facade.Position, unit);
 
         unit.Died += OnUnitDied;
@@ -168,18 +167,25 @@ public class CitiesActionsManager
         OnDeselect();
     }
 
-    private void OnDeselect() => _selectedUnit?.Disable();
+    private void OnDeselect()
+    {
+        _selectedUnit?.Disable();
+        _selectedUnitMenu?.Disable();
+    }
 
     private void OnCitySelected(Vector2Int position)
     {
+        _selectedUnit?.Disable();
+        _selectedUnitMenu?.Disable();
         Unit unit = _grid.GetGridObject(position);
 
-        if (unit == null)
+        if (unit == null || unit is WalkableUnit)
             return;
 
-        _selectedUnit?.Disable();
         _selectedUnit = _cities[unit].UnitView;
+        _selectedUnitMenu = _cities[unit].Menu;
         _selectedUnit.Enable();
+        _selectedUnitMenu.Enable();
     }
 
     private void OnUnitDied(Unit unit)

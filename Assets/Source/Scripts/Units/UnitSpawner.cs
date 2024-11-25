@@ -34,6 +34,7 @@ public class UnitSpawner : MonoBehaviour
             case UnitType.Infantry:
                 var unit = _factory.CreateInfantry(side);
                 var facade = Instantiate(_configuration.GetPrefab(type), _grid.GetCellWorldPosition(neighbours[0]), Quaternion.identity);
+                facade.UnitView.Init(unit);
                 _unitsManager.AddUnit(unit, facade);
                 break;
             default:
