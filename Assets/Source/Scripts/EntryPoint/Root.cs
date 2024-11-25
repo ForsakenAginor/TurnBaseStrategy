@@ -37,7 +37,7 @@ public class Root : MonoBehaviour
         _cellHighlighter = new (inputSorter, _gridCreator.HexGrid);
 
         //********  Unit creation  ***********
-        UnitsManager unitManager = new UnitsManager(inputSorter, _gridCreator.UnitsGrid, _gridCreator.PathFinder);
+        UnitsManager unitManager = new UnitsManager(inputSorter, _gridCreator.UnitsGrid);
         _unitSpawner.Init(unitManager, _unitConfiguration, unitsGrid, _gridCreator.HexGridView);
         //************************************
         _testButton.onClick.AddListener(OnTestButtonClick);

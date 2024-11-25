@@ -23,7 +23,7 @@ public class NewInputSorter : IControllable
         _cellSelector = selector != null ? selector : throw new ArgumentNullException(nameof(selector));
     }
 
-    public event Action<IEnumerable<Vector2Int>, IEnumerable<Vector2Int>, IEnumerable<Vector2Int>, IEnumerable<Vector2Int>> MovableUnitSelected;
+    public event Action<WalkableUnit, IEnumerable<Vector2Int>, IEnumerable<Vector2Int>, IEnumerable<Vector2Int>, IEnumerable<Vector2Int>> MovableUnitSelected;
     public event Action<WalkableUnit, Unit, Action> UnitIsAttacking;
     public event Action<WalkableUnit, Vector2Int, Action> UnitIsMoving;
 
@@ -60,7 +60,7 @@ public class NewInputSorter : IControllable
             var friendlyCells = neighbours.Where(o => IsCellContainAlly(_selectedUnit, o)).ToList();
             _possibleAttacks = neighbours.Where(o => IsCellContainEnemy(_selectedUnit, o)).ToList();
 
-            MovableUnitSelected?.Invoke(_possibleWays, blockedCells, friendlyCells, _possibleAttacks);
+            MovableUnitSelected?.Invoke(selectedUnit, _possibleWays, blockedCells, friendlyCells, _possibleAttacks);
             return;
         }
 

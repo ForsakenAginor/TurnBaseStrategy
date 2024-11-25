@@ -9,14 +9,6 @@ public class WalkableUnitView : UnitView
 
     private WalkableUnit _unit;
 
-    private void OnDestroy()
-    {
-        if (_unit == null)
-            return;
-
-        _unit.Moved -= OnUnitMoved;
-    }
-
     public override void Init(Unit unit)
     {
         if(unit == null)
@@ -32,6 +24,11 @@ public class WalkableUnitView : UnitView
         _moving.text = _unit.RemainingSteps.ToString();
 
         _unit.Moved += OnUnitMoved;
+    }
+
+    protected override void DoOnDestroyAction()
+    {
+        _unit.Moved -= OnUnitMoved;
     }
 
     private void OnUnitMoved()

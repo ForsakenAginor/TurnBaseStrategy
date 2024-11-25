@@ -1,5 +1,4 @@
 ﻿using Assets.Scripts.HexGrid;
-using HexPathfinding;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,20 +9,23 @@ public class UnitsManager
     private readonly Dictionary<Unit, IUnitFacade> _units = new Dictionary<Unit, IUnitFacade>();
     private readonly NewInputSorter _inputSorter;
     private readonly HexGridXZ<Unit> _grid;
-    private readonly HexPathFinder _pathfinder;
 
-    public UnitsManager(NewInputSorter inputSorter, HexGridXZ<Unit> grid, HexPathFinder pathfinder)
+    private IUIElement _selectedUnit;
+
+    public UnitsManager(NewInputSorter inputSorter, HexGridXZ<Unit> grid)
     {
         _inputSorter = inputSorter != null ? inputSorter : throw new System.ArgumentNullException(nameof(inputSorter));
         _grid = grid != null ? grid : throw new System.ArgumentNullException(nameof(grid));
-        _pathfinder = pathfinder != null ? pathfinder : throw new ArgumentNullException(nameof(pathfinder));
 
+        _inputSorter.MovableUnitSelected += OnUnitSelected;
         _inputSorter.UnitIsMoving += OnUnitMoving;
         _inputSorter.UnitIsAttacking += OnUnitAttacking;
     }
 
+
     ~UnitsManager()
     {
+        _inputSorter.MovableUnitSelected -= OnUnitSelected;
         _inputSorter.UnitIsMoving -= OnUnitMoving;
         _inputSorter.UnitIsAttacking -= OnUnitAttacking;
     }
@@ -46,10 +48,16 @@ public class UnitsManager
         _grid.SetGridObject(facade.Position, unit);
         Vector2Int coordinates = _grid.GetXZ(facade.Position);
 
-        if (unit.Side == Side.Enemy)
-            _pathfinder.MakeNodUnwalkable(coordinates);
-
         unit.Died += OnUnitDied;
+    }
+
+    private void OnUnitSelected(WalkableUnit unit,
+        IEnumerable<Vector2Int> _, IEnumerable<Vector2Int> _1,
+        IEnumerable<Vector2Int> _2, IEnumerable<Vector2Int> _3)
+    {
+        _selectedUnit?.Disable();
+        _selectedUnit = _units[unit].UnitView;
+        _selectedUnit.Enable();
     }
 
     private void OnUnitDied(Unit unit)

@@ -37,7 +37,7 @@ public class CellHighlighter
         ColorizeSelectedCell(position, _enemyColor);
     }
 
-    private void OnMovableUnitSelected(
+    private void OnMovableUnitSelected(WalkableUnit _,
         IEnumerable<Vector2Int> possibleWays, IEnumerable<Vector2Int> blockedCells,
         IEnumerable<Vector2Int> friendlyCells, IEnumerable<Vector2Int> possiblesAttacks)
     {
