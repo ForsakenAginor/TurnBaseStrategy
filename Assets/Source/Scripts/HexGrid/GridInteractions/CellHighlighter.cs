@@ -21,6 +21,7 @@ public class CellHighlighter
 
         _inputSorter.MovableUnitSelected += OnMovableUnitSelected;
         _inputSorter.EnemySelected += OnEnemySelected;
+        _inputSorter.FriendlyCitySelected += OnFriendlyCitySelected;
         _inputSorter.BecomeInactive += OnBecameInactive;
     }
 
@@ -28,7 +29,14 @@ public class CellHighlighter
     {
         _inputSorter.MovableUnitSelected -= OnMovableUnitSelected;
         _inputSorter.EnemySelected -= OnEnemySelected;
+        _inputSorter.FriendlyCitySelected -= OnFriendlyCitySelected;
         _inputSorter.BecomeInactive -= OnBecameInactive;
+    }
+
+    private void OnFriendlyCitySelected(Vector2Int position)
+    {
+        ClearGrid();
+        ColorizeSelectedCell(position, _unitColor);
     }
 
     private void OnEnemySelected(Vector2Int position)
@@ -37,7 +45,7 @@ public class CellHighlighter
         ColorizeSelectedCell(position, _enemyColor);
     }
 
-    private void OnMovableUnitSelected(WalkableUnit _,
+    private void OnMovableUnitSelected(Vector2Int _,
         IEnumerable<Vector2Int> possibleWays, IEnumerable<Vector2Int> blockedCells,
         IEnumerable<Vector2Int> friendlyCells, IEnumerable<Vector2Int> possiblesAttacks)
     {

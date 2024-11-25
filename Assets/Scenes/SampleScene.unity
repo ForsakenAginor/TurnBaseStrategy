@@ -180,17 +180,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f674e09a397a3de47b6fd550cdc3a895, type: 3}
---- !u!114 &19142494 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: -8173261334090171093, guid: f674e09a397a3de47b6fd550cdc3a895, type: 3}
-  m_PrefabInstance: {fileID: 19142493}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19d6ee1e7ffb5ad43834c63d050a8452, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &65488194
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3341,16 +3330,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _unitConfiguration: {fileID: 11400000, guid: b3e9461514ee68f44a938b0273be49ba, type: 2}
+  _cityConfiguration: {fileID: 11400000, guid: 67b8fa3fc224a5942ad0bf0eab6310e4, type: 2}
   _gridCreator: {fileID: 994843276}
   _meshUpdater: {fileID: 994843272}
   _gridRaycaster: {fileID: 994843278}
   _cellSelector: {fileID: 994843279}
   _gameStateMachineCreator: {fileID: 1254421031}
   _unitSpawner: {fileID: 840627873}
+  _citySpawner: {fileID: 840627874}
   _testButton: {fileID: 688772000}
-  _firstWarrior: {fileID: 903825045}
-  _secondWarrior: {fileID: 19142494}
-  _castle: {fileID: 1375998026}
 --- !u!4 &717580000
 Transform:
   m_ObjectHideFlags: 0
@@ -4076,6 +4064,7 @@ GameObject:
   m_Component:
   - component: {fileID: 840627872}
   - component: {fileID: 840627873}
+  - component: {fileID: 840627874}
   m_Layer: 0
   m_Name: Spawner
   m_TagString: Untagged
@@ -4110,7 +4099,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ab2af6eb6368d449b3d90b762f0e17f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _castle: {fileID: 1375998026}
+--- !u!114 &840627874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 840627871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7efbc0aa06ab2d41ac35da756b81538, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &861520594
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4238,17 +4238,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f674e09a397a3de47b6fd550cdc3a895, type: 3}
---- !u!114 &903825045 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: -8173261334090171093, guid: f674e09a397a3de47b6fd550cdc3a895, type: 3}
-  m_PrefabInstance: {fileID: 903825044}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19d6ee1e7ffb5ad43834c63d050a8452, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &912528873
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6437,6 +6426,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: City Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 2465166135498751663, guid: e778d4b8316b7504abf77ee678f530fe, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3210946603160930138, guid: e778d4b8316b7504abf77ee678f530fe, type: 3}
       propertyPath: m_LocalPosition.x
       value: 4.95
@@ -6482,17 +6475,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e778d4b8316b7504abf77ee678f530fe, type: 3}
---- !u!114 &1375998026 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5095004251916867342, guid: e778d4b8316b7504abf77ee678f530fe, type: 3}
-  m_PrefabInstance: {fileID: 1375998025}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc4f16db0b7f7f840a7f357686b7f8ae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1414851390
 PrefabInstance:
   m_ObjectHideFlags: 0

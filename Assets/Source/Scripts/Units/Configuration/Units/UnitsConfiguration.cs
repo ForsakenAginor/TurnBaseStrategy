@@ -2,7 +2,8 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "UnitConfiguration")]
-public class UnitsConfiguration : UpdatableConfiguration<UnitType, UnitInfo>, IUnitCostGetter, IUnitInfoGetter, IUnitPrefabGetter
+public class UnitsConfiguration : UpdatableConfiguration<UnitType, UnitInfo>,
+    IUnitCostGetter, IUnitInfoGetter, IUnitPrefabGetter
 {
     public UnitFacade GetPrefab(UnitType type)
     {
@@ -18,5 +19,10 @@ public class UnitsConfiguration : UpdatableConfiguration<UnitType, UnitInfo>, IU
     {
         var value = Content.First(o => o.Key == type).Value;
         return (value.Attack, value.CounterAttack, value.Health, value.Steps);
+    }
+
+    public int GetUnitSalary(UnitType type)
+    {
+        return Content.First(o => o.Key == type).Value.Salary;
     }
 }

@@ -18,9 +18,12 @@ public class UnitFactory
         return new WalkableUnit(mover, tuple.attack, side, health, tuple.counterAttack);
     }
 
-    public Unit CreateCity(Side side)
+    public WalkableUnit CreateKnight(Side side)
     {
-        Resource health = new(10);
-        return new Unit(side, health, 4);
+        UnitType knight = UnitType.Knight;
+        var tuple = _configuration.GetUnitInfo(knight);
+        UnitMover mover = new(tuple.steps);
+        Resource health = new(tuple.health);
+        return new WalkableUnit(mover, tuple.attack, side, health, tuple.counterAttack);
     }
 }

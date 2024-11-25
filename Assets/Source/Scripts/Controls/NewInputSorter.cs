@@ -23,10 +23,10 @@ public class NewInputSorter : IControllable
         _cellSelector = selector != null ? selector : throw new ArgumentNullException(nameof(selector));
     }
 
-    public event Action<WalkableUnit, IEnumerable<Vector2Int>, IEnumerable<Vector2Int>, IEnumerable<Vector2Int>, IEnumerable<Vector2Int>> MovableUnitSelected;
+    public event Action<Vector2Int, IEnumerable<Vector2Int>, IEnumerable<Vector2Int>, IEnumerable<Vector2Int>, IEnumerable<Vector2Int>> MovableUnitSelected;
     public event Action<WalkableUnit, Unit, Action> UnitIsAttacking;
     public event Action<WalkableUnit, Vector2Int, Action> UnitIsMoving;
-
+    public event Action<Vector2Int> FriendlyCitySelected;
     public event Action<Vector2Int> EnemySelected;
     public event Action BecomeInactive;
 
@@ -60,7 +60,16 @@ public class NewInputSorter : IControllable
             var friendlyCells = neighbours.Where(o => IsCellContainAlly(_selectedUnit, o)).ToList();
             _possibleAttacks = neighbours.Where(o => IsCellContainEnemy(_selectedUnit, o)).ToList();
 
-            MovableUnitSelected?.Invoke(selectedUnit, _possibleWays, blockedCells, friendlyCells, _possibleAttacks);
+            MovableUnitSelected?.Invoke(position, _possibleWays, blockedCells, friendlyCells, _possibleAttacks);
+            return;
+        }
+        // Friendly City chosen
+        else if (unit != null && unit.Side == Side.Player)
+        {
+            _selectedCell = position;
+            _possibleWays = null;
+            _possibleAttacks = null;
+            FriendlyCitySelected?.Invoke(position);
             return;
         }
 

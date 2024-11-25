@@ -9,6 +9,7 @@ public class Root : MonoBehaviour
 {
     [Header("Configurations")]
     [SerializeField] private UnitsConfiguration _unitConfiguration;
+    [SerializeField] private CitiesConfiguration _cityConfiguration;
 
     [Header("Grid")]
     [SerializeField] private HexGridCreator _gridCreator;
@@ -20,12 +21,10 @@ public class Root : MonoBehaviour
     [Header("Game progress")]
     [SerializeField] private GameStateMachineCreator _gameStateMachineCreator;
     [SerializeField] private UnitSpawner _unitSpawner;
+    [SerializeField] private CitySpawner _citySpawner;
 
     [Header("Debug")]
     [SerializeField] private Button _testButton;
-    [SerializeField] private UnitFacade _firstWarrior;
-    [SerializeField] private UnitFacade _secondWarrior;
-    [SerializeField] private UnitFacade _castle;
 
     private void Start()
     {
@@ -37,25 +36,24 @@ public class Root : MonoBehaviour
         _cellHighlighter = new (inputSorter, _gridCreator.HexGrid);
 
         //********  Unit creation  ***********
-        UnitsManager unitManager = new UnitsManager(inputSorter, _gridCreator.UnitsGrid);
+        UnitsActionsManager unitManager = new UnitsActionsManager(inputSorter, unitsGrid);
         _unitSpawner.Init(unitManager, _unitConfiguration, unitsGrid, _gridCreator.HexGridView);
-        //************************************
-        _testButton.onClick.AddListener(OnTestButtonClick);
-        /*
-        UnitFactory factory = new();
-        unitManager.AddUnit(factory.CreateInfantry(Side.Player), _firstWarrior);
-        unitManager.AddUnit(factory.CreateInfantry(Side.Player), _secondWarrior);
-        unitManager.AddUnit(factory.CreateCity(Side.Enemy), _castle);
-        */
+        CitiesActionsManager cityManager = new CitiesActionsManager(inputSorter, unitsGrid);
+        _citySpawner.Init(cityManager, _cityConfiguration, unitsGrid);
+
+        _citySpawner.SpawnCity(new Vector2Int(0, 0), CitySize.Village, Side.Player);
+        _citySpawner.SpawnCity(new Vector2Int(5, 5), CitySize.Village, Side.Enemy);
 
         var stateMachine = _gameStateMachineCreator.Create(unitManager.Units, new List<IControllable>() { inputSorter });
 
         TextureAtlasReader atlas = _meshUpdater.GetComponent<TextureAtlasReader>();
 
+        //********  Debug  ***********
+        _testButton.onClick.AddListener(OnTestButtonClick);
     }
 
     private void OnTestButtonClick()
     {
-        _unitSpawner.TrySpawnUnit(new Vector2Int(5, 0), UnitType.Infantry, Side.Player);
+        _unitSpawner.TrySpawnUnit(new Vector2Int(0, 0), UnitType.Infantry, Side.Player);
     }
 }

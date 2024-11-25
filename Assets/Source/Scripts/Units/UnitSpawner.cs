@@ -7,23 +7,17 @@ public class UnitSpawner : MonoBehaviour
 {
     private IUnitPrefabGetter _configuration;
     private UnitFactory _factory;
-    private UnitsManager _unitsManager;
+    private UnitsActionsManager _unitsManager;
     private HexGridXZ<Unit> _grid;
     private HexGridXZ<IBlockedCell> _landGrid;
 
-    [Header("debug")]
-    [SerializeField] private UnitFacade _castle;
-
-    public void Init(UnitsManager manager, IUnitPrefabGetter configuration, HexGridXZ<Unit> grid, HexGridXZ<IBlockedCell> landGrid)
+    public void Init(UnitsActionsManager manager, IUnitPrefabGetter configuration, HexGridXZ<Unit> grid, HexGridXZ<IBlockedCell> landGrid)
     {
         _unitsManager = manager != null ? manager : throw new ArgumentNullException(nameof(manager));
         _configuration = configuration != null ? configuration : throw new ArgumentNullException(nameof(configuration));
         _grid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
         _landGrid = landGrid != null ? landGrid : throw new ArgumentNullException(nameof(landGrid));
         _factory = new UnitFactory(configuration);
-
-        //debug
-        _unitsManager.AddUnit(_factory.CreateCity(Side.Player), _castle);
     }
 
     public bool TrySpawnUnit(Vector2Int position, UnitType type, Side side)
