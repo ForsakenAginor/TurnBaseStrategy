@@ -9,21 +9,11 @@ public class UnitFactory
         _configuration = configuration != null ? configuration : throw new ArgumentNullException(nameof(configuration));
     }
 
-    public WalkableUnit CreateInfantry(Side side)
+    public WalkableUnit Create(Side side, UnitType type)
     {
-        UnitType infantry = UnitType.Infantry;
-        var tuple = _configuration.GetUnitInfo(infantry);
+        var tuple = _configuration.GetUnitInfo(type);
         UnitMover mover = new(tuple.steps);
         Resource health = new(tuple.health);
-        return new WalkableUnit(mover, tuple.attack, infantry, side, health, tuple.counterAttack);
-    }
-
-    public WalkableUnit CreateKnight(Side side)
-    {
-        UnitType knight = UnitType.Knight;
-        var tuple = _configuration.GetUnitInfo(knight);
-        UnitMover mover = new(tuple.steps);
-        Resource health = new(tuple.health);
-        return new WalkableUnit(mover, tuple.attack, knight, side, health, tuple.counterAttack);
+        return new WalkableUnit(mover, tuple.attack, type, side, health, tuple.counterAttack);
     }
 }

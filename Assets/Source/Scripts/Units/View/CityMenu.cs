@@ -11,7 +11,7 @@ public class CityMenu : MonoBehaviour, IUIElement
     private Button _hireKnight;
     private IUIElement _buttonCanvas;
 
-    private Action<UnitType, Vector3> TryHireCallback;
+    private Func<UnitType, Vector3, bool> TryHireCallback;
     private Func<Vector3, bool> TryUpgradeCityCallback;
 
     public void Enable()
@@ -41,7 +41,7 @@ public class CityMenu : MonoBehaviour, IUIElement
         Disable();
     }
 
-    public void Init(Action<UnitType, Vector3> tryHireCallback, Func<Vector3, bool> tryUpgradeCityCallback,
+    public void Init(Func<UnitType, Vector3, bool> tryHireCallback, Func<Vector3, bool> tryUpgradeCityCallback,
         Button upgradeButton, Button hireInfantry, Button hireSpearman,
         Button hireArcher, Button hireKnight, IUIElement buttonCanvas)
     {
@@ -62,14 +62,12 @@ public class CityMenu : MonoBehaviour, IUIElement
 
     private void OnHireSpearmanClick()
     {
-        Debug.Log("spearman hired");
-        //_tryHireCallback.Invoke(UnitType.Spearman, transform.position);
+        TryHireCallback.Invoke(UnitType.Spearman, transform.position);
     }
 
     private void OnHireArcherClick()
     {
-        Debug.Log("archer hired");
-        //_tryHireCallback.Invoke(UnitType.Archer, transform.position);
+        TryHireCallback.Invoke(UnitType.Archer, transform.position);
     }
 
     private void OnHireInfantryClick()

@@ -3,7 +3,6 @@ using Assets.Source.Scripts.GameLoop.StateMachine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -46,17 +45,17 @@ public class Root : MonoBehaviour
         _walletView.Init(wallet);
         //********  Unit creation  ***********
         UnitsActionsManager unitManager = new UnitsActionsManager(inputSorter, unitsGrid);
-        _unitSpawner.Init(unitManager, _unitConfiguration, unitsGrid, _gridCreator.HexGridView);
+        _unitSpawner.Init(unitManager, wallet, _unitConfiguration, unitsGrid, _gridCreator.HexGridView);
         CitiesActionsManager cityManager = new CitiesActionsManager(inputSorter, unitsGrid);
-        _citySpawner.Init(cityManager, _unitSpawner, _cityConfiguration, unitsGrid);
+        _citySpawner.Init(cityManager, _unitSpawner, wallet, _cityConfiguration, unitsGrid);
 
         _citySpawner.SpawnCity(new Vector2Int(0, 0), CitySize.Village, Side.Player);
         _citySpawner.SpawnCity(new Vector2Int(5, 5), CitySize.Village, Side.Enemy);
 
 
         //********* Game state machine *******
-        var resettables = unitManager.Units.ToList();
-        resettables.Add(taxSystem);
+        var resettables = unitManager.Units.Append(taxSystem);
+        //resettables.Add(taxSystem);
         var stateMachine = _gameStateMachineCreator.Create(resettables, new List<IControllable>() { inputSorter });
 
         TextureAtlasReader atlas = _meshUpdater.GetComponent<TextureAtlasReader>();

@@ -12,18 +12,21 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
     [SerializeField] private Button _hireKnight;
     [SerializeField] private UIElement _buttonCanvas;
 
-    private ICityPrefabGetter _configuration;
+    private CitiesConfiguration _configuration;
     private CitiesFactory _factory;
     private CitiesActionsManager _unitsManager;
     private HexGridXZ<Unit> _grid;
     private UnitSpawner _unitSpawner;
+    private Resource _wallet;
 
     public event Action<Unit> UnitSpawned;
 
-    public void Init(CitiesActionsManager manager, UnitSpawner unitSpawner, ICityPrefabGetter configuration, HexGridXZ<Unit> grid)
+    public void Init(CitiesActionsManager manager, UnitSpawner unitSpawner, Resource wallet,
+        CitiesConfiguration configuration, HexGridXZ<Unit> grid)
     {
         _unitsManager = manager != null ? manager : throw new ArgumentNullException(nameof(manager));
         _unitSpawner = unitSpawner != null ? unitSpawner : throw new ArgumentNullException(nameof(unitSpawner));
+        _wallet = wallet != null ? wallet : throw new ArgumentNullException(nameof(wallet));
         _configuration = configuration != null ? configuration : throw new ArgumentNullException(nameof(configuration));
         _grid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
         _factory = new CitiesFactory(configuration);
@@ -37,7 +40,8 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
         var unit = _factory.Create(size, side);
         var facade = Instantiate(_configuration.GetPrefab(size), _grid.GetCellWorldPosition(position), Quaternion.identity);
         facade.UnitView.Init(unit);
-        facade.Menu.Init(TryHireUnit, TryUpgradeCity, _upgradeButton, _hireInfantry, _hireSpearman, _hireArcher, _hireKnight, _buttonCanvas);
+        facade.Menu.Init(TryHireUnit, TryUpgradeCity,
+            _upgradeButton, _hireInfantry, _hireSpearman, _hireArcher, _hireKnight, _buttonCanvas);
         _unitsManager.AddCity(unit, facade);
 
         //todo: subscribe to city died event, for spawn opposite side village on died
@@ -51,8 +55,14 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
         CitySize size = city.CitySize;
         Vector2Int cell = _grid.GetXZ(position);
 
-        if((int)size == Enum.GetValues(typeof(CitySize)).Length - 1)
+        if ((int)size == Enum.GetValues(typeof(CitySize)).Length - 1)
             return false;
+
+        int cost = _configuration.GetUpgradeCost(size);
+
+        if (side == Side.Player)
+            if (_wallet.TrySpent(cost) == false)
+                return false;
 
         _unitsManager.RemoveCity(city);
         size++;
@@ -60,15 +70,10 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
         return true;
     }
 
-    private void TryHireUnit(UnitType type, Vector3 position)
+    private bool TryHireUnit(UnitType type, Vector3 position)
     {
         var city = _grid.GetGridObject(position);
         Vector2Int cell = _grid.GetXZ(position);
-        _unitSpawner.TrySpawnUnit(cell, type, city.Side);
+        return _unitSpawner.TrySpawnUnit(cell, type, city.Side);
     }
-}
-
-public interface IUnitSpawner
-{
-    public event Action<Unit> UnitSpawned;
 }

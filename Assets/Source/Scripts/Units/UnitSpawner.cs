@@ -1,21 +1,25 @@
 ﻿using Assets.Scripts.HexGrid;
 using System;
+using System.Drawing;
 using System.Linq;
 using UnityEngine;
 
 public class UnitSpawner : MonoBehaviour, IUnitSpawner
 {
-    private IUnitPrefabGetter _configuration;
+    private UnitsConfiguration _configuration;
     private UnitFactory _factory;
     private UnitsActionsManager _unitsManager;
     private HexGridXZ<Unit> _grid;
     private HexGridXZ<IBlockedCell> _landGrid;
+    private Resource _wallet;
 
     public event Action<Unit> UnitSpawned;
 
-    public void Init(UnitsActionsManager manager, IUnitPrefabGetter configuration, HexGridXZ<Unit> grid, HexGridXZ<IBlockedCell> landGrid)
+    public void Init(UnitsActionsManager manager, Resource wallet,
+        UnitsConfiguration configuration, HexGridXZ<Unit> grid, HexGridXZ<IBlockedCell> landGrid)
     {
         _unitsManager = manager != null ? manager : throw new ArgumentNullException(nameof(manager));
+        _wallet = wallet != null ? wallet : throw new ArgumentNullException(nameof(wallet));
         _configuration = configuration != null ? configuration : throw new ArgumentNullException(nameof(configuration));
         _grid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
         _landGrid = landGrid != null ? landGrid : throw new ArgumentNullException(nameof(landGrid));
@@ -31,18 +35,17 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawner
         if (neighbours.Count == 0)
             return false;
 
-        switch (type)
-        {
-            case UnitType.Infantry:
-                var unit = _factory.CreateInfantry(side);
-                var facade = Instantiate(_configuration.GetPrefab(type), _grid.GetCellWorldPosition(neighbours[0]), Quaternion.identity);
-                facade.UnitView.Init(unit);
-                _unitsManager.AddUnit(unit, facade);
-                UnitSpawned?.Invoke(unit);
-                break;
-            default:
-                break;
-        }
+        int cost = _configuration.GetUnitCost(type);
+
+        if (side == Side.Player)
+            if (_wallet.TrySpent(cost) == false)
+                return false;
+
+        var unit = _factory.Create(side, type);
+        var facade = Instantiate(_configuration.GetPrefab(type), _grid.GetCellWorldPosition(neighbours[0]), Quaternion.identity);
+        facade.UnitView.Init(unit);
+        _unitsManager.AddUnit(unit, facade);
+        UnitSpawned?.Invoke(unit);
 
         return true;
     }
