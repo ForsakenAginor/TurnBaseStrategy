@@ -4,13 +4,15 @@ public class WalkableUnit : Unit, IResetable
 {
     private readonly UnitMover _mover;
     private readonly int _attackPower;
+    private readonly UnitType _type;
     private bool _canAttack = true;
 
-    public WalkableUnit(UnitMover mover, int attackPower,
+    public WalkableUnit(UnitMover mover, int attackPower, UnitType type,
         Side side, Resource health, int counterAttackPower) : base(side, health, counterAttackPower)
     {
         _mover = mover != null ? mover : throw new ArgumentNullException(nameof(mover));
         _attackPower = attackPower > 0 ? attackPower : throw new ArgumentOutOfRangeException(nameof(attackPower));
+        _type = type;
     }
 
     public event Action Moved;
@@ -27,6 +29,8 @@ public class WalkableUnit : Unit, IResetable
     public int RemainingSteps => _mover.RemainingSteps;
 
     public int AttackPower => _attackPower;
+
+    public UnitType UnitType => _type;
 
     public bool TryMoving(int steps)
     {

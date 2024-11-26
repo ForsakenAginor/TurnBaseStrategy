@@ -3,13 +3,15 @@ using System;
 using System.Linq;
 using UnityEngine;
 
-public class UnitSpawner : MonoBehaviour
+public class UnitSpawner : MonoBehaviour, IUnitSpawner
 {
     private IUnitPrefabGetter _configuration;
     private UnitFactory _factory;
     private UnitsActionsManager _unitsManager;
     private HexGridXZ<Unit> _grid;
     private HexGridXZ<IBlockedCell> _landGrid;
+
+    public event Action<Unit> UnitSpawned;
 
     public void Init(UnitsActionsManager manager, IUnitPrefabGetter configuration, HexGridXZ<Unit> grid, HexGridXZ<IBlockedCell> landGrid)
     {
@@ -26,16 +28,17 @@ public class UnitSpawner : MonoBehaviour
             Where(o => _grid.IsValidGridPosition(o) && _grid.GetGridObject(o) == null && _landGrid.GetGridObject(o).IsBlocked == false).
             ToList();
 
-        if(neighbours.Count == 0)
+        if (neighbours.Count == 0)
             return false;
-        
-        switch(type)
+
+        switch (type)
         {
             case UnitType.Infantry:
                 var unit = _factory.CreateInfantry(side);
                 var facade = Instantiate(_configuration.GetPrefab(type), _grid.GetCellWorldPosition(neighbours[0]), Quaternion.identity);
                 facade.UnitView.Init(unit);
                 _unitsManager.AddUnit(unit, facade);
+                UnitSpawned?.Invoke(unit);
                 break;
             default:
                 break;

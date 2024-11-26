@@ -11,6 +11,12 @@ public class Resource : IResource
         _maximum = amount;
     }
 
+    public Resource(int amount, int maximum)
+    {
+        _amount = amount >= 0 ? amount : throw new ArgumentOutOfRangeException(nameof(amount));
+        _maximum = maximum >= amount ? maximum : throw new ArgumentOutOfRangeException(nameof(maximum));
+    }
+
     public event Action ResourcesAmountChanged;
     public event Action ResourceOver;
 
@@ -50,6 +56,9 @@ public class Resource : IResource
         ResourcesAmountChanged?.Invoke();
 
         if (_amount <= 0)
+        {
+            _amount = 0;
             ResourceOver?.Invoke();
+        }
     }
 }

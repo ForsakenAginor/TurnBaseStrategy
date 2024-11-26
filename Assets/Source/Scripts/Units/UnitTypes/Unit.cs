@@ -2,6 +2,8 @@
 
 public class Unit
 {
+    private const int LackOfPaymentDamage = 3;
+
     private readonly Side _side;
     private readonly Resource _health;
     private readonly int _counterAttackPower;
@@ -34,6 +36,8 @@ public class Unit
     public int CounterAttackPower => _counterAttackPower;
 
     public void TakeDamage(int amount) => _health.Spent(amount);
+
+    public void SufferPaymentDamage() => TakeDamage(LackOfPaymentDamage);
 
     protected void Kill() => OnResourceOver();
 

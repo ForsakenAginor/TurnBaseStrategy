@@ -15,7 +15,7 @@ public class UnitFactory
         var tuple = _configuration.GetUnitInfo(infantry);
         UnitMover mover = new(tuple.steps);
         Resource health = new(tuple.health);
-        return new WalkableUnit(mover, tuple.attack, side, health, tuple.counterAttack);
+        return new WalkableUnit(mover, tuple.attack, infantry, side, health, tuple.counterAttack);
     }
 
     public WalkableUnit CreateKnight(Side side)
@@ -24,6 +24,6 @@ public class UnitFactory
         var tuple = _configuration.GetUnitInfo(knight);
         UnitMover mover = new(tuple.steps);
         Resource health = new(tuple.health);
-        return new WalkableUnit(mover, tuple.attack, side, health, tuple.counterAttack);
+        return new WalkableUnit(mover, tuple.attack, knight, side, health, tuple.counterAttack);
     }
 }

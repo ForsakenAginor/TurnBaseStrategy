@@ -1,10 +1,9 @@
 ﻿using Assets.Scripts.HexGrid;
 using System;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CitySpawner : MonoBehaviour
+public class CitySpawner : MonoBehaviour, IUnitSpawner
 {
     [SerializeField] private Button _upgradeButton;
     [SerializeField] private Button _hireInfantry;
@@ -18,6 +17,8 @@ public class CitySpawner : MonoBehaviour
     private CitiesActionsManager _unitsManager;
     private HexGridXZ<Unit> _grid;
     private UnitSpawner _unitSpawner;
+
+    public event Action<Unit> UnitSpawned;
 
     public void Init(CitiesActionsManager manager, UnitSpawner unitSpawner, ICityPrefabGetter configuration, HexGridXZ<Unit> grid)
     {
@@ -40,6 +41,7 @@ public class CitySpawner : MonoBehaviour
         _unitsManager.AddCity(unit, facade);
 
         //todo: subscribe to city died event, for spawn opposite side village on died
+        UnitSpawned?.Invoke(unit);
     }
 
     private bool TryUpgradeCity(Vector3 position)
@@ -64,4 +66,9 @@ public class CitySpawner : MonoBehaviour
         Vector2Int cell = _grid.GetXZ(position);
         _unitSpawner.TrySpawnUnit(cell, type, city.Side);
     }
+}
+
+public interface IUnitSpawner
+{
+    public event Action<Unit> UnitSpawned;
 }
