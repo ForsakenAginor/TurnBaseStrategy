@@ -33,18 +33,29 @@ public class CitySpawner : MonoBehaviour
         if (_grid.GetGridObject(position) != null)
             throw new Exception("Can't create city: cell is not empty");
 
-        switch (size)
-        {
-            case CitySize.Village:
-                var unit = _factory.CreateVillage(side);
-                var facade = Instantiate(_configuration.GetPrefab(size), _grid.GetCellWorldPosition(position), Quaternion.identity);
-                facade.UnitView.Init(unit);
-                facade.Menu.Init(TryHireUnit, _upgradeButton, _hireInfantry, _hireSpearman, _hireArcher, _hireKnight, _buttonCanvas);
-                _unitsManager.AddCity(unit, facade);
-                break;
-            default:
-                break;
-        }
+        var unit = _factory.Create(size, side);
+        var facade = Instantiate(_configuration.GetPrefab(size), _grid.GetCellWorldPosition(position), Quaternion.identity);
+        facade.UnitView.Init(unit);
+        facade.Menu.Init(TryHireUnit, TryUpgradeCity, _upgradeButton, _hireInfantry, _hireSpearman, _hireArcher, _hireKnight, _buttonCanvas);
+        _unitsManager.AddCity(unit, facade);
+
+        //todo: subscribe to city died event, for spawn opposite side village on died
+    }
+
+    private bool TryUpgradeCity(Vector3 position)
+    {
+        var city = _grid.GetGridObject(position) as CityUnit;
+        Side side = city.Side;
+        CitySize size = city.CitySize;
+        Vector2Int cell = _grid.GetXZ(position);
+
+        if((int)size == Enum.GetValues(typeof(CitySize)).Length - 1)
+            return false;
+
+        _unitsManager.RemoveCity(city);
+        size++;
+        SpawnCity(cell, size, side);
+        return true;
     }
 
     private void TryHireUnit(UnitType type, Vector3 position)

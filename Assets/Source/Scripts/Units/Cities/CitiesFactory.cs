@@ -9,11 +9,10 @@ public class CitiesFactory
         _configuration = configuration != null ? configuration : throw new ArgumentNullException(nameof(configuration));
     }
 
-    public Unit CreateVillage(Side side)
+    public CityUnit Create(CitySize size, Side side)
     {
-        CitySize village = CitySize.Village;
-        var tuple = _configuration.GetCityBattleInfo(village);
+        var tuple = _configuration.GetCityBattleInfo(size);
         Resource health = new(tuple.health);
-        return new Unit(side, health, tuple.counterAttack);
+        return new CityUnit(size, side, health, tuple.counterAttack);
     }
 }

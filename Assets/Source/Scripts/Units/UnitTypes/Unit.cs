@@ -35,6 +35,8 @@ public class Unit
 
     public void TakeDamage(int amount) => _health.Spent(amount);
 
+    protected void Kill() => OnResourceOver();
+
     private void OnResourceOver() => Died?.Invoke(this);
 
     private void OnHealthChanged() => HealthChanged?.Invoke();

@@ -71,4 +71,3 @@ public class PathHighlighter : MonoBehaviour, IControllable
             _hexGrid.SetGridObject(_path[i].x, _path[i].y, _availableColor);
     }
 }
-

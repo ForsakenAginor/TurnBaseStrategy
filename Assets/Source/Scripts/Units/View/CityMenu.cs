@@ -11,7 +11,8 @@ public class CityMenu : MonoBehaviour, IUIElement
     private Button _hireKnight;
     private IUIElement _buttonCanvas;
 
-    private Action<UnitType, Vector3> _tryHireCallback;
+    private Action<UnitType, Vector3> TryHireCallback;
+    private Func<Vector3, bool> TryUpgradeCityCallback;
 
     public void Enable()
     {
@@ -40,11 +41,12 @@ public class CityMenu : MonoBehaviour, IUIElement
         Disable();
     }
 
-    public void Init(Action<UnitType, Vector3> tryHireCallback,
+    public void Init(Action<UnitType, Vector3> tryHireCallback, Func<Vector3, bool> tryUpgradeCityCallback,
         Button upgradeButton, Button hireInfantry, Button hireSpearman,
         Button hireArcher, Button hireKnight, IUIElement buttonCanvas)
     {
-        _tryHireCallback = tryHireCallback != null ? tryHireCallback : throw new ArgumentNullException(nameof(tryHireCallback));
+        TryHireCallback = tryHireCallback != null ? tryHireCallback : throw new ArgumentNullException(nameof(tryHireCallback));
+        TryUpgradeCityCallback = tryUpgradeCityCallback != null ? tryUpgradeCityCallback : throw new ArgumentNullException(nameof(tryUpgradeCityCallback));
         _hireInfantry = hireInfantry != null ? hireInfantry : throw new ArgumentNullException(nameof(hireInfantry));
         _hireSpearman = hireSpearman != null ? hireSpearman : throw new ArgumentNullException(nameof(hireSpearman));
         _hireArcher = hireArcher != null ? hireArcher : throw new ArgumentNullException(nameof(hireArcher));
@@ -55,7 +57,7 @@ public class CityMenu : MonoBehaviour, IUIElement
 
     private void OnHireKnightClick()
     {
-        _tryHireCallback.Invoke(UnitType.Knight, transform.position);
+        TryHireCallback.Invoke(UnitType.Knight, transform.position);
     }
 
     private void OnHireSpearmanClick()
@@ -72,11 +74,12 @@ public class CityMenu : MonoBehaviour, IUIElement
 
     private void OnHireInfantryClick()
     {
-        _tryHireCallback.Invoke(UnitType.Infantry, transform.position);
+        TryHireCallback.Invoke(UnitType.Infantry, transform.position);
     }
 
     private void OnUpgradeButtonClick()
     {
-        Debug.Log("City upgraded");
+        bool isUpgraded = TryUpgradeCityCallback.Invoke(transform.position);
+        Debug.Log($"City upgraded: {isUpgraded}");
     }
 }

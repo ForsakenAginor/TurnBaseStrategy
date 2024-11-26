@@ -76,6 +76,7 @@ public class UnitsActionsManager
 
     private void OnUnitDied(Unit unit)
     {
+        unit.Died -= OnUnitDied;
         Vector3 position = _units[unit].Position;
         _grid.SetGridObject(position, null);
         _units.Remove(unit);
@@ -112,86 +113,5 @@ public class UnitsActionsManager
         {
             callback.Invoke();
         }
-    }
-}
-
-public class CitiesActionsManager
-{
-    private readonly Dictionary<Unit, ICityFacade> _cities = new Dictionary<Unit, ICityFacade>();
-    private readonly NewInputSorter _inputSorter;
-    private readonly HexGridXZ<Unit> _grid;
-
-    private IUIElement _selectedUnit;
-    private IUIElement _selectedUnitMenu;
-
-    public CitiesActionsManager(NewInputSorter inputSorter, HexGridXZ<Unit> grid)
-    {
-        _inputSorter = inputSorter != null ? inputSorter : throw new System.ArgumentNullException(nameof(inputSorter));
-        _grid = grid != null ? grid : throw new System.ArgumentNullException(nameof(grid));
-
-        _inputSorter.MovableUnitSelected += OnUnitSelected;
-        _inputSorter.FriendlyCitySelected += OnCitySelected;
-        _inputSorter.EnemySelected += OnCitySelected;
-        _inputSorter.BecomeInactive += OnDeselect;
-    }
-
-    ~CitiesActionsManager()
-    {
-        _inputSorter.MovableUnitSelected += OnUnitSelected;
-        _inputSorter.FriendlyCitySelected -= OnCitySelected;
-        _inputSorter.EnemySelected -= OnCitySelected;
-        _inputSorter.BecomeInactive -= OnDeselect;
-    }
-
-
-    public void AddCity(Unit unit, ICityFacade facade)
-    {
-        if (unit == null)
-            throw new ArgumentNullException(nameof(unit));
-
-        if (facade == null)
-            throw new ArgumentNullException(nameof(facade));
-
-        if (_cities.ContainsKey(unit))
-            throw new ArgumentException("Unit already added");
-
-        _cities.Add(unit, facade);
-        _grid.SetGridObject(facade.Position, unit);
-
-        unit.Died += OnUnitDied;
-    }
-
-    private void OnUnitSelected(Vector2Int _, IEnumerable<Vector2Int> _1,
-        IEnumerable<Vector2Int> _2, IEnumerable<Vector2Int> _3, IEnumerable<Vector2Int> _4)
-    {
-        OnDeselect();
-    }
-
-    private void OnDeselect()
-    {
-        _selectedUnit?.Disable();
-        _selectedUnitMenu?.Disable();
-    }
-
-    private void OnCitySelected(Vector2Int position)
-    {
-        _selectedUnit?.Disable();
-        _selectedUnitMenu?.Disable();
-        Unit unit = _grid.GetGridObject(position);
-
-        if (unit == null || unit is WalkableUnit)
-            return;
-
-        _selectedUnit = _cities[unit].UnitView;
-        _selectedUnitMenu = _cities[unit].Menu;
-        _selectedUnit.Enable();
-        _selectedUnitMenu.Enable();
-    }
-
-    private void OnUnitDied(Unit unit)
-    {
-        Vector3 position = _cities[unit].Position;
-        _grid.SetGridObject(position, null);
-        _cities.Remove(unit);
     }
 }
