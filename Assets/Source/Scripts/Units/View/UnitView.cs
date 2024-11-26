@@ -33,7 +33,7 @@ public class UnitView : MonoBehaviour, IUIElement
         _health.text = _unit.Health.ToString();
 
         _unit.HealthChanged += OnHealthChanged;
-        _unit.Died += OnUnitDied;
+        _unit.Destroyed += OnUnitDied;
     }
 
     protected virtual void DoOnDestroyAction()
@@ -47,7 +47,7 @@ public class UnitView : MonoBehaviour, IUIElement
             return;
 
         _unit.HealthChanged -= OnHealthChanged;
-        _unit.Died -= OnUnitDied;
+        _unit.Destroyed -= OnUnitDied;
         DoOnDestroyAction();
     }
 

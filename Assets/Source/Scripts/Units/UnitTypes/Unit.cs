@@ -25,7 +25,8 @@ public class Unit
     }
 
     public event Action HealthChanged;
-    public event Action<Unit> Died;
+    public event Action<Unit> Destroyed;
+    public event Action<Unit> Captured;
 
     public int Health => _health.Amount;
 
@@ -39,9 +40,13 @@ public class Unit
 
     public void SufferPaymentDamage() => TakeDamage(LackOfPaymentDamage);
 
-    protected void Kill() => OnResourceOver();
+    protected void Kill() => Destroyed?.Invoke(this);
 
-    private void OnResourceOver() => Died?.Invoke(this);
+    private void OnResourceOver()
+    {
+        Captured?.Invoke(this);
+        Destroyed?.Invoke(this);
+    }
 
     private void OnHealthChanged() => HealthChanged?.Invoke();
 }

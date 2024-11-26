@@ -129,7 +129,7 @@ public class TaxSystem : IResetable
         if (unit.Side == Side.Enemy)
             return;
 
-        unit.Died += OnUnitDied;
+        unit.Destroyed += OnUnitDied;
         var walkableUnit = unit as WalkableUnit;
         _units.Add(unit, _unitConfiguration.GetUnitSalary(walkableUnit.UnitType));
     }
@@ -137,13 +137,13 @@ public class TaxSystem : IResetable
     private void OnUnitDied(Unit unit)
     {
         _units.Remove(unit);
-        unit.Died -= OnUnitDied;
+        unit.Destroyed -= OnUnitDied;
     }
 
     private void OnCityDestroyed(Unit unit)
     {
         _cities.Remove(unit);
-        unit.Died -= OnCityDestroyed;
+        unit.Destroyed -= OnCityDestroyed;
     }
 
     private void OnCitySpawned(Unit unit)
@@ -151,7 +151,7 @@ public class TaxSystem : IResetable
         if (unit.Side == Side.Enemy)
             return;
 
-        unit.Died += OnCityDestroyed;
+        unit.Destroyed += OnCityDestroyed;
         var city = unit as CityUnit;
         _cities.Add(unit, _cityEconomicConfiguration.GetGoldIncome(city.CitySize));
     }

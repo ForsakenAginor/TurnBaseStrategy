@@ -31,6 +31,8 @@ public class CitiesActionsManager
         _inputSorter.BecomeInactive -= OnDeselect;
     }
 
+    public event Action<Vector2Int, Side> CityCaptured;
+
     public void AddCity(CityUnit unit, ICityFacade facade)
     {
         if (unit == null)
@@ -45,7 +47,8 @@ public class CitiesActionsManager
         _cities.Add(unit, facade);
         _grid.SetGridObject(facade.Position, unit);
 
-        unit.Died += OnUnitDied;
+        unit.Captured += OnCityCaptured;
+        unit.Destroyed += OnUnitDied;
     }
 
     public void RemoveCity(CityUnit unit)
@@ -58,6 +61,15 @@ public class CitiesActionsManager
 
         OnUnitDied(unit);
         unit.DestroyCity();
+    }
+
+    private void OnCityCaptured(Unit unit)
+    {
+        unit.Captured -= OnCityCaptured;
+        Side side = unit.Side == Side.Player ? Side.Enemy : Side.Player;
+        Vector2Int position = _grid.GetXZ(_cities[unit as CityUnit].Position);
+        RemoveCity(unit as CityUnit);
+        CityCaptured?.Invoke(position, side);
     }
 
     private void OnUnitSelected(Vector2Int _, IEnumerable<Vector2Int> _1,
@@ -89,7 +101,7 @@ public class CitiesActionsManager
 
     private void OnUnitDied(Unit unit)
     {
-        unit.Died -= OnUnitDied;
+        unit.Destroyed -= OnUnitDied;
         var city = unit as CityUnit;
         Vector3 position = _cities[city].Position;
         _grid.SetGridObject(position, null);

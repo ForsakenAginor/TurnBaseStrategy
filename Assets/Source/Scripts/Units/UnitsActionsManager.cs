@@ -51,7 +51,7 @@ public class UnitsActionsManager
         _units.Add(unit, facade);
         _grid.SetGridObject(facade.Position, unit);
 
-        unit.Died += OnUnitDied;
+        unit.Destroyed += OnUnitDied;
     }
 
     private void OnDeselect() => _selectedUnit?.Disable();
@@ -76,7 +76,7 @@ public class UnitsActionsManager
 
     private void OnUnitDied(Unit unit)
     {
-        unit.Died -= OnUnitDied;
+        unit.Destroyed -= OnUnitDied;
         Vector3 position = _units[unit].Position;
         _grid.SetGridObject(position, null);
         _units.Remove(unit);

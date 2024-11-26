@@ -21,6 +21,11 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
 
     public event Action<Unit> UnitSpawned;
 
+    private void OnDestroy()
+    {
+        _unitsManager.CityCaptured -= OnCityCaptured;
+    }
+
     public void Init(CitiesActionsManager manager, UnitSpawner unitSpawner, Resource wallet,
         CitiesConfiguration configuration, HexGridXZ<Unit> grid)
     {
@@ -30,6 +35,8 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
         _configuration = configuration != null ? configuration : throw new ArgumentNullException(nameof(configuration));
         _grid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
         _factory = new CitiesFactory(configuration);
+
+        _unitsManager.CityCaptured += OnCityCaptured;
     }
 
     public void SpawnCity(Vector2Int position, CitySize size, Side side)
@@ -46,6 +53,11 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
 
         //todo: subscribe to city died event, for spawn opposite side village on died
         UnitSpawned?.Invoke(unit);
+    }
+
+    private void OnCityCaptured(Vector2Int cell, Side side)
+    {
+        SpawnCity(cell, CitySize.Village, side);
     }
 
     private bool TryUpgradeCity(Vector3 position)
