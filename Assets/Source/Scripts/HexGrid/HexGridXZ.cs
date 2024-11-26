@@ -14,6 +14,7 @@ namespace Assets.Scripts.HexGrid
         private readonly TGridObject[,] _gridArray;
         private Vector3 _originPosition;
         private Dictionary<Vector2Int, IEnumerable<Vector2Int>> _cashedNeghbours;
+        private Dictionary<Vector2Int, IEnumerable<Vector2Int>> _cashedFarNeghbours;
 
         public HexGridXZ(int width, int height, float cellSize, Vector3 originPosition)
         {
@@ -28,6 +29,7 @@ namespace Assets.Scripts.HexGrid
                     _gridArray[x, z] = default;
 
             MakeCasheNeighbours();
+            MakeCasheFarNeighbours();
         }
 
         public event Action<Vector2Int> GridObjectChanged;
@@ -41,11 +43,12 @@ namespace Assets.Scripts.HexGrid
         public Vector3 OriginPosition => _originPosition;
 
         public IReadOnlyDictionary<Vector2Int, IEnumerable<Vector2Int>> CashedNeighbours => _cashedNeghbours;
+        public IReadOnlyDictionary<Vector2Int, IEnumerable<Vector2Int>> CashedFarNeighbours => _cashedFarNeghbours;
 
         public static IEnumerable<Vector2Int> GetNeighbours(Vector2Int cell)
         {
             bool oddRow = cell.y % 2 == 1;
-            List<Vector2Int> neighbours = new ()
+            List<Vector2Int> neighbours = new()
         {
             cell + new Vector2Int(-1, 0),
             cell + new Vector2Int(+1, 0),
@@ -54,6 +57,42 @@ namespace Assets.Scripts.HexGrid
             cell + new Vector2Int(oddRow ? +1 : -1, -1),
             cell + new Vector2Int(+0, -1),
         };
+            return neighbours;
+        }
+
+        /// <summary>
+        /// Return neighbours of cell with radius 2
+        /// </summary>
+        /// <param name="cell"></param>
+        /// <returns></returns>
+        public static IEnumerable<Vector2Int> GetFarNeighbours(Vector2Int cell)
+        {
+            bool oddRow = cell.y % 2 == 1;
+            List<Vector2Int> neighbours = new()
+            {
+                //same row
+                cell + new Vector2Int(-1, 0),
+                cell + new Vector2Int(+1, 0),
+                cell + new Vector2Int(-2, 0),
+                cell + new Vector2Int(+2, 0),
+                // +2 and -2 row
+                cell + new Vector2Int(-1, 2),
+                cell + new Vector2Int(0, 2),
+                cell + new Vector2Int(1, 2),
+                cell + new Vector2Int(-1, -2),
+                cell + new Vector2Int(0, -2),
+                cell + new Vector2Int(1, -2),
+                // +1 row
+                cell + new Vector2Int(-1, 1),
+                cell + new Vector2Int(0, 1),
+                cell + new Vector2Int(1, 1),
+                cell + new Vector2Int(oddRow ? +2 : -2, 1),
+                // -1 row
+                cell + new Vector2Int(-1, -1),
+                cell + new Vector2Int(0, -1),
+                cell + new Vector2Int(1, -1),
+                cell + new Vector2Int(oddRow ? +2 : -2, -1),
+            };
             return neighbours;
         }
 
@@ -132,7 +171,7 @@ namespace Assets.Scripts.HexGrid
             int roughX = Mathf.RoundToInt((worldPosition - _originPosition).x / _cellSize);
             int roughZ = Mathf.RoundToInt((worldPosition - _originPosition).z / _cellSize / VerticalOffsetMultiplier);
 
-            Vector2Int roughXZ = new (roughX, roughZ);
+            Vector2Int roughXZ = new(roughX, roughZ);
             Vector2Int closestXZ = roughXZ;
             IEnumerable<Vector2Int> neighbours;
 
@@ -162,9 +201,24 @@ namespace Assets.Scripts.HexGrid
             {
                 for (int z = 0; z < _gridArray.GetLength(1); z++)
                 {
-                    Vector2Int cell = new (x, z);
+                    Vector2Int cell = new(x, z);
                     IEnumerable<Vector2Int> neighbours = GetNeighbours(cell);
                     _cashedNeghbours.Add(cell, neighbours);
+                }
+            }
+        }
+
+        private void MakeCasheFarNeighbours()
+        {
+            _cashedFarNeghbours = new Dictionary<Vector2Int, IEnumerable<Vector2Int>>();
+
+            for (int x = 0; x < _gridArray.GetLength(0); x++)
+            {
+                for (int z = 0; z < _gridArray.GetLength(1); z++)
+                {
+                    Vector2Int cell = new(x, z);
+                    IEnumerable<Vector2Int> neighbours = GetFarNeighbours(cell);
+                    _cashedFarNeghbours.Add(cell, neighbours);
                 }
             }
         }

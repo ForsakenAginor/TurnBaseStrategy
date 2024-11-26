@@ -58,8 +58,11 @@ public class NewInputSorter : IControllable
             _possibleWays = neighbours.Where(o => IsCellFree(_selectedUnit, o)).ToList();
             var blockedCells = neighbours.Where(o => IsCellUnwalkable(o)).ToList();
             var friendlyCells = neighbours.Where(o => IsCellContainAlly(_selectedUnit, o)).ToList();
-            _possibleAttacks = neighbours.Where(o => IsCellContainEnemy(_selectedUnit, o)).ToList();
 
+            if (selectedUnit.UnitType == UnitType.Archer)
+                neighbours = _hexGrid.CashedFarNeighbours[position].Where(o => _hexGrid.IsValidGridPosition(o)).ToList();
+
+            _possibleAttacks = neighbours.Where(o => IsCellContainEnemy(_selectedUnit, o)).ToList();
             MovableUnitSelected?.Invoke(position, _possibleWays, blockedCells, friendlyCells, _possibleAttacks);
             return;
         }
