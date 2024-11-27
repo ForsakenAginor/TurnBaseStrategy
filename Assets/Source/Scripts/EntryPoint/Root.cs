@@ -76,15 +76,15 @@ public class EnemyScaner
     private readonly Dictionary<Vector2Int, Action<Vector2Int>> _enemyCities = new ();
     private readonly UnitSpawner _unitSpawner;
     private readonly HexGridXZ<Unit> _grid;
-    private readonly int _squareDetectDistance;
+    private readonly int _detectDistance = 4;
 
     public EnemyScaner(IEnumerable<(Vector2Int position, CitySize size)> cities, UnitSpawner unitSpawner, HexGridXZ<Unit> grid)
     {
         _unitSpawner = unitSpawner != null ? unitSpawner : throw new ArgumentNullException(nameof(unitSpawner));
         _grid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
         
-        int detectDistance = 4;
-        _squareDetectDistance = (new Vector2Int(0, 0) - new Vector2Int(0, detectDistance)).sqrMagnitude;
+        //int detectDistance = 4;
+        //_squareDetectDistance = (new Vector2Int(0, 0) - new Vector2Int(0, detectDistance)).sqrMagnitude;
 
         foreach (var city in cities)
             _enemyCities.Add(city.position, SpawnEnemies);
@@ -103,7 +103,7 @@ public class EnemyScaner
 
         for( int i = 0; i < cities.Length; i++ )
         {
-            bool inDetectRange = (cities[i] - coordinates).sqrMagnitude <= _squareDetectDistance;
+            bool inDetectRange = (int)(cities[i] - coordinates).magnitude <= _detectDistance;
 
             if (inDetectRange && _enemyCities.ContainsKey(cities[i]))
             {
