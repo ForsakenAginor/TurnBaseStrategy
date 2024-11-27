@@ -1,6 +1,8 @@
 ﻿using Assets.Scripts.HexGrid;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 using UnityEngine;
 
 public class CitiesActionsManager
@@ -32,6 +34,11 @@ public class CitiesActionsManager
     }
 
     public event Action<Vector2Int, Side> CityCaptured;
+
+    public IEnumerable<(Vector2Int position, CitySize size)> GetEnemyCities()
+    {
+        return _cities.Where(city => city.Key.Side == Side.Enemy).Select(city => (_grid.GetXZ(city.Value.Position), city.Key.CitySize)).ToList();
+    }
 
     public void AddCity(CityUnit unit, ICityFacade facade)
     {
