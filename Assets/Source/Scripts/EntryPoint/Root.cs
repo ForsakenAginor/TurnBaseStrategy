@@ -10,6 +10,7 @@ public class Root : MonoBehaviour
     [Header("Configurations")]
     [SerializeField] private UnitsConfiguration _unitConfiguration;
     [SerializeField] private CitiesConfiguration _cityConfiguration;
+    [SerializeField] private EnemySpawnerConfiguration _enemySpawnerConfiguration;
 
     [Header("Grid")]
     [SerializeField] private HexGridCreator _gridCreator;
@@ -53,8 +54,8 @@ public class Root : MonoBehaviour
 
         //********* EnemyLogic ***************
         _enemyBrain.Init(unitsGrid, _gridCreator.PathFinder, _unitSpawner, unitManager);
-        _citySpawner.SpawnCity(new Vector2Int(6, 5), CitySize.Village, Side.Enemy);
-        EnemyScaner scaner = new(cityManager.GetEnemyCities(), _unitSpawner, unitsGrid);
+        _citySpawner.SpawnCity(new Vector2Int(6, 5), CitySize.City, Side.Enemy);
+        EnemyScaner scaner = new(cityManager.GetEnemyCities(), _unitSpawner, unitsGrid, _enemySpawnerConfiguration);
 
         //********* Game state machine *******
         var resettables = unitManager.Units.Append(taxSystem);
