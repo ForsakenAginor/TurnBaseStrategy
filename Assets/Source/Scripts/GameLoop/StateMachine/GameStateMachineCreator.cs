@@ -8,6 +8,7 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine
 {
     public class GameStateMachineCreator : MonoBehaviour
     {
+        [SerializeField] private EnemyBrain _enemyBrain;
         [SerializeField] private Button _nextTurnButton;
         [SerializeField] private UIElement _winScreen;
         [SerializeField] private UIElement _loseScreen;
@@ -40,7 +41,7 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine
                 });
 
             EnemyTurn enemyTurn = new EnemyTurn(
-                _enemyTurnSkipButton,
+                _enemyTurnSkipButton, _enemyBrain,
                 new Transition[]
                 {
                 toPlayerTurnTransition, toLoseTransition, toWinTransition

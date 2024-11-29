@@ -9,13 +9,15 @@ public class UnitsActionsManager
     private readonly Dictionary<Unit, IUnitFacade> _units = new Dictionary<Unit, IUnitFacade>();
     private readonly NewInputSorter _inputSorter;
     private readonly HexGridXZ<Unit> _grid;
+    private readonly EnemyBrain _enemyBrain;
 
     private IUIElement _selectedUnit;
 
-    public UnitsActionsManager(NewInputSorter inputSorter, HexGridXZ<Unit> grid)
+    public UnitsActionsManager(NewInputSorter inputSorter, HexGridXZ<Unit> grid, EnemyBrain enemyBrain)
     {
-        _inputSorter = inputSorter != null ? inputSorter : throw new System.ArgumentNullException(nameof(inputSorter));
-        _grid = grid != null ? grid : throw new System.ArgumentNullException(nameof(grid));
+        _inputSorter = inputSorter != null ? inputSorter : throw new ArgumentNullException(nameof(inputSorter));
+        _grid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
+        _enemyBrain = enemyBrain != null ? enemyBrain : throw new ArgumentNullException(nameof(enemyBrain));
 
         _inputSorter.MovableUnitSelected += OnUnitSelected;
         _inputSorter.FriendlyCitySelected += OnCitySelected;
@@ -23,6 +25,9 @@ public class UnitsActionsManager
         _inputSorter.UnitIsAttacking += OnUnitAttacking;
         _inputSorter.EnemySelected += OnEnemySelected;
         _inputSorter.BecomeInactive += OnDeselect;
+
+        _enemyBrain.UnitMoving += OnUnitMoving;
+        _enemyBrain.UnitAttacking += OnUnitAttacking;
     }
 
     ~UnitsActionsManager()
@@ -33,6 +38,9 @@ public class UnitsActionsManager
         _inputSorter.UnitIsAttacking -= OnUnitAttacking;
         _inputSorter.EnemySelected -= OnEnemySelected;
         _inputSorter.BecomeInactive -= OnDeselect;
+
+        _enemyBrain.UnitMoving -= OnUnitMoving;
+        _enemyBrain.UnitAttacking -= OnUnitAttacking;
     }
 
     public IEnumerable<IResetable> Units => _units.Keys.Where(o => o is WalkableUnit).Select(o => o as IResetable);
@@ -53,6 +61,8 @@ public class UnitsActionsManager
 
         unit.Destroyed += OnUnitDied;
     }
+
+    public Vector2Int GetUnitPosition(Unit unit) => _grid.GetXZ(_units[unit].Position);
 
     private void OnDeselect() => _selectedUnit?.Disable();
 

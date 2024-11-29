@@ -58,24 +58,37 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
     public class EnemyTurn : State
     {
         private readonly Button _nextTurnButton;
+        private readonly EnemyBrain _enemyBrain;
 
-        public EnemyTurn(Button nextTurnButton, Transition[] transitions) : base(transitions)
+        public EnemyTurn(Button nextTurnButton, EnemyBrain enemyBrain, Transition[] transitions) : base(transitions)
         {
             _nextTurnButton = nextTurnButton != null ?
                 nextTurnButton :
                 throw new ArgumentNullException(nameof(nextTurnButton));
+
+            _enemyBrain = enemyBrain != null ? enemyBrain : throw new ArgumentNullException(nameof(enemyBrain));
+
+            _enemyBrain.TurnEnded += OnTurnEnded;
         }
 
         public override void DoThing()
         {
-            _nextTurnButton.interactable = true;
-            _nextTurnButton.onClick.AddListener(OnNextTurnButtonClick);
+            _enemyBrain.EnableControl();
+            //_nextTurnButton.interactable = true;
+            //_nextTurnButton.onClick.AddListener(OnNextTurnButtonClick);
+        }
+
+        private void OnTurnEnded()
+        {
+            _enemyBrain.DisableControl();
+            Transitions.First(o => o is ToPlayerTurnTransition).SetIsReady(true);
+            CallBecomeReadyToTransitEvent();
         }
 
         private void OnNextTurnButtonClick()
         {
-            _nextTurnButton.interactable = false;
-            _nextTurnButton.onClick.RemoveListener(OnNextTurnButtonClick);
+            //_nextTurnButton.interactable = false;
+            //_nextTurnButton.onClick.RemoveListener(OnNextTurnButtonClick);
             Transitions.First(o => o is ToPlayerTurnTransition).SetIsReady(true);
             CallBecomeReadyToTransitEvent();
         }

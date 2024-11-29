@@ -13,13 +13,13 @@ public class HexGridCreator : MonoBehaviour
     [SerializeField] private float _gridCellSize = 1;
     [SerializeField] private float _height = 0.25f;
 
-    private HexGridXZ<IBlockedCell> _hexesOnScene;
+    private HexGridXZ<IBlockedCell> _blockedCells;
     private HexGridXZ<CellSprite> _hexGrid;
     private HexGridXZ<Unit> _unitsGrid;
     private HexPathFinder _pathFinder;
     private HexOnScene[] _views;
 
-    public HexGridXZ<IBlockedCell> HexGridView => _hexesOnScene;
+    public HexGridXZ<IBlockedCell> BlockedCells => _blockedCells;
 
     public HexGridXZ<CellSprite> HexGrid => _hexGrid;
 
@@ -37,14 +37,21 @@ public class HexGridCreator : MonoBehaviour
         Vector3 position = new Vector3(0, _height, 0);
         _hexGrid = new(_gridWidth, _gridHeight, _gridCellSize, position);
         _unitsGrid = new(_gridWidth, _gridHeight, _gridCellSize, position);
-        _hexesOnScene = new HexGridXZ<IBlockedCell>(_gridWidth, _gridHeight, _gridCellSize, position);
+        _blockedCells = new HexGridXZ<IBlockedCell>(_gridWidth, _gridHeight, _gridCellSize, position);
         _pathFinder = new HexPathFinder(_gridWidth, _gridHeight, _gridCellSize);
 
         for (int i = 0; i < _views.Length; i++)
-            _hexesOnScene.SetGridObject(_views[i].transform.position, _views[i]);
+            _blockedCells.SetGridObject(_views[i].transform.position, _views[i]);
 
         for (int i = 0; i < _gridWidth; i++)
+        {
             for (int j = 0; j < _gridHeight; j++)
-                _pathFinder.MakeNodWalkable(new Vector2Int(i, j));
+            {
+                if (_blockedCells.GetGridObject(i, j).IsBlocked)
+                    _pathFinder.MakeNodUnwalkable(new Vector2Int(i, j));
+                else
+                    _pathFinder.MakeNodWalkable(new Vector2Int(i, j));
+            }
+        }
     }
 }

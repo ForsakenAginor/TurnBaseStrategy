@@ -1,6 +1,5 @@
 using Assets.Scripts.HexGrid;
 using Assets.Source.Scripts.GameLoop.StateMachine;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -27,6 +26,9 @@ public class Root : MonoBehaviour
     [Header("Gold")]
     [SerializeField] private WalletView _walletView;
 
+    [Header("Enemy")]
+    [SerializeField] private EnemyBrain _enemyBrain;
+
     [Header("Debug")]
     [SerializeField] private Button _testButton;
 
@@ -36,30 +38,32 @@ public class Root : MonoBehaviour
         _meshUpdater.Init(_gridCreator.HexGrid);
         _cellSelector.Init(_gridCreator.HexGrid, _gridRaycaster);
         var unitsGrid = _gridCreator.UnitsGrid;
-        NewInputSorter inputSorter = new NewInputSorter(unitsGrid, _cellSelector, _gridCreator.HexGridView);
+        NewInputSorter inputSorter = new NewInputSorter(unitsGrid, _cellSelector, _gridCreator.BlockedCells);
         _cellHighlighter = new (inputSorter, _gridCreator.HexGrid);
 
         //******** Wallet ***********
-        Resource wallet = new Resource(0, int.MaxValue);
+        Resource wallet = new Resource(20, int.MaxValue);
         TaxSystem taxSystem = new TaxSystem(wallet, _citySpawner, _unitSpawner, _cityConfiguration, _unitConfiguration);
         _walletView.Init(wallet);
         //********  Unit creation  ***********
-        UnitsActionsManager unitManager = new UnitsActionsManager(inputSorter, unitsGrid);
-        _unitSpawner.Init(unitManager, wallet, _unitConfiguration, unitsGrid, _gridCreator.HexGridView);
+        UnitsActionsManager unitManager = new UnitsActionsManager(inputSorter, unitsGrid, _enemyBrain);
+        _unitSpawner.Init(unitManager, wallet, _unitConfiguration, unitsGrid, _gridCreator.BlockedCells);
         CitiesActionsManager cityManager = new CitiesActionsManager(inputSorter, unitsGrid);
         _citySpawner.Init(cityManager, _unitSpawner, wallet, _cityConfiguration, unitsGrid);
 
-        _citySpawner.SpawnCity(new Vector2Int(0, 0), CitySize.Village, Side.Player);
-        _citySpawner.SpawnCity(new Vector2Int(5, 5), CitySize.Village, Side.Enemy);
-
         //********* EnemyLogic ***************
         EnemyScaner scaner = new(cityManager.GetEnemyCities(), _unitSpawner, unitsGrid);
+        _enemyBrain.Init(unitsGrid, _gridCreator.PathFinder, _unitSpawner, unitManager);
 
         //********* Game state machine *******
         var resettables = unitManager.Units.Append(taxSystem);
         var stateMachine = _gameStateMachineCreator.Create(resettables, new List<IControllable>() { inputSorter });
-
+        
+        //********* Other ************************
         TextureAtlasReader atlas = _meshUpdater.GetComponent<TextureAtlasReader>();
+        _citySpawner.SpawnCity(new Vector2Int(0, 0), CitySize.Village, Side.Player);
+        _citySpawner.SpawnCity(new Vector2Int(9, 0), CitySize.Village, Side.Player);
+        _citySpawner.SpawnCity(new Vector2Int(6, 5), CitySize.Village, Side.Enemy);
 
         //********  Debug  ***********
         _testButton.onClick.AddListener(OnTestButtonClick);
@@ -68,55 +72,5 @@ public class Root : MonoBehaviour
     private void OnTestButtonClick()
     {
         _unitSpawner.TrySpawnUnit(new Vector2Int(0, 0), UnitType.Infantry, Side.Player);
-    }
-}
-
-public class EnemyScaner
-{
-    private readonly Dictionary<Vector2Int, Action<Vector2Int>> _enemyCities = new ();
-    private readonly UnitSpawner _unitSpawner;
-    private readonly HexGridXZ<Unit> _grid;
-    private readonly int _detectDistance = 4;
-
-    public EnemyScaner(IEnumerable<(Vector2Int position, CitySize size)> cities, UnitSpawner unitSpawner, HexGridXZ<Unit> grid)
-    {
-        _unitSpawner = unitSpawner != null ? unitSpawner : throw new ArgumentNullException(nameof(unitSpawner));
-        _grid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
-        
-        //int detectDistance = 4;
-        //_squareDetectDistance = (new Vector2Int(0, 0) - new Vector2Int(0, detectDistance)).sqrMagnitude;
-
-        foreach (var city in cities)
-            _enemyCities.Add(city.position, SpawnEnemies);
-
-        _grid.GridObjectChanged += OnGridChanged;
-    }
-
-    private void OnGridChanged(Vector2Int coordinates)
-    {
-        var cell = _grid.GetGridObject(coordinates);
-
-        if (cell == null || cell.Side == Side.Enemy)
-            return;
-
-        var cities = _enemyCities.Keys.ToArray();
-
-        for( int i = 0; i < cities.Length; i++ )
-        {
-            bool inDetectRange = (int)(cities[i] - coordinates).magnitude <= _detectDistance;
-
-            if (inDetectRange && _enemyCities.ContainsKey(cities[i]))
-            {
-                _enemyCities[cities[i]].Invoke(cities[i]);
-                _enemyCities.Remove(cities[i]);
-            }
-        }
-    }
-
-    private void SpawnEnemies(Vector2Int position)
-    {
-        _unitSpawner.TrySpawnUnit(position, UnitType.Knight, Side.Enemy);
-        _unitSpawner.TrySpawnUnit(position, UnitType.Knight, Side.Enemy);
-        _unitSpawner.TrySpawnUnit(position, UnitType.Knight, Side.Enemy);
     }
 }

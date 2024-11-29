@@ -30,6 +30,8 @@ public class Unit
 
     public int Health => _health.Amount;
 
+    public bool IsAlive => _health.Amount > 0;
+
     public int HealthMaximum => _health.Maximum;
 
     public Side Side => _side;
