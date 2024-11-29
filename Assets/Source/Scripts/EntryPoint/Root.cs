@@ -52,8 +52,9 @@ public class Root : MonoBehaviour
         _citySpawner.Init(cityManager, _unitSpawner, wallet, _cityConfiguration, unitsGrid);
 
         //********* EnemyLogic ***************
-        EnemyScaner scaner = new(cityManager.GetEnemyCities(), _unitSpawner, unitsGrid);
         _enemyBrain.Init(unitsGrid, _gridCreator.PathFinder, _unitSpawner, unitManager);
+        _citySpawner.SpawnCity(new Vector2Int(6, 5), CitySize.Village, Side.Enemy);
+        EnemyScaner scaner = new(cityManager.GetEnemyCities(), _unitSpawner, unitsGrid);
 
         //********* Game state machine *******
         var resettables = unitManager.Units.Append(taxSystem);
@@ -63,7 +64,6 @@ public class Root : MonoBehaviour
         TextureAtlasReader atlas = _meshUpdater.GetComponent<TextureAtlasReader>();
         _citySpawner.SpawnCity(new Vector2Int(0, 0), CitySize.Village, Side.Player);
         _citySpawner.SpawnCity(new Vector2Int(9, 0), CitySize.Village, Side.Player);
-        _citySpawner.SpawnCity(new Vector2Int(6, 5), CitySize.Village, Side.Enemy);
 
         //********  Debug  ***********
         _testButton.onClick.AddListener(OnTestButtonClick);

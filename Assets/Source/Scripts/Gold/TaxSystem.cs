@@ -7,8 +7,10 @@ public class TaxSystem : IResetable
     private readonly Resource _wallet;
     private readonly IUnitSpawner _citySpawner;
     private readonly IUnitSpawner _unitSpawner;
-    private readonly Dictionary<Unit, int> _units = new ();
-    private readonly Dictionary<Unit, int> _cities = new ();
+    private readonly Dictionary<Unit, int> _units = new();
+    private readonly List<Unit> _enemyUnits = new();
+    private readonly Dictionary<Unit, int> _cities = new();
+    private readonly List<Unit> _enemyCities = new();
     private readonly ICityEconomicInfoGetter _cityEconomicConfiguration;
     private readonly IUnitCostGetter _unitConfiguration;
 
@@ -33,12 +35,20 @@ public class TaxSystem : IResetable
 
     public void Reset()
     {
-        foreach(var city in _cities.Keys)
-            _wallet.Add(_cities[city]);        
+        //enemy logic
+        foreach (var city in _enemyCities)
+            city.HealingUnit();
+
+        foreach (var unit in _enemyUnits)
+            unit.HealingUnit();
+
+        //player logic
+        foreach (var city in _cities.Keys)
+            _wallet.Add(_cities[city]);
 
         bool isBankrupt = false;
 
-        foreach(var unit in _units.Keys)
+        foreach (var unit in _units.Keys)
         {
             if (_wallet.TrySpent(_units[unit]) == false)
             {
@@ -47,44 +57,56 @@ public class TaxSystem : IResetable
             }
         }
 
-        if (isBankrupt == false)
-            return;
-
         var units = _units.Keys.Concat(_cities.Keys).ToList();
 
         foreach (var unit in units)
-            unit.SufferPaymentDamage();
+        {
+            if (isBankrupt)
+                unit.SufferPaymentDamage();
+            else
+                unit.HealingUnit();
+        }
     }
 
     private void OnUnitSpawned(Unit unit)
     {
-        if (unit.Side == Side.Enemy)
-            return;
-
         unit.Destroyed += OnUnitDied;
         var walkableUnit = unit as WalkableUnit;
-        _units.Add(unit, _unitConfiguration.GetUnitSalary(walkableUnit.UnitType));
+
+        if (unit.Side == Side.Enemy)
+            _enemyUnits.Add(walkableUnit);
+        else
+            _units.Add(unit, _unitConfiguration.GetUnitSalary(walkableUnit.UnitType));
     }
 
     private void OnUnitDied(Unit unit)
     {
-        _units.Remove(unit);
+        if (_units.ContainsKey(unit))
+            _units.Remove(unit);
+        else
+            _enemyUnits.Remove(unit);
+
         unit.Destroyed -= OnUnitDied;
     }
 
     private void OnCityDestroyed(Unit unit)
     {
-        _cities.Remove(unit);
+        if (_cities.ContainsKey(unit))
+            _cities.Remove(unit);
+        else
+            _enemyCities.Remove(unit);
+
         unit.Destroyed -= OnCityDestroyed;
     }
 
     private void OnCitySpawned(Unit unit)
     {
-        if (unit.Side == Side.Enemy)
-            return;
-
         unit.Destroyed += OnCityDestroyed;
         var city = unit as CityUnit;
-        _cities.Add(unit, _cityEconomicConfiguration.GetGoldIncome(city.CitySize));
+
+        if (unit.Side == Side.Enemy)
+            _enemyCities.Add(city);
+        else
+            _cities.Add(unit, _cityEconomicConfiguration.GetGoldIncome(city.CitySize));
     }
 }

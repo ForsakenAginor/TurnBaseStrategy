@@ -3,6 +3,7 @@
 public class Unit
 {
     private const int LackOfPaymentDamage = 3;
+    private const int HealingValue = 2;
 
     private readonly Side _side;
     private readonly Resource _health;
@@ -41,6 +42,8 @@ public class Unit
     public void TakeDamage(int amount) => _health.Spent(amount);
 
     public void SufferPaymentDamage() => TakeDamage(LackOfPaymentDamage);
+
+    public void HealingUnit() => _health.Add(HealingValue);
 
     protected void Kill() => Destroyed?.Invoke(this);
 

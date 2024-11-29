@@ -47,12 +47,24 @@ public class WalkableUnit : Unit, IResetable
             return false;
 
         _canAttack = false;
+
+        //******** Spearman attack bonus vs Cavalry ************
+        int dealingDamageFactor = _type == UnitType.Spearman
+            && target is WalkableUnit knight
+            && knight.UnitType == UnitType.Knight ?
+            1 : 0;
+        int takingDamageFactor = _type == UnitType.Knight
+            && target is WalkableUnit spearman
+            && spearman.UnitType == UnitType.Spearman ?
+            1 : 0;
+
         _mover.SpentAllSteps();
         Moved?.Invoke();
-        target.TakeDamage(_attackPower);
+        target.TakeDamage(_attackPower + dealingDamageFactor);
 
+        // Archer ignore counter attack logic
         if (_type != UnitType.Archer)
-            TakeDamage(target.CounterAttackPower);
+            TakeDamage(target.CounterAttackPower + takingDamageFactor);
 
         return true;
     }
