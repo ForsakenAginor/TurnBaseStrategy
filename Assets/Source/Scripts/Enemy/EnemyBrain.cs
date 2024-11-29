@@ -141,7 +141,13 @@ public class EnemyBrain : MonoBehaviour, IControllable
     private bool CanAttack(Vector2Int position, out Unit target)
     {
         target = null;
-        var neighbours = _unitGrid.CashedNeighbours[position].Where(o => _unitGrid.IsValidGridPosition(o)).ToList();
+        List<Vector2Int> neighbours;
+
+        if (_unitGrid.GetGridObject(position) is WalkableUnit unit && unit.UnitType != UnitType.Archer)
+            neighbours = _unitGrid.CashedNeighbours[position].Where(o => _unitGrid.IsValidGridPosition(o)).ToList();
+        else
+            neighbours = _unitGrid.CashedFarNeighbours[position].Where(o => _unitGrid.IsValidGridPosition(o)).ToList();
+
         var possibleTargets = neighbours.Where(o => IsCellContainEnemy(o)).ToList();
 
         if (possibleTargets.Count == 0)
@@ -157,7 +163,7 @@ public class EnemyBrain : MonoBehaviour, IControllable
         targetPosition = Vector2Int.zero;
         Vector3 coordinates = _unitGrid.GetCellWorldPosition(position);
 
-        if(_targets.Count == 0)
+        if (_targets.Count == 0)
             return false;
 
         var closestCity = _targets.OrderBy(o => Vector3.Distance(coordinates, _unitGrid.GetCellWorldPosition(o))).First();
@@ -165,9 +171,9 @@ public class EnemyBrain : MonoBehaviour, IControllable
         var path = _pathFinder.FindPath(position, closestCity);
         _pathFinder.MakeNodUnwalkable(position);
 
-        if(path == null)
+        if (path == null)
             return false;
-        
+
         targetPosition = path.Skip(1).First();
         return true;
     }

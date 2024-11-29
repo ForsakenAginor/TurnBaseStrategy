@@ -34,7 +34,7 @@ public class WalkableUnit : Unit, IResetable
 
     public bool TryMoving(int steps)
     {
-        if(_mover.TryMoving(steps) == false)
+        if (_mover.TryMoving(steps) == false)
             return false;
 
         Moved?.Invoke();
@@ -50,7 +50,10 @@ public class WalkableUnit : Unit, IResetable
         _mover.SpentAllSteps();
         Moved?.Invoke();
         target.TakeDamage(_attackPower);
-        TakeDamage(target.CounterAttackPower);
+
+        if (_type != UnitType.Archer)
+            TakeDamage(target.CounterAttackPower);
+
         return true;
     }
 }
