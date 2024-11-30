@@ -12,9 +12,7 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine
         [SerializeField] private Button _nextTurnButton;
         [SerializeField] private UIElement _winScreen;
         [SerializeField] private UIElement _loseScreen;
-
-        [Header("Debug")]
-        [SerializeField] private Button _enemyTurnSkipButton;
+        [SerializeField] private WinLoseMonitor _winLoseMonitor;
 
         public GameStateMachine Create(IEnumerable<IResetable> resetables, IEnumerable<IControllable> controllables)
         {
@@ -33,6 +31,7 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine
             //states
             PlayerTurn playerTurn = new PlayerTurn(
                 _nextTurnButton,
+                _winLoseMonitor,
                 resetables,
                 controllables,
                 new Transition[]
@@ -41,7 +40,8 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine
                 });
 
             EnemyTurn enemyTurn = new EnemyTurn(
-                _enemyTurnSkipButton, _enemyBrain,
+                _enemyBrain,
+                _winLoseMonitor,
                 new Transition[]
                 {
                 toPlayerTurnTransition, toLoseTransition, toWinTransition

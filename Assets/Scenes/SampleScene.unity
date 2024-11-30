@@ -3533,6 +3533,7 @@ MonoBehaviour:
   _gridRaycaster: {fileID: 994843278}
   _cellSelector: {fileID: 994843279}
   _gameStateMachineCreator: {fileID: 1254421031}
+  _winLoseMonitor: {fileID: 1254421032}
   _unitSpawner: {fileID: 840627873}
   _citySpawner: {fileID: 840627874}
   _walletView: {fileID: 1128542883}
@@ -6549,6 +6550,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1254421030}
   - component: {fileID: 1254421031}
+  - component: {fileID: 1254421032}
   m_Layer: 0
   m_Name: StateMachine
   m_TagString: Untagged
@@ -6587,7 +6589,19 @@ MonoBehaviour:
   _nextTurnButton: {fileID: 833771163}
   _winScreen: {fileID: 2112268963}
   _loseScreen: {fileID: 562002754}
-  _enemyTurnSkipButton: {fileID: 1085612862}
+  _winLoseMonitor: {fileID: 1254421032}
+--- !u!114 &1254421032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1254421029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbae5139cbcd29d458c1d5bc898a6acc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1278383598
 PrefabInstance:
   m_ObjectHideFlags: 0

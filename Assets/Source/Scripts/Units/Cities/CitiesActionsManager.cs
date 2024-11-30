@@ -1,7 +1,6 @@
 ﻿using Assets.Scripts.HexGrid;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using UnityEngine;
 
@@ -34,6 +33,9 @@ public class CitiesActionsManager
     }
 
     public event Action<Vector2Int, Side> CityCaptured;
+    public event Action CitiesChanged;
+
+    public IEnumerable<Side> Cities => _cities.Keys.Select(o => o.Side);
 
     public IEnumerable<(Vector2Int position, CitySize size)> GetEnemyCities()
     {
@@ -52,6 +54,7 @@ public class CitiesActionsManager
             throw new ArgumentException("Unit already added");
 
         _cities.Add(unit, facade);
+        CitiesChanged?.Invoke();
         _grid.SetGridObject(facade.Position, unit);
 
         unit.Captured += OnCityCaptured;
@@ -113,5 +116,6 @@ public class CitiesActionsManager
         Vector3 position = _cities[city].Position;
         _grid.SetGridObject(position, null);
         _cities.Remove(city);
+        CitiesChanged?.Invoke();
     }
 }

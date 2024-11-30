@@ -21,6 +21,7 @@ public class Root : MonoBehaviour
 
     [Header("Game progress")]
     [SerializeField] private GameStateMachineCreator _gameStateMachineCreator;
+    [SerializeField] private WinLoseMonitor _winLoseMonitor;
     [SerializeField] private UnitSpawner _unitSpawner;
     [SerializeField] private CitySpawner _citySpawner;
 
@@ -58,6 +59,7 @@ public class Root : MonoBehaviour
         EnemyScaner scaner = new(cityManager.GetEnemyCities(), _unitSpawner, unitsGrid, _enemySpawnerConfiguration);
 
         //********* Game state machine *******
+        _winLoseMonitor.Init(cityManager);
         var resettables = unitManager.Units.Append(taxSystem);
         var stateMachine = _gameStateMachineCreator.Create(resettables, new List<IControllable>() { inputSorter });
         
