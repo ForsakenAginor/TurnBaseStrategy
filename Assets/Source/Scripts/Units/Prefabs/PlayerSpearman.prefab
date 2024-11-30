@@ -873,6 +873,7 @@ GameObject:
   - component: {fileID: 1702256689923677199}
   - component: {fileID: 8737945511782870783}
   - component: {fileID: -8173261334090171093}
+  - component: {fileID: 6386943743190877911}
   m_Layer: 0
   m_Name: PlayerSpearman
   m_TagString: Untagged
@@ -911,6 +912,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _movingTimePerCell: 0.5
   _model: {fileID: 7709684641849792628}
+  _controller: {fileID: 6386943743190877911}
 --- !u!114 &8737945511782870783
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -939,6 +941,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19d6ee1e7ffb5ad43834c63d050a8452, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6386943743190877911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8649777300899352274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b7c34fd2f3a86f4181b6ca43ddcea04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animator: {fileID: 4332007098301809166}
 --- !u!1001 &3770836402972923200
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -947,6 +962,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8553386577438045991}
     m_Modifications:
+    - target: {fileID: 597521054974351182, guid: 5972ba3bf4145444ca22447604cfd100, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 6c45c70a22865544db48bce08994ab57, type: 2}
     - target: {fileID: 6188278231710144398, guid: 5972ba3bf4145444ca22447604cfd100, type: 3}
       propertyPath: m_Name
       value: Spearman_evil
@@ -1012,6 +1031,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5972ba3bf4145444ca22447604cfd100, type: 3}
+--- !u!95 &4332007098301809166 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 597521054974351182, guid: 5972ba3bf4145444ca22447604cfd100, type: 3}
+  m_PrefabInstance: {fileID: 3770836402972923200}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7709684641849792628 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6821544889515101492, guid: 5972ba3bf4145444ca22447604cfd100, type: 3}
