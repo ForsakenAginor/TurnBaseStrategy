@@ -42,7 +42,8 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawner
                 return false;
 
         var unit = _factory.Create(side, type);
-        var facade = Instantiate(_configuration.GetPrefab(type), _grid.GetCellWorldPosition(neighbours[0]), Quaternion.identity);
+        var prefab = side == Side.Enemy ? _configuration.GetEnemyPrefab(type) : _configuration.GetPlayerPrefab(type);
+        var facade = Instantiate(prefab, _grid.GetCellWorldPosition(neighbours[0]), Quaternion.identity);
         facade.UnitView.Init(unit);
         _unitsManager.AddUnit(unit, facade);
         UnitSpawned?.Invoke(unit);
