@@ -84,22 +84,24 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
     {
         private readonly EnemyBrain _enemyBrain;
         private readonly IWinLoseEventThrower _winLoseMonitor;
+        private readonly EnemyWaveSpawner _enemyWaveSpawner;
 
-        public EnemyTurn(EnemyBrain enemyBrain, IWinLoseEventThrower winLoseMonitor, Transition[] transitions) : base(transitions)
+        public EnemyTurn(EnemyBrain enemyBrain, EnemyWaveSpawner waveSpawner, IWinLoseEventThrower winLoseMonitor, Transition[] transitions) : base(transitions)
         {
             _enemyBrain = enemyBrain != null ? enemyBrain : throw new ArgumentNullException(nameof(enemyBrain));
+            _enemyWaveSpawner = waveSpawner != null ? waveSpawner : throw new ArgumentNullException(nameof(waveSpawner));
             _winLoseMonitor = winLoseMonitor != null ?
                 winLoseMonitor :
                 throw new ArgumentNullException(nameof(winLoseMonitor));
 
             _enemyBrain.TurnEnded += OnTurnEnded;
-
             _winLoseMonitor.PlayerLost += OnPlayerLost;
             _winLoseMonitor.PlayerWon += OnPlayerWon;
         }
 
         ~EnemyTurn()
         {
+            _enemyBrain.TurnEnded -= OnTurnEnded;
             _winLoseMonitor.PlayerLost -= OnPlayerLost;
             _winLoseMonitor.PlayerWon -= OnPlayerWon;
         }
@@ -107,6 +109,7 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
         public override void DoThing()
         {
             _enemyBrain.EnableControl();
+            _enemyWaveSpawner.SpawnWave();
         }
 
         private void OnPlayerWon()

@@ -11,6 +11,7 @@ public class Root : MonoBehaviour
     [SerializeField] private UnitsConfiguration _unitConfiguration;
     [SerializeField] private CitiesConfiguration _cityConfiguration;
     [SerializeField] private EnemySpawnerConfiguration _enemySpawnerConfiguration;
+    [SerializeField] private EnemySpawnerConfiguration _enemyWaveConfiguration;
 
     [Header("Grid")]
     [SerializeField] private HexGridCreator _gridCreator;
@@ -43,6 +44,9 @@ public class Root : MonoBehaviour
         NewInputSorter inputSorter = new NewInputSorter(unitsGrid, _cellSelector, _gridCreator.BlockedCells);
         _cellHighlighter = new (inputSorter, _gridCreator.HexGrid);
 
+        //******** FogOfWar *********
+        FogOfWar fogOfWar = new(_gridCreator.Clouds, unitsGrid);
+
         //******** Wallet ***********
         Resource wallet = new Resource(20, int.MaxValue);
         TaxSystem taxSystem = new TaxSystem(wallet, _citySpawner, _unitSpawner, _cityConfiguration, _unitConfiguration);
@@ -56,12 +60,13 @@ public class Root : MonoBehaviour
         //********* EnemyLogic ***************
         _enemyBrain.Init(unitsGrid, _gridCreator.PathFinder, _unitSpawner, unitManager);
         _citySpawner.SpawnCity(new Vector2Int(6, 5), CitySize.City, Side.Enemy);
+        EnemyWaveSpawner waveSpawner = new(cityManager.GetEnemyCities(), _unitSpawner, _enemyWaveConfiguration);
         EnemyScaner scaner = new(cityManager.GetEnemyCities(), _unitSpawner, unitsGrid, _enemySpawnerConfiguration);
 
         //********* Game state machine *******
         _winLoseMonitor.Init(cityManager);
         var resettables = unitManager.Units.Append(taxSystem);
-        var stateMachine = _gameStateMachineCreator.Create(resettables, new List<IControllable>() { inputSorter });
+        var stateMachine = _gameStateMachineCreator.Create(resettables, new List<IControllable>() { inputSorter }, waveSpawner);
         
         //********* Other ************************
         TextureAtlasReader atlas = _meshUpdater.GetComponent<TextureAtlasReader>();

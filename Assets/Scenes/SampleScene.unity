@@ -3528,6 +3528,7 @@ MonoBehaviour:
   _unitConfiguration: {fileID: 11400000, guid: b3e9461514ee68f44a938b0273be49ba, type: 2}
   _cityConfiguration: {fileID: 11400000, guid: 67b8fa3fc224a5942ad0bf0eab6310e4, type: 2}
   _enemySpawnerConfiguration: {fileID: 11400000, guid: af5b653e77d7c224f95116bcf818979b, type: 2}
+  _enemyWaveConfiguration: {fileID: 11400000, guid: 26f7d908ecfff5f4cb9eb19fddcdf366, type: 2}
   _gridCreator: {fileID: 994843276}
   _meshUpdater: {fileID: 994843272}
   _gridRaycaster: {fileID: 994843278}
@@ -4938,6 +4939,9 @@ MonoBehaviour:
   _gridHeight: 10
   _gridCellSize: 1
   _height: 0.25
+  _cloudHeight: 1
+  _cloudPrefab: {fileID: 7233243436970453600, guid: aba13a55f7d33184c86d6a2083bd8c37, type: 3}
+  _cloudsHolder: {fileID: 994843271}
 --- !u!114 &994843278
 MonoBehaviour:
   m_ObjectHideFlags: 0

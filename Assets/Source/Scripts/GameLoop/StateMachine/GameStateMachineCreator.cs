@@ -14,13 +14,16 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine
         [SerializeField] private UIElement _loseScreen;
         [SerializeField] private WinLoseMonitor _winLoseMonitor;
 
-        public GameStateMachine Create(IEnumerable<IResetable> resetables, IEnumerable<IControllable> controllables)
+        public GameStateMachine Create(IEnumerable<IResetable> resetables, IEnumerable<IControllable> controllables, EnemyWaveSpawner waveSpawner)
         {
             if (resetables == null)
                 throw new System.ArgumentNullException(nameof(resetables));
 
             if (controllables == null)
                 throw new System.ArgumentNullException(nameof(controllables));
+
+            if (waveSpawner == null)
+                throw new System.ArgumentNullException(nameof(waveSpawner));
 
             //transitions
             ToEnemyTurnTransition toEnemyTurnTransition = new ToEnemyTurnTransition();
@@ -41,6 +44,7 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine
 
             EnemyTurn enemyTurn = new EnemyTurn(
                 _enemyBrain,
+                waveSpawner,
                 _winLoseMonitor,
                 new Transition[]
                 {
