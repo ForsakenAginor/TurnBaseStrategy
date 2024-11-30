@@ -873,6 +873,7 @@ GameObject:
   - component: {fileID: 1702256689923677199}
   - component: {fileID: 8737945511782870783}
   - component: {fileID: -8173261334090171093}
+  - component: {fileID: 2386671692291416322}
   m_Layer: 0
   m_Name: PlayerArcher
   m_TagString: Untagged
@@ -911,6 +912,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _movingTimePerCell: 0.5
   _model: {fileID: 6393541241582561198}
+  _controller: {fileID: 2386671692291416322}
 --- !u!114 &8737945511782870783
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -939,6 +941,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19d6ee1e7ffb5ad43834c63d050a8452, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2386671692291416322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8649777300899352274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b7c34fd2f3a86f4181b6ca43ddcea04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animator: {fileID: 1034217361758715348}
 --- !u!1001 &437013050541435546
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -950,7 +965,7 @@ PrefabInstance:
     - target: {fileID: 597521054974351182, guid: 9f250d35bc5a8ed4cbf1a75c3de8c68f, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 9100000, guid: c946eee49687e29499adf16f06e44dd6, type: 2}
     - target: {fileID: 597521054974351182, guid: 9f250d35bc5a8ed4cbf1a75c3de8c68f, type: 3}
       propertyPath: m_WarningMessage
       value: 
@@ -1020,6 +1035,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9f250d35bc5a8ed4cbf1a75c3de8c68f, type: 3}
+--- !u!95 &1034217361758715348 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 597521054974351182, guid: 9f250d35bc5a8ed4cbf1a75c3de8c68f, type: 3}
+  m_PrefabInstance: {fileID: 437013050541435546}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6393541241582561198 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6821544889515101492, guid: 9f250d35bc5a8ed4cbf1a75c3de8c68f, type: 3}
