@@ -5,9 +5,14 @@ using UnityEngine;
 public class UnitsConfiguration : UpdatableConfiguration<UnitType, UnitInfo>,
     IUnitCostGetter, IUnitInfoGetter, IUnitPrefabGetter
 {
-    public UnitFacade GetPrefab(UnitType type)
+    public UnitFacade GetEnemyPrefab(UnitType type)
     {
-        return Content.First(o => o.Key == type).Value.Prefab;
+        return Content.First(o => o.Key == type).Value.EnemyPrefab;
+    }
+
+    public UnitFacade GetPlayerPrefab(UnitType type)
+    {
+        return Content.First(o => o.Key == type).Value.PlayerPrefab;
     }
 
     public int GetUnitCost(UnitType type)
