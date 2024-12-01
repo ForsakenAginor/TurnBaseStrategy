@@ -18,7 +18,7 @@ public class EnemyBrain : MonoBehaviour, IControllable
     private Coroutine _coroutine;
 
     public event Action<WalkableUnit, Vector2Int, Action> UnitMoving;
-    public event Action<WalkableUnit, Unit, Action> UnitAttacking;
+    public event Action<WalkableUnit, Vector3, Unit, Action> UnitAttacking;
     public event Action TurnEnded;
 
     public void DisableControl()
@@ -104,9 +104,9 @@ public class EnemyBrain : MonoBehaviour, IControllable
             {
                 Vector2Int position = _actionManager.GetUnitPosition(unit);
 
-                if (CanAttack(position, out Unit targetUnit))
+                if (CanAttack(position, out Unit targetUnit, out Vector3 targetWorldPosition))
                 {
-                    UnitAttacking?.Invoke(unit, targetUnit, WaitAnimationCallback);
+                    UnitAttacking?.Invoke(unit, targetWorldPosition, targetUnit, WaitAnimationCallback);
                     yield return waitUntilAnimationPlayed;
                     _isReady = false;
                 }
@@ -118,9 +118,9 @@ public class EnemyBrain : MonoBehaviour, IControllable
                         yield return waitUntilAnimationPlayed;
                         _isReady = false;
 
-                        if (CanAttack(target, out targetUnit))
+                        if (CanAttack(target, out targetUnit, out targetWorldPosition))
                         {
-                            UnitAttacking?.Invoke(unit, targetUnit, WaitAnimationCallback);
+                            UnitAttacking?.Invoke(unit, targetWorldPosition, targetUnit, WaitAnimationCallback);
                             yield return waitUntilAnimationPlayed;
                             _isReady = false;
                         }
@@ -138,9 +138,10 @@ public class EnemyBrain : MonoBehaviour, IControllable
 
     private void WaitAnimationCallback() => _isReady = true;
 
-    private bool CanAttack(Vector2Int position, out Unit target)
+    private bool CanAttack(Vector2Int position, out Unit target, out Vector3 targetWorldPosition)
     {
         target = null;
+        targetWorldPosition = Vector3.zero;
         List<Vector2Int> neighbours;
 
         if (_unitGrid.GetGridObject(position) is WalkableUnit unit && unit.UnitType != UnitType.Archer)
@@ -154,6 +155,7 @@ public class EnemyBrain : MonoBehaviour, IControllable
             return false;
 
         Vector2Int targetPosition = possibleTargets.OrderBy(o => _unitGrid.GetGridObject(o).Health).First();
+        targetWorldPosition = _unitGrid.GetCellWorldPosition(targetPosition);
         target = _unitGrid.GetGridObject(targetPosition);
         return true;
     }

@@ -41,6 +41,11 @@ public class UnitView : MonoBehaviour, IUIElement
 
     }
 
+    protected virtual void DoOnUnitDiedAction()
+    {
+
+    }
+
     private void Unsubscribe()
     {
         if (_unit == null)
@@ -51,9 +56,9 @@ public class UnitView : MonoBehaviour, IUIElement
         DoOnDestroyAction();
     }
 
-    private void OnUnitDied(Unit unit)
+    private void OnUnitDied(Unit _)
     {
-        gameObject.SetActive(false);
+        DoOnUnitDiedAction();
     }
 
     private void OnHealthChanged()
