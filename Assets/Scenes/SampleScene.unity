@@ -3665,6 +3665,7 @@ MonoBehaviour:
   _cityConfiguration: {fileID: 11400000, guid: 67b8fa3fc224a5942ad0bf0eab6310e4, type: 2}
   _enemySpawnerConfiguration: {fileID: 11400000, guid: af5b653e77d7c224f95116bcf818979b, type: 2}
   _enemyWaveConfiguration: {fileID: 11400000, guid: 26f7d908ecfff5f4cb9eb19fddcdf366, type: 2}
+  _gridColorConfiguration: {fileID: 11400000, guid: 4bc54be9597086f45a3a18613c5dcfea, type: 2}
   _gridCreator: {fileID: 994843276}
   _meshUpdater: {fileID: 994843272}
   _gridRaycaster: {fileID: 994843278}
@@ -5042,21 +5043,48 @@ MonoBehaviour:
   - Sprite: 0
     CoordinatesUV00: {x: 0, y: 128}
     CoordinatesUV11: {x: 127, y: 255}
-  - Sprite: 11
-    CoordinatesUV00: {x: 512, y: 0}
-    CoordinatesUV11: {x: 639, y: 127}
-  - Sprite: 10
-    CoordinatesUV00: {x: 384, y: 0}
-    CoordinatesUV11: {x: 511, y: 127}
-  - Sprite: 9
-    CoordinatesUV00: {x: 256, y: 0}
-    CoordinatesUV11: {x: 383, y: 127}
   - Sprite: 8
     CoordinatesUV00: {x: 128, y: 0}
     CoordinatesUV11: {x: 255, y: 127}
+  - Sprite: 9
+    CoordinatesUV00: {x: 256, y: 0}
+    CoordinatesUV11: {x: 383, y: 127}
+  - Sprite: 10
+    CoordinatesUV00: {x: 384, y: 0}
+    CoordinatesUV11: {x: 511, y: 127}
+  - Sprite: 11
+    CoordinatesUV00: {x: 512, y: 0}
+    CoordinatesUV11: {x: 639, y: 127}
   - Sprite: 12
     CoordinatesUV00: {x: 640, y: 0}
     CoordinatesUV11: {x: 767, y: 127}
+  - Sprite: 13
+    CoordinatesUV00: {x: 768, y: 0}
+    CoordinatesUV11: {x: 895, y: 127}
+  - Sprite: 14
+    CoordinatesUV00: {x: 896, y: 0}
+    CoordinatesUV11: {x: 1023, y: 127}
+  - Sprite: 1
+    CoordinatesUV00: {x: 128, y: 128}
+    CoordinatesUV11: {x: 255, y: 255}
+  - Sprite: 2
+    CoordinatesUV00: {x: 256, y: 128}
+    CoordinatesUV11: {x: 383, y: 255}
+  - Sprite: 3
+    CoordinatesUV00: {x: 384, y: 128}
+    CoordinatesUV11: {x: 511, y: 255}
+  - Sprite: 4
+    CoordinatesUV00: {x: 512, y: 128}
+    CoordinatesUV11: {x: 639, y: 255}
+  - Sprite: 5
+    CoordinatesUV00: {x: 640, y: 128}
+    CoordinatesUV11: {x: 767, y: 255}
+  - Sprite: 6
+    CoordinatesUV00: {x: 768, y: 128}
+    CoordinatesUV11: {x: 895, y: 255}
+  - Sprite: 7
+    CoordinatesUV00: {x: 896, y: 128}
+    CoordinatesUV11: {x: 1023, y: 255}
 --- !u!23 &994843274
 MeshRenderer:
   m_ObjectHideFlags: 0
