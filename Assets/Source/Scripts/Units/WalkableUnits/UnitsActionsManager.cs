@@ -92,16 +92,22 @@ public class UnitsActionsManager
         _units.Remove(unit);
     }
 
-    private void OnUnitAttacking(WalkableUnit unit1, Unit unit2, Action callback)
+    private void OnUnitAttacking(WalkableUnit unit1, Vector3 targetPosition, Unit unit2, Action callback)
     {
-        if (unit1.TryAttack(unit2) == false)
+        IUnitFacade unitFacade = _units[unit1];
+
+        if (unit1.TryAttack(unit2))
+        {
+            if (unitFacade is IWalkableUnitFacade facade)
+                facade.Attacker.Attack(targetPosition, callback);
+            else
+                throw new Exception("You are moving unmovable object");
+        }
+        else
         {
             callback.Invoke();
             return;
         }
-
-        //todo: wait animation end
-        callback.Invoke();
     }
 
     private void OnUnitMoving(WalkableUnit unit, Vector2Int target, Action callback)

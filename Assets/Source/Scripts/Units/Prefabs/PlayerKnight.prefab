@@ -874,6 +874,7 @@ GameObject:
   - component: {fileID: 8737945511782870783}
   - component: {fileID: -8173261334090171093}
   - component: {fileID: 3530250117938935842}
+  - component: {fileID: -1903967321797055441}
   m_Layer: 0
   m_Name: PlayerKnight
   m_TagString: Untagged
@@ -929,6 +930,7 @@ MonoBehaviour:
   _viewCanvas: {fileID: 5532721956678977207}
   _attack: {fileID: 6670950590602491972}
   _moving: {fileID: 2362160942454245495}
+  _unitController: {fileID: 3530250117938935842}
 --- !u!114 &-8173261334090171093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -954,6 +956,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animator: {fileID: 5682505524539766426}
+--- !u!114 &-1903967321797055441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8649777300899352274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc6c7c11a0f424c46ba05d11605c79fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _model: {fileID: 5730334768232298424}
+  _controller: {fileID: 3530250117938935842}
+  _duration: 0.5
 --- !u!1001 &5730831415575967996
 PrefabInstance:
   m_ObjectHideFlags: 0

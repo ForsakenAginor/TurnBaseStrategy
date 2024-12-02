@@ -5,19 +5,29 @@ using UnityEngine;
 
 public class CellHighlighter
 {
-    private readonly CellSprite _unitColor = CellSprite.ContestedBlue;
-    private readonly CellSprite _availableColor = CellSprite.ContestedGreen;
-    private readonly CellSprite _notAvailableColor = CellSprite.ContestedOrange;
-    private readonly CellSprite _enemyColor = CellSprite.ContestedRed;
+    private readonly CellSprite _unitColor;
+    private readonly CellSprite _selectedUnitColor;
+    private readonly CellSprite _availableColor;
+    private readonly CellSprite _notAvailableColor;
+    private readonly CellSprite _enemyColor;
 
     private readonly NewInputSorter _inputSorter;
     private readonly HexGridXZ<CellSprite> _hexGrid;
     private readonly List<Vector2Int> _coloredCells = new List<Vector2Int>();
 
-    public CellHighlighter(NewInputSorter inputSorter, HexGridXZ<CellSprite> grid)
+    public CellHighlighter(NewInputSorter inputSorter, HexGridXZ<CellSprite> grid, GridColorConfiguration configuration)
     {
         _inputSorter = inputSorter != null ? inputSorter : throw new ArgumentNullException(nameof(inputSorter));
         _hexGrid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
+        
+        if(configuration == null)
+            throw new ArgumentNullException(nameof(configuration));
+
+        _unitColor = configuration.GetAllyCellColor();
+        _selectedUnitColor = configuration.GetSelectedCellColor();
+        _availableColor = configuration.GetAvailableCellColor();
+        _notAvailableColor = configuration.GetBlockedCellColor();
+        _enemyColor = configuration.GetEnemyCellColor();
 
         _inputSorter.MovableUnitSelected += OnMovableUnitSelected;
         _inputSorter.EnemySelected += OnEnemySelected;
@@ -36,7 +46,7 @@ public class CellHighlighter
     private void OnFriendlyCitySelected(Vector2Int position)
     {
         ClearGrid();
-        ColorizeSelectedCell(position, _unitColor);
+        ColorizeSelectedCell(position, _selectedUnitColor);
     }
 
     private void OnEnemySelected(Vector2Int position)
@@ -45,11 +55,13 @@ public class CellHighlighter
         ColorizeSelectedCell(position, _enemyColor);
     }
 
-    private void OnMovableUnitSelected(Vector2Int _,
+    private void OnMovableUnitSelected(Vector2Int selectedUnit,
         IEnumerable<Vector2Int> possibleWays, IEnumerable<Vector2Int> blockedCells,
         IEnumerable<Vector2Int> friendlyCells, IEnumerable<Vector2Int> possiblesAttacks)
     {
         ClearGrid();
+
+        ColorizeSelectedCell(selectedUnit, _selectedUnitColor);
 
         foreach (var cell in possibleWays)
             ColorizeSelectedCell(cell, _availableColor);

@@ -874,6 +874,7 @@ GameObject:
   - component: {fileID: 8737945511782870783}
   - component: {fileID: -8173261334090171093}
   - component: {fileID: 6386943743190877911}
+  - component: {fileID: -3122183511295548804}
   m_Layer: 0
   m_Name: PlayerSpearman
   m_TagString: Untagged
@@ -929,6 +930,7 @@ MonoBehaviour:
   _viewCanvas: {fileID: 5532721956678977207}
   _attack: {fileID: 6670950590602491972}
   _moving: {fileID: 2362160942454245495}
+  _unitController: {fileID: 6386943743190877911}
 --- !u!114 &-8173261334090171093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -954,6 +956,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animator: {fileID: 4332007098301809166}
+--- !u!114 &-3122183511295548804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8649777300899352274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc6c7c11a0f424c46ba05d11605c79fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _model: {fileID: 7709684641849792628}
+  _controller: {fileID: 6386943743190877911}
+  _duration: 0.5
 --- !u!1001 &3770836402972923200
 PrefabInstance:
   m_ObjectHideFlags: 0

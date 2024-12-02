@@ -11,7 +11,8 @@ public class Root : MonoBehaviour
     [SerializeField] private UnitsConfiguration _unitConfiguration;
     [SerializeField] private CitiesConfiguration _cityConfiguration;
     [SerializeField] private EnemySpawnerConfiguration _enemySpawnerConfiguration;
-    [SerializeField] private EnemySpawnerConfiguration _enemyWaveConfiguration;
+    [SerializeField] private EnemyWaveConfiguration _enemyWaveConfiguration;
+    [SerializeField] private GridColorConfiguration _gridColorConfiguration;
 
     [Header("Grid")]
     [SerializeField] private HexGridCreator _gridCreator;
@@ -42,7 +43,7 @@ public class Root : MonoBehaviour
         _cellSelector.Init(_gridCreator.HexGrid, _gridRaycaster);
         var unitsGrid = _gridCreator.UnitsGrid;
         NewInputSorter inputSorter = new NewInputSorter(unitsGrid, _cellSelector, _gridCreator.BlockedCells);
-        _cellHighlighter = new (inputSorter, _gridCreator.HexGrid);
+        _cellHighlighter = new (inputSorter, _gridCreator.HexGrid, _gridColorConfiguration);
 
         //******** FogOfWar *********
         FogOfWar fogOfWar = new(_gridCreator.Clouds, unitsGrid);
