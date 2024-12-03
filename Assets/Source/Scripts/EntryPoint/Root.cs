@@ -66,7 +66,7 @@ public class Root : MonoBehaviour
 
         //********* EnemyLogic ***************
         _enemyBrain.Init(unitsGrid, _gridCreator.PathFinder, _unitSpawner, unitManager);
-        _citySpawner.SpawnCity(new Vector2Int(6, 5), CitySize.City, Side.Enemy);
+        _citySpawner.SpawnCity(new Vector2Int(6, 5), CitySize.Village, Side.Enemy);
         EnemyWaveSpawner waveSpawner = new(cityManager.GetEnemyCities(), _unitSpawner, _enemyWaveConfiguration);
         EnemyScaner scaner = new(cityManager.GetEnemyCities(), _unitSpawner, unitsGrid, _enemySpawnerConfiguration);
 

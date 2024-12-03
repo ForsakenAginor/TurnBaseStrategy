@@ -4,9 +4,14 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "CitiesConfiguration")]
 public class CitiesConfiguration : UpdatableConfiguration<CitySize, CityInfo>, ICityEconomicInfoGetter, ICityPrefabGetter
 {
-    public CityFacade GetPrefab(CitySize size)
+    public CityFacade GetPlayerPrefab(CitySize size)
     {
-        return Content.First(o => o.Key == size).Value.Prefab;
+        return Content.First(o => o.Key == size).Value.PlayerPrefab;
+    }
+
+    public CityFacade GetEnemyPrefab(CitySize size)
+    {
+        return Content.First(o => o.Key == size).Value.EnemyPrefab;
     }
 
     public int GetUpgradeCost(CitySize size)

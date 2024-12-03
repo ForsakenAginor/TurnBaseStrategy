@@ -1,4 +1,6 @@
 ﻿public interface ICityPrefabGetter : ICityBattleInfoGetter
 {
-    public CityFacade GetPrefab(CitySize size);
+    public CityFacade GetPlayerPrefab(CitySize size);
+
+    public CityFacade GetEnemyPrefab(CitySize size);
 }
