@@ -15,20 +15,20 @@ public class CellSelector : MonoBehaviour
 
     private void Start()
     {
-        _fingerDown.OnScreen.AddListener(OnFingerDown);
+        _fingerDown.OnFinger.AddListener(OnFingerDown);
     }
 
     private void OnDestroy()
     {
-        _fingerDown.OnScreen.RemoveListener(OnFingerDown);
+        _fingerDown.OnFinger.RemoveListener(OnFingerDown);
     }
 
-    private void OnFingerDown(Vector2 screenPosition)
+    private void OnFingerDown(LeanFinger finger)
     {
         if (_isWorking == false)
             return;
 
-        if (_gridRaycaster.TryGetPointerPosition(screenPosition, out Vector3 worldPosition))
+        if (finger.Down && _gridRaycaster.TryGetPointerPosition(finger.ScreenPosition, out Vector3 worldPosition))
         {
             var position = _hexGrid.GetXZ(worldPosition);
 
