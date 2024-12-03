@@ -1,4 +1,6 @@
+using Assets.Scripts.General;
 using Assets.Scripts.HexGrid;
+using Assets.Scripts.Sound.AudioMixer;
 using Assets.Source.Scripts.GameLoop.StateMachine;
 using Lean.Touch;
 using System.Collections.Generic;
@@ -39,8 +41,8 @@ public class Root : MonoBehaviour
     [SerializeField] private LeanFingerSwipe _leanSwipe;
     [SerializeField] private PinchDetector _pinchDetector;
 
-    [Header("Debug")]
-    [SerializeField] private Button _testButton;
+    [Header("Other")]
+    [SerializeField] private SoundInitializer _soundInitializer;
 
     private void Start()
     {
@@ -84,12 +86,14 @@ public class Root : MonoBehaviour
         _citySpawner.SpawnCity(new Vector2Int(0, 0), CitySize.Village, Side.Player);
         _citySpawner.SpawnCity(new Vector2Int(9, 0), CitySize.Village, Side.Player);
 
-        //********  Debug  ***********
-        _testButton.onClick.AddListener(OnTestButtonClick);
-    }
+        //********* Sound ************************
+        _soundInitializer.Init();
 
-    private void OnTestButtonClick()
-    {
-        _unitSpawner.TrySpawnUnit(new Vector2Int(0, 0), UnitType.Infantry, Side.Player);
+        if (MusicSingleton.Instance.IsAdded == false)
+            _soundInitializer.AddMusicSource(MusicSingleton.Instance.Music);
+        else
+            _soundInitializer.AddMusicSourceWithoutVolumeChanging(MusicSingleton.Instance.Music);
+
+        SceneChangerSingleton.Instance.FadeOut();
     }
 }
