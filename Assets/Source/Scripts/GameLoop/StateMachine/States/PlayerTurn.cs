@@ -11,14 +11,19 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
         private readonly Button _nextTurnButton;
         private readonly IEnumerable<IResetable> _resetables;
         private readonly IEnumerable<IControllable> _controllables;
+        private readonly IWinLoseEventThrower _winLoseMonitor;
 
-        public PlayerTurn(Button nextTurnButton, IEnumerable<IResetable> resetables,
+        public PlayerTurn(Button nextTurnButton, IWinLoseEventThrower winLoseMonitor, IEnumerable<IResetable> resetables,
             IEnumerable<IControllable> controllables, Transition[] transitions)
             : base(transitions)
         {
             _nextTurnButton = nextTurnButton != null ?
                 nextTurnButton :
                 throw new ArgumentNullException(nameof(nextTurnButton));
+
+            _winLoseMonitor = winLoseMonitor != null ?
+                winLoseMonitor :
+                throw new ArgumentNullException(nameof(winLoseMonitor));
 
             _resetables = resetables != null ?
                 resetables :
@@ -27,8 +32,16 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
             _controllables = controllables != null ?
                 controllables :
                 throw new ArgumentNullException(nameof(controllables));
+
+            _winLoseMonitor.PlayerLost += OnPlayerLost;
+            _winLoseMonitor.PlayerWon += OnPlayerWon;
         }
 
+        ~PlayerTurn()
+        {
+            _winLoseMonitor.PlayerLost -= OnPlayerLost;
+            _winLoseMonitor.PlayerWon -= OnPlayerWon;
+        }
 
         public override void DoThing()
         {
@@ -40,6 +53,18 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
 
             foreach (var resetable in _resetables)
                 resetable.Reset();
+        }
+
+        private void OnPlayerWon()
+        {
+            Transitions.First(o => o is ToWinTransition).SetIsReady(true);
+            CallBecomeReadyToTransitEvent();
+        }
+
+        private void OnPlayerLost()
+        {
+            Transitions.First(o => o is ToLoseTransition).SetIsReady(true);
+            CallBecomeReadyToTransitEvent();
         }
 
         private void OnNextTurnButtonClick()
@@ -57,25 +82,51 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
 
     public class EnemyTurn : State
     {
-        private readonly Button _nextTurnButton;
+        private readonly EnemyBrain _enemyBrain;
+        private readonly IWinLoseEventThrower _winLoseMonitor;
+        private readonly EnemyWaveSpawner _enemyWaveSpawner;
 
-        public EnemyTurn(Button nextTurnButton, Transition[] transitions) : base(transitions)
+        public EnemyTurn(EnemyBrain enemyBrain, EnemyWaveSpawner waveSpawner, IWinLoseEventThrower winLoseMonitor, Transition[] transitions) : base(transitions)
         {
-            _nextTurnButton = nextTurnButton != null ?
-                nextTurnButton :
-                throw new ArgumentNullException(nameof(nextTurnButton));
+            _enemyBrain = enemyBrain != null ? enemyBrain : throw new ArgumentNullException(nameof(enemyBrain));
+            _enemyWaveSpawner = waveSpawner != null ? waveSpawner : throw new ArgumentNullException(nameof(waveSpawner));
+            _winLoseMonitor = winLoseMonitor != null ?
+                winLoseMonitor :
+                throw new ArgumentNullException(nameof(winLoseMonitor));
+
+            _enemyBrain.TurnEnded += OnTurnEnded;
+            _winLoseMonitor.PlayerLost += OnPlayerLost;
+            _winLoseMonitor.PlayerWon += OnPlayerWon;
+        }
+
+        ~EnemyTurn()
+        {
+            _enemyBrain.TurnEnded -= OnTurnEnded;
+            _winLoseMonitor.PlayerLost -= OnPlayerLost;
+            _winLoseMonitor.PlayerWon -= OnPlayerWon;
         }
 
         public override void DoThing()
         {
-            _nextTurnButton.interactable = true;
-            _nextTurnButton.onClick.AddListener(OnNextTurnButtonClick);
+            _enemyBrain.EnableControl();
+            _enemyWaveSpawner.SpawnWave();
         }
 
-        private void OnNextTurnButtonClick()
+        private void OnPlayerWon()
         {
-            _nextTurnButton.interactable = false;
-            _nextTurnButton.onClick.RemoveListener(OnNextTurnButtonClick);
+            Transitions.First(o => o is ToWinTransition).SetIsReady(true);
+            CallBecomeReadyToTransitEvent();
+        }
+
+        private void OnPlayerLost()
+        {
+            Transitions.First(o => o is ToLoseTransition).SetIsReady(true);
+            CallBecomeReadyToTransitEvent();
+        }
+
+        private void OnTurnEnded()
+        {
+            _enemyBrain.DisableControl();
             Transitions.First(o => o is ToPlayerTurnTransition).SetIsReady(true);
             CallBecomeReadyToTransitEvent();
         }

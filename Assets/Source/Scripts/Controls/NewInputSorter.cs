@@ -24,7 +24,7 @@ public class NewInputSorter : IControllable
     }
 
     public event Action<Vector2Int, IEnumerable<Vector2Int>, IEnumerable<Vector2Int>, IEnumerable<Vector2Int>, IEnumerable<Vector2Int>> MovableUnitSelected;
-    public event Action<WalkableUnit, Unit, Action> UnitIsAttacking;
+    public event Action<WalkableUnit, Vector3, Unit, Action> UnitIsAttacking;
     public event Action<WalkableUnit, Vector2Int, Action> UnitIsMoving;
     public event Action<Vector2Int> FriendlyCitySelected;
     public event Action<Vector2Int> EnemySelected;
@@ -42,7 +42,7 @@ public class NewInputSorter : IControllable
         _cellSelector.CellClicked -= OnCellClicked;
     }
 
-    private void OnCellClicked(Vector3 _, Vector2Int position)
+    private void OnCellClicked(Vector3 worldPosition, Vector2Int position)
     {
         if (position == _selectedCell)
             return;
@@ -86,7 +86,7 @@ public class NewInputSorter : IControllable
             UnitIsMoving?.Invoke(_selectedUnit, position, () =>
                 {
                     _cellSelector.CellClicked += OnCellClicked;
-                    OnCellClicked(_, position);
+                    OnCellClicked(worldPosition, position);
                 });
             return;
         }
@@ -98,10 +98,10 @@ public class NewInputSorter : IControllable
             _possibleAttacks = null;
             _cellSelector.CellClicked -= OnCellClicked;
 
-            UnitIsAttacking?.Invoke(_selectedUnit, unit, () =>
+            UnitIsAttacking?.Invoke(_selectedUnit, worldPosition, unit, () =>
                 {
                     _cellSelector.CellClicked += OnCellClicked;
-                    OnCellClicked(_, position);
+                    OnCellClicked(worldPosition, position);
                 });
             return;
         }

@@ -10,7 +10,8 @@ public class UnitInfo
     [SerializeField] private int _steps;
     [SerializeField] private int _cost;
     [SerializeField] private int _salary;
-    [SerializeField] private UnitFacade _prefab;
+    [SerializeField] private UnitFacade _prefabEnemy;
+    [SerializeField] private UnitFacade _prefabPlayer;
 
     public int Attack => _attack;
 
@@ -24,5 +25,7 @@ public class UnitInfo
 
     public int Salary => _salary;
 
-    public UnitFacade Prefab => _prefab;
+    public UnitFacade EnemyPrefab => _prefabEnemy;
+
+    public UnitFacade PlayerPrefab => _prefabPlayer;
 }

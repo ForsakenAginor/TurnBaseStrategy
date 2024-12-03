@@ -8,20 +8,22 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine
 {
     public class GameStateMachineCreator : MonoBehaviour
     {
+        [SerializeField] private EnemyBrain _enemyBrain;
         [SerializeField] private Button _nextTurnButton;
         [SerializeField] private UIElement _winScreen;
         [SerializeField] private UIElement _loseScreen;
+        [SerializeField] private WinLoseMonitor _winLoseMonitor;
 
-        [Header("Debug")]
-        [SerializeField] private Button _enemyTurnSkipButton;
-
-        public GameStateMachine Create(IEnumerable<IResetable> resetables, IEnumerable<IControllable> controllables)
+        public GameStateMachine Create(IEnumerable<IResetable> resetables, IEnumerable<IControllable> controllables, EnemyWaveSpawner waveSpawner)
         {
             if (resetables == null)
                 throw new System.ArgumentNullException(nameof(resetables));
 
             if (controllables == null)
                 throw new System.ArgumentNullException(nameof(controllables));
+
+            if (waveSpawner == null)
+                throw new System.ArgumentNullException(nameof(waveSpawner));
 
             //transitions
             ToEnemyTurnTransition toEnemyTurnTransition = new ToEnemyTurnTransition();
@@ -32,6 +34,7 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine
             //states
             PlayerTurn playerTurn = new PlayerTurn(
                 _nextTurnButton,
+                _winLoseMonitor,
                 resetables,
                 controllables,
                 new Transition[]
@@ -40,7 +43,9 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine
                 });
 
             EnemyTurn enemyTurn = new EnemyTurn(
-                _enemyTurnSkipButton,
+                _enemyBrain,
+                waveSpawner,
+                _winLoseMonitor,
                 new Transition[]
                 {
                 toPlayerTurnTransition, toLoseTransition, toWinTransition

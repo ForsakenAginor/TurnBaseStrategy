@@ -1,4 +1,6 @@
 ﻿public interface IUnitPrefabGetter : IUnitInfoGetter
 {
-    public UnitFacade GetPrefab(UnitType type);
+    public UnitFacade GetEnemyPrefab(UnitType type);
+
+    public UnitFacade GetPlayerPrefab(UnitType type);
 }
