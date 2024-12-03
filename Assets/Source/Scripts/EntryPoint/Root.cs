@@ -1,5 +1,6 @@
 using Assets.Scripts.HexGrid;
 using Assets.Source.Scripts.GameLoop.StateMachine;
+using Lean.Touch;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -32,6 +33,11 @@ public class Root : MonoBehaviour
 
     [Header("Enemy")]
     [SerializeField] private EnemyBrain _enemyBrain;
+
+    [Header("Camera")]
+    [SerializeField] private Transform _camera;
+    [SerializeField] private LeanFingerSwipe _leanSwipe;
+    [SerializeField] private PinchDetector _pinchDetector;
 
     [Header("Debug")]
     [SerializeField] private Button _testButton;
@@ -68,6 +74,10 @@ public class Root : MonoBehaviour
         _winLoseMonitor.Init(cityManager);
         var resettables = unitManager.Units.Append(taxSystem);
         var stateMachine = _gameStateMachineCreator.Create(resettables, new List<IControllable>() { inputSorter }, waveSpawner);
+
+        //********* Camera control *********
+        SwipeHandler swipeHandler = new SwipeHandler(_leanSwipe);
+        CameraMover cameraMover = new CameraMover(_camera, swipeHandler, _pinchDetector);
         
         //********* Other ************************
         TextureAtlasReader atlas = _meshUpdater.GetComponent<TextureAtlasReader>();

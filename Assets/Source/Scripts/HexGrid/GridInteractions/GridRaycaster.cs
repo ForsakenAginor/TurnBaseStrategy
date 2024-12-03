@@ -12,10 +12,10 @@ public class GridRaycaster : MonoBehaviour
         _plane = new Plane(Vector3.up, _planeHeight);
     }
 
-    public bool TryGetPointerPosition(out Vector3 worldPosition)
+    public bool TryGetPointerPosition(Vector2 screenPosition, out Vector3 worldPosition)
     {
         //Create a ray from the Mouse click position
-        Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
+        Ray ray = _camera.ScreenPointToRay(screenPosition);
 
         if (_plane.Raycast(ray, out float enter))
         {
