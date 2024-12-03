@@ -1,9 +1,16 @@
 fileFormatVersion: 2
 guid: ea12619dec31048449d1de8563672f08
+AssetOrigin:
+  serializedVersion: 1
+  productId: 163413
+  packageName: Tavern Game Mobile UI
+  packageVersion: 1.0
+  assetPath: Assets/[UIFBRCA] Tavern UI/02.PNG/02.UIFBRCA_Tavern-Panels/ALL/Panels_03.png
+  uploadId: 353906
 TextureImporter:
-  fileIDToRecycleName: {}
+  internalIDToNameTable: []
   externalObjects: {}
-  serializedVersion: 9
+  serializedVersion: 13
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -20,9 +27,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -31,9 +41,9 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: -1
-    aniso: -1
-    mipBias: -100
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
     wrapU: 1
     wrapV: 1
     wrapW: 1
@@ -50,15 +60,21 @@ TextureImporter:
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
-  spriteTessellationDetail: -1
+  spriteTessellationDetail: 0
   textureType: 8
   textureShape: 1
   singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
   maxTextureSizeSet: 0
   compressionQualitySet: 0
   textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  swizzle: 50462976
+  cookieLightType: 1
   platformSettings:
-  - serializedVersion: 2
+  - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
     maxTextureSize: 8192
     resizeAlgorithm: 0
@@ -68,8 +84,10 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
-  - serializedVersion: 2
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  - serializedVersion: 4
     buildTarget: Standalone
     maxTextureSize: 8192
     resizeAlgorithm: 0
@@ -79,28 +97,331 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 8192
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 8192
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  - serializedVersion: 4
+    buildTarget: WindowsStoreApps
+    maxTextureSize: 8192
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
   spriteSheet:
     serializedVersion: 2
     sprites: []
     outline: []
-    physicsShape: []
+    customData: 
+    physicsShape:
+    - - {x: 12, y: 1774}
+      - {x: -155, y: 1857}
+      - {x: -1839, y: 1857}
+      - {x: -1839, y: -264}
+      - {x: 12, y: -264}
+    - - {x: 823, y: 1572}
+      - {x: 823, y: 1609}
+      - {x: 674, y: 1847}
+      - {x: 363, y: 1847}
+      - {x: 222, y: 1615}
+      - {x: 222, y: 1548}
+      - {x: 368, y: 1322}
+      - {x: 681, y: 1322}
+    - - {x: 1134, y: 1534}
+      - {x: 1134, y: 1625}
+      - {x: 1111, y: 1666}
+      - {x: 1012, y: 1666}
+      - {x: 979, y: 1637}
+      - {x: 979, y: 1555}
+      - {x: 1005, y: 1510}
+      - {x: 1109, y: 1510}
+    - - {x: 1465, y: 912}
+      - {x: 1465, y: 965}
+      - {x: 1350, y: 1119}
+      - {x: 222, y: 1119}
+      - {x: 222, y: 801}
+      - {x: 1248, y: 801}
+    - - {x: 1407, y: 477}
+      - {x: 1338, y: 597}
+      - {x: 1328, y: 607}
+      - {x: 224, y: 607}
+      - {x: 222, y: 605}
+      - {x: 222, y: 473}
+      - {x: 224, y: 471}
+      - {x: 1407, y: 471}
+    - - {x: 1180, y: 319}
+      - {x: 1180, y: 335}
+      - {x: 222, y: 335}
+      - {x: 222, y: 252}
+      - {x: 1166, y: 252}
+    - - {x: -837, y: -574}
+      - {x: -837, y: -524}
+      - {x: -883, y: -490}
+      - {x: -910, y: -473}
+      - {x: -946, y: -473}
+      - {x: -1001, y: -519}
+      - {x: -1001, y: -570}
+      - {x: -973, y: -631}
+      - {x: -854, y: -631}
+    - - {x: -253, y: -631}
+      - {x: -251, y: -627}
+      - {x: -251, y: -511}
+      - {x: -275, y: -503}
+      - {x: -336, y: -503}
+      - {x: -341, y: -507}
+      - {x: -341, y: -638}
+      - {x: -261, y: -638}
+    - - {x: -1473, y: -604}
+      - {x: -1473, y: -526}
+      - {x: -1478, y: -510}
+      - {x: -1612, y: -510}
+      - {x: -1621, y: -514}
+      - {x: -1621, y: -610}
+      - {x: -1568, y: -648}
+      - {x: -1528, y: -648}
+    - - {x: -1508, y: -561}
+      - {x: -1507, y: -558}
+      - {x: -1506, y: -561}
+    - - {x: -1525, y: -579}
+      - {x: -1523, y: -580}
+      - {x: -1523.5, y: -580.5}
+    - - {x: -704, y: -1146}
+      - {x: -704, y: -900}
+      - {x: -788, y: -791}
+      - {x: -1107, y: -791}
+      - {x: -1132, y: -892}
+      - {x: -1132, y: -1189}
+      - {x: -1075, y: -1219}
+      - {x: -821, y: -1219}
+    - - {x: -932, y: -1182}
+      - {x: -954, y: -1179}
+      - {x: -980, y: -1172}
+      - {x: -991, y: -1167}
+      - {x: -993, y: -1167}
+      - {x: -1020, y: -1150}
+      - {x: -1034, y: -1140}
+      - {x: -1053, y: -1121}
+      - {x: -1067, y: -1101}
+      - {x: -1079, y: -1080}
+      - {x: -1086, y: -1060}
+      - {x: -1094, y: -1029}
+      - {x: -1095, y: -1019}
+      - {x: -1096, y: -992}
+      - {x: -1095, y: -991}
+      - {x: -1092, y: -969}
+      - {x: -1085, y: -943}
+      - {x: -1080, y: -932}
+      - {x: -1073, y: -919}
+      - {x: -1053, y: -889}
+      - {x: -1034, y: -870}
+      - {x: -1014, y: -856}
+      - {x: -993, y: -844}
+      - {x: -954, y: -831}
+      - {x: -932, y: -828}
+      - {x: -905, y: -827}
+      - {x: -904, y: -828}
+      - {x: -882, y: -831}
+      - {x: -855, y: -838}
+      - {x: -853, y: -841}
+      - {x: -832, y: -850}
+      - {x: -802, y: -870}
+      - {x: -783, y: -889}
+      - {x: -769, y: -908}
+      - {x: -756, y: -932}
+      - {x: -747, y: -957}
+      - {x: -742, y: -981}
+      - {x: -741, y: -992}
+      - {x: -740, y: -1017}
+      - {x: -741, y: -1018}
+      - {x: -752, y: -1067}
+      - {x: -774, y: -1107}
+      - {x: -783, y: -1121}
+      - {x: -802, y: -1140}
+      - {x: -822, y: -1154}
+      - {x: -843, y: -1166}
+      - {x: -882, y: -1179}
+      - {x: -904, y: -1182}
+      - {x: -931, y: -1183}
+    - - {x: -1370, y: -1090}
+      - {x: -1370, y: -939}
+      - {x: -1437, y: -846}
+      - {x: -1464, y: -828}
+      - {x: -1668, y: -828}
+      - {x: -1725, y: -875}
+      - {x: -1725, y: -1123}
+      - {x: -1699, y: -1183}
+      - {x: -1454, y: -1183}
+    - - {x: -120, y: -1073}
+      - {x: -120, y: -863}
+      - {x: -205, y: -828}
+      - {x: -402, y: -828}
+      - {x: -474, y: -905}
+      - {x: -474, y: -1093}
+      - {x: -422, y: -1182}
+      - {x: -206, y: -1182}
+    - - {x: -310, y: -1150}
+      - {x: -317, y: -1148}
+      - {x: -337, y: -1145}
+      - {x: -354, y: -1139}
+      - {x: -376, y: -1127}
+      - {x: -393, y: -1115}
+      - {x: -407, y: -1101}
+      - {x: -422, y: -1079}
+      - {x: -431, y: -1062}
+      - {x: -441, y: -1026}
+      - {x: -442, y: -1018}
+      - {x: -443, y: -993}
+      - {x: -442, y: -992}
+      - {x: -437, y: -965}
+      - {x: -431, y: -948}
+      - {x: -422, y: -931}
+      - {x: -407, y: -909}
+      - {x: -393, y: -895}
+      - {x: -371, y: -880}
+      - {x: -354, y: -871}
+      - {x: -336, y: -865}
+      - {x: -310, y: -860}
+      - {x: -285, y: -859}
+      - {x: -284, y: -860}
+      - {x: -257, y: -865}
+      - {x: -240, y: -871}
+      - {x: -223, y: -880}
+      - {x: -201, y: -895}
+      - {x: -187, y: -909}
+      - {x: -172, y: -931}
+      - {x: -163, y: -948}
+      - {x: -157, y: -966}
+      - {x: -152, y: -992}
+      - {x: -151, y: -1017}
+      - {x: -152, y: -1018}
+      - {x: -158, y: -1045}
+      - {x: -164, y: -1064}
+      - {x: -179, y: -1091}
+      - {x: -187, y: -1101}
+      - {x: -201, y: -1115}
+      - {x: -223, y: -1130}
+      - {x: -240, y: -1139}
+      - {x: -258, y: -1145}
+      - {x: -284, y: -1150}
+    - - {x: -1560, y: -1150}
+      - {x: -1579, y: -1147}
+      - {x: -1599, y: -1142}
+      - {x: -1623, y: -1129}
+      - {x: -1641, y: -1117}
+      - {x: -1658, y: -1099}
+      - {x: -1663, y: -1093}
+      - {x: -1671, y: -1081}
+      - {x: -1682, y: -1060}
+      - {x: -1689, y: -1032}
+      - {x: -1691, y: -1017}
+      - {x: -1693, y: -994}
+      - {x: -1692, y: -993}
+      - {x: -1690, y: -978}
+      - {x: -1682, y: -951}
+      - {x: -1671, y: -930}
+      - {x: -1659, y: -912}
+      - {x: -1641, y: -894}
+      - {x: -1623, y: -882}
+      - {x: -1604, y: -872}
+      - {x: -1587, y: -867}
+      - {x: -1575, y: -863}
+      - {x: -1560, y: -861}
+      - {x: -1536, y: -860}
+      - {x: -1535, y: -861}
+      - {x: -1520, y: -863}
+      - {x: -1493, y: -871}
+      - {x: -1472, y: -882}
+      - {x: -1454, y: -894}
+      - {x: -1436, y: -912}
+      - {x: -1424, y: -930}
+      - {x: -1413, y: -951}
+      - {x: -1406, y: -979}
+      - {x: -1404, y: -995}
+      - {x: -1402, y: -1016}
+      - {x: -1403, y: -1017}
+      - {x: -1406, y: -1038}
+      - {x: -1413, y: -1060}
+      - {x: -1424, y: -1081}
+      - {x: -1436, y: -1099}
+      - {x: -1454, y: -1116}
+      - {x: -1463, y: -1123}
+      - {x: -1481, y: -1134}
+      - {x: -1493, y: -1140}
+      - {x: -1508, y: -1145}
+      - {x: -1535, y: -1150}
+      - {x: -1559, y: -1151}
+    - - {x: -674, y: -1858}
+      - {x: -674, y: -1397}
+      - {x: -678, y: -1371}
+      - {x: -1042, y: -1371}
+      - {x: -1158, y: -1460}
+      - {x: -1163, y: -1476}
+      - {x: -1163, y: -1772}
+      - {x: -1028, y: -1860}
+      - {x: -677, y: -1860}
+    - - {x: -1377, y: -1755}
+      - {x: -1345, y: -1702}
+      - {x: -1345, y: -1545}
+      - {x: -1397, y: -1424}
+      - {x: -1416, y: -1413}
+      - {x: -1635, y: -1413}
+      - {x: -1750, y: -1462}
+      - {x: -1750, y: -1726}
+      - {x: -1707, y: -1812}
+      - {x: -1661, y: -1818}
+      - {x: -1429, y: -1818}
+    - - {x: -95, y: -1773}
+      - {x: -95, y: -1413}
+      - {x: -460, y: -1413}
+      - {x: -499, y: -1488}
+      - {x: -499, y: -1702}
+      - {x: -470, y: -1812}
+      - {x: -435, y: -1818}
+      - {x: -172, y: -1818}
     bones: []
     spriteID: 5479eb9cc42b32f4fa2a663787e9033a
+    internalID: 1498355318
     vertices: []
     indices: 
     edges: []
     weights: []
-  spritePackingTag: 
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable: {}
+  mipmapLimitGroupName: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 163413
-  packageName: Tavern Game Mobile UI
-  packageVersion: 1.0
-  assetPath: Assets/[UIFBRCA] Tavern UI/02.PNG/02.UIFBRCA_Tavern-Panels/ALL/Panels_03.png
-  uploadId: 353906
