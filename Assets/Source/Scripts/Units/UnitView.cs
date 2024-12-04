@@ -38,12 +38,11 @@ public class UnitView : MonoBehaviour, IUIElement
 
     protected virtual void DoOnDestroyAction()
     {
-
     }
 
     protected virtual void DoOnUnitDiedAction()
     {
-
+        gameObject.SetActive(false);
     }
 
     private void Unsubscribe()

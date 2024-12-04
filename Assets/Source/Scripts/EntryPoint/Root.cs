@@ -1,18 +1,16 @@
+using Assets.Scripts.General;
 using Assets.Scripts.HexGrid;
+using Assets.Scripts.Sound.AudioMixer;
 using Assets.Source.Scripts.GameLoop.StateMachine;
 using Lean.Touch;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Root : MonoBehaviour
 {
     [Header("Configurations")]
-    [SerializeField] private UnitsConfiguration _unitConfiguration;
-    [SerializeField] private CitiesConfiguration _cityConfiguration;
-    [SerializeField] private EnemySpawnerConfiguration _enemySpawnerConfiguration;
-    [SerializeField] private EnemyWaveConfiguration _enemyWaveConfiguration;
+    [SerializeField] private LevelConfiguration _levelConfiguration;
     [SerializeField] private GridColorConfiguration _gridColorConfiguration;
 
     [Header("Grid")]
@@ -39,57 +37,66 @@ public class Root : MonoBehaviour
     [SerializeField] private LeanFingerSwipe _leanSwipe;
     [SerializeField] private PinchDetector _pinchDetector;
 
-    [Header("Debug")]
-    [SerializeField] private Button _testButton;
+    [Header("Other")]
+    [SerializeField] private SoundInitializer _soundInitializer;
 
     private void Start()
     {
-        _gridCreator.Init();
+        //******** Load Data ***********
+        SaveSystem saveSystem = new SaveSystem();
+        GameLevel currentLevel = saveSystem.Load();
+
+        //******** Init grid ***********
+        _gridCreator.Init(currentLevel, _levelConfiguration);
         _meshUpdater.Init(_gridCreator.HexGrid);
         _cellSelector.Init(_gridCreator.HexGrid, _gridRaycaster);
         var unitsGrid = _gridCreator.UnitsGrid;
         NewInputSorter inputSorter = new NewInputSorter(unitsGrid, _cellSelector, _gridCreator.BlockedCells);
-        _cellHighlighter = new (inputSorter, _gridCreator.HexGrid, _gridColorConfiguration);
+        _cellHighlighter = new(inputSorter, _gridCreator.HexGrid, _gridColorConfiguration);
 
         //******** FogOfWar *********
         FogOfWar fogOfWar = new(_gridCreator.Clouds, unitsGrid);
 
         //******** Wallet ***********
         Resource wallet = new Resource(20, int.MaxValue);
-        TaxSystem taxSystem = new TaxSystem(wallet, _citySpawner, _unitSpawner, _cityConfiguration, _unitConfiguration);
+        TaxSystem taxSystem = new TaxSystem(wallet, _citySpawner, _unitSpawner,
+            _levelConfiguration.GetCityConfiguration(currentLevel), _levelConfiguration.GetUnitConfiguration(currentLevel));
         _walletView.Init(wallet);
+
         //********  Unit creation  ***********
         UnitsActionsManager unitManager = new UnitsActionsManager(inputSorter, unitsGrid, _enemyBrain);
-        _unitSpawner.Init(unitManager, wallet, _unitConfiguration, unitsGrid, _gridCreator.BlockedCells);
+        _unitSpawner.Init(unitManager, wallet, _levelConfiguration.GetUnitConfiguration(currentLevel), unitsGrid, _gridCreator.BlockedCells);
         CitiesActionsManager cityManager = new CitiesActionsManager(inputSorter, unitsGrid);
-        _citySpawner.Init(cityManager, _unitSpawner, wallet, _cityConfiguration, unitsGrid);
+        _citySpawner.Init(cityManager, _unitSpawner, wallet, _levelConfiguration.GetCityConfiguration(currentLevel), unitsGrid);
+        CityAtMapInitializer cityInitializer = new CityAtMapInitializer(currentLevel, _levelConfiguration, _citySpawner);
 
         //********* EnemyLogic ***************
         _enemyBrain.Init(unitsGrid, _gridCreator.PathFinder, _unitSpawner, unitManager);
-        _citySpawner.SpawnCity(new Vector2Int(6, 5), CitySize.City, Side.Enemy);
-        EnemyWaveSpawner waveSpawner = new(cityManager.GetEnemyCities(), _unitSpawner, _enemyWaveConfiguration);
-        EnemyScaner scaner = new(cityManager.GetEnemyCities(), _unitSpawner, unitsGrid, _enemySpawnerConfiguration);
+        cityInitializer.SpawnEnemyCities();
+        EnemyWaveSpawner waveSpawner = new(cityManager.GetEnemyCities(), _unitSpawner, _levelConfiguration.GetEnemyWaveConfiguration(currentLevel));
+        EnemyScaner scaner = new(cityManager.GetEnemyCities(), _unitSpawner, unitsGrid, _levelConfiguration.GetEnemySpawnerConfiguration(currentLevel));
 
         //********* Game state machine *******
-        _winLoseMonitor.Init(cityManager);
+        _winLoseMonitor.Init(cityManager, saveSystem, currentLevel);
         var resettables = unitManager.Units.Append(taxSystem);
-        var stateMachine = _gameStateMachineCreator.Create(resettables, new List<IControllable>() { inputSorter }, waveSpawner);
+        var stateMachine = _gameStateMachineCreator.Create(resettables, new List<IControllable>() { inputSorter }, waveSpawner, currentLevel);
 
         //********* Camera control *********
         SwipeHandler swipeHandler = new SwipeHandler(_leanSwipe);
-        CameraMover cameraMover = new CameraMover(_camera, swipeHandler, _pinchDetector);
-        
+        CameraMover cameraMover = new CameraMover(_camera, swipeHandler, _pinchDetector, currentLevel, _levelConfiguration);
+
         //********* Other ************************
         TextureAtlasReader atlas = _meshUpdater.GetComponent<TextureAtlasReader>();
-        _citySpawner.SpawnCity(new Vector2Int(0, 0), CitySize.Village, Side.Player);
-        _citySpawner.SpawnCity(new Vector2Int(9, 0), CitySize.Village, Side.Player);
+        cityInitializer.SpawnPlayerCities();
 
-        //********  Debug  ***********
-        _testButton.onClick.AddListener(OnTestButtonClick);
-    }
+        //********* Sound ************************
+        _soundInitializer.Init();
 
-    private void OnTestButtonClick()
-    {
-        _unitSpawner.TrySpawnUnit(new Vector2Int(0, 0), UnitType.Infantry, Side.Player);
+        if (MusicSingleton.Instance.IsAdded == false)
+            _soundInitializer.AddMusicSource(MusicSingleton.Instance.Music);
+        else
+            _soundInitializer.AddMusicSourceWithoutVolumeChanging(MusicSingleton.Instance.Music);
+
+        SceneChangerSingleton.Instance.FadeOut();
     }
 }

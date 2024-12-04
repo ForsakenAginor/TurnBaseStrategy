@@ -106,7 +106,9 @@ public class CitiesActionsManager
         _selectedUnit = _cities[city].UnitView;
         _selectedUnitMenu = _cities[city].Menu;
         _selectedUnit.Enable();
-        _selectedUnitMenu.Enable();
+
+        if (city.Side == Side.Player)
+            _selectedUnitMenu.Enable();
     }
 
     private void OnUnitDied(Unit unit)

@@ -45,7 +45,8 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
             throw new Exception("Can't create city: cell is not empty");
 
         var unit = _factory.Create(size, side);
-        var facade = Instantiate(_configuration.GetPrefab(size), _grid.GetCellWorldPosition(position), Quaternion.identity);
+        var facadePrefab = side == Side.Player ? _configuration.GetPlayerPrefab(size) : _configuration.GetEnemyPrefab(size);
+        var facade = Instantiate(facadePrefab, _grid.GetCellWorldPosition(position), Quaternion.identity);
         facade.UnitView.Init(unit);
         facade.Menu.Init(TryHireUnit, TryUpgradeCity,
             _upgradeButton, _hireInfantry, _hireSpearman, _hireArcher, _hireKnight, _buttonCanvas);
