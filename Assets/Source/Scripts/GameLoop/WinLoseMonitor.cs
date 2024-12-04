@@ -5,6 +5,8 @@ using UnityEngine;
 public class WinLoseMonitor : MonoBehaviour, IWinLoseEventThrower
 {
     private CitiesActionsManager _actionsManager;
+    private SaveSystem _saveSystem;
+    private GameLevel _gameLevel;
     private bool _isCheckNeeded;
 
     public event Action PlayerWon;
@@ -18,9 +20,21 @@ public class WinLoseMonitor : MonoBehaviour, IWinLoseEventThrower
         _isCheckNeeded = false;
 
         if(_actionsManager.Cities.Any(o => o == Side.Enemy) && _actionsManager.Cities.Any(o => o == Side.Player) == false)
+        {
             PlayerLost?.Invoke();
+        }
         else if (_actionsManager.Cities.Any(o => o == Side.Enemy) == false && _actionsManager.Cities.Any(o => o == Side.Player))
+        {
+            GameLevel nextLevel;
+
+            if ((int)_gameLevel == Enum.GetNames(typeof(GameLevel)).Length - 1)
+                nextLevel = 0;
+            else
+                nextLevel = _gameLevel + 1;
+
+            _saveSystem.Save(nextLevel);
             PlayerWon?.Invoke();
+        }
     }
 
     private void OnDestroy()
@@ -28,9 +42,11 @@ public class WinLoseMonitor : MonoBehaviour, IWinLoseEventThrower
         _actionsManager.CitiesChanged -= OnCitiesChanged;        
     }
 
-    public void Init(CitiesActionsManager actionsManager)
+    public void Init(CitiesActionsManager actionsManager, SaveSystem saveSystem, GameLevel level)
     {
         _actionsManager = actionsManager != null ? actionsManager : throw new ArgumentNullException(nameof(actionsManager));
+        _saveSystem = saveSystem != null ? saveSystem : throw new ArgumentNullException(nameof(saveSystem));
+        _gameLevel = level;
 
         _actionsManager.CitiesChanged += OnCitiesChanged;
     }
