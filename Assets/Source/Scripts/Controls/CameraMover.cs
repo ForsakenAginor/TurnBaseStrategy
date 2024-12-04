@@ -6,10 +6,11 @@ public class CameraMover
 {
     private const float MaxZoomValue = 12f;
     private const float MinZoomValue = 5f;
-    private const float MinX = 0;
-    private const float MinZ = -1;
-    private const float MaxX = 10;
-    private const float MaxZ = 6;
+
+    private readonly float _minX = 0;
+    private readonly float _minZ = -1;
+    private readonly float _maxX = 10;
+    private readonly float _maxZ = 6;
 
     private readonly Transform _camera;
     private readonly SwipeHandler _swipeHandler;
@@ -19,11 +20,21 @@ public class CameraMover
 
     private Tween _tween;
 
-    public CameraMover(Transform camera, SwipeHandler swipeHandler, PinchDetector pinchDetector)
+    public CameraMover(Transform camera, SwipeHandler swipeHandler, PinchDetector pinchDetector, GameLevel level, ICameraConfigurationGetter configuration)
     {
         _camera = camera != null ? camera : throw new ArgumentNullException(nameof(camera));
         _swipeHandler = swipeHandler != null ? swipeHandler : throw new ArgumentNullException(nameof(swipeHandler));
         _pinchDetector = pinchDetector != null ? pinchDetector : throw new ArgumentNullException(nameof(pinchDetector));
+
+        if(configuration == null)
+            throw new ArgumentNullException(nameof(configuration));
+
+        _minX = configuration.GetMinimumCameraPosition(level).x;
+        _minZ = configuration.GetMinimumCameraPosition(level).y;
+        _maxX = configuration.GetMaximumCameraPosition(level).x;
+        _maxZ = configuration.GetMaximumCameraPosition(level).y;
+
+        _tween = _camera.DOMove(configuration.GetCameraStartPosition(level), _speed);
 
         _pinchDetector.GotPinchInput += OnPinch;
         _swipeHandler.SwipeInputReceived += OnSwipeInputReceived;
@@ -46,8 +57,8 @@ public class CameraMover
     private void OnSwipeInputReceived(Vector3 vector)
     {
         Vector3 target = _camera.position - vector;
-        target.x = Mathf.Clamp(target.x, MinX, MaxX);
-        target.z = Mathf.Clamp(target.z, MinZ, MaxZ);
+        target.x = Mathf.Clamp(target.x, _minX, _maxX);
+        target.z = Mathf.Clamp(target.z, _minZ, _maxZ);
         _tween.Kill();
         _tween = _camera.DOMove(target, _speed);
     }

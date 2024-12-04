@@ -6,15 +6,11 @@ using Lean.Touch;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Root : MonoBehaviour
 {
     [Header("Configurations")]
-    [SerializeField] private UnitsConfiguration _unitConfiguration;
-    [SerializeField] private CitiesConfiguration _cityConfiguration;
-    [SerializeField] private EnemySpawnerConfiguration _enemySpawnerConfiguration;
-    [SerializeField] private EnemyWaveConfiguration _enemyWaveConfiguration;
+    [SerializeField] private LevelConfiguration _levelConfiguration;
     [SerializeField] private GridColorConfiguration _gridColorConfiguration;
 
     [Header("Grid")]
@@ -46,31 +42,36 @@ public class Root : MonoBehaviour
 
     private void Start()
     {
-        _gridCreator.Init();
+        GameLevel currentLevel = GameLevel.First;
+
+        _gridCreator.Init(currentLevel, _levelConfiguration);
         _meshUpdater.Init(_gridCreator.HexGrid);
         _cellSelector.Init(_gridCreator.HexGrid, _gridRaycaster);
         var unitsGrid = _gridCreator.UnitsGrid;
         NewInputSorter inputSorter = new NewInputSorter(unitsGrid, _cellSelector, _gridCreator.BlockedCells);
-        _cellHighlighter = new (inputSorter, _gridCreator.HexGrid, _gridColorConfiguration);
+        _cellHighlighter = new(inputSorter, _gridCreator.HexGrid, _gridColorConfiguration);
 
         //******** FogOfWar *********
         FogOfWar fogOfWar = new(_gridCreator.Clouds, unitsGrid);
 
         //******** Wallet ***********
         Resource wallet = new Resource(20, int.MaxValue);
-        TaxSystem taxSystem = new TaxSystem(wallet, _citySpawner, _unitSpawner, _cityConfiguration, _unitConfiguration);
+        TaxSystem taxSystem = new TaxSystem(wallet, _citySpawner, _unitSpawner,
+            _levelConfiguration.GetCityConfiguration(currentLevel), _levelConfiguration.GetUnitConfiguration(currentLevel));
         _walletView.Init(wallet);
+
         //********  Unit creation  ***********
         UnitsActionsManager unitManager = new UnitsActionsManager(inputSorter, unitsGrid, _enemyBrain);
-        _unitSpawner.Init(unitManager, wallet, _unitConfiguration, unitsGrid, _gridCreator.BlockedCells);
+        _unitSpawner.Init(unitManager, wallet, _levelConfiguration.GetUnitConfiguration(currentLevel), unitsGrid, _gridCreator.BlockedCells);
         CitiesActionsManager cityManager = new CitiesActionsManager(inputSorter, unitsGrid);
-        _citySpawner.Init(cityManager, _unitSpawner, wallet, _cityConfiguration, unitsGrid);
+        _citySpawner.Init(cityManager, _unitSpawner, wallet, _levelConfiguration.GetCityConfiguration(currentLevel), unitsGrid);
+        CityAtMapInitializer cityInitializer = new CityAtMapInitializer(currentLevel, _levelConfiguration, _citySpawner);
 
         //********* EnemyLogic ***************
         _enemyBrain.Init(unitsGrid, _gridCreator.PathFinder, _unitSpawner, unitManager);
-        _citySpawner.SpawnCity(new Vector2Int(6, 5), CitySize.Village, Side.Enemy);
-        EnemyWaveSpawner waveSpawner = new(cityManager.GetEnemyCities(), _unitSpawner, _enemyWaveConfiguration);
-        EnemyScaner scaner = new(cityManager.GetEnemyCities(), _unitSpawner, unitsGrid, _enemySpawnerConfiguration);
+        cityInitializer.SpawnEnemyCities();
+        EnemyWaveSpawner waveSpawner = new(cityManager.GetEnemyCities(), _unitSpawner, _levelConfiguration.GetEnemyWaveConfiguration(currentLevel));
+        EnemyScaner scaner = new(cityManager.GetEnemyCities(), _unitSpawner, unitsGrid, _levelConfiguration.GetEnemySpawnerConfiguration(currentLevel));
 
         //********* Game state machine *******
         _winLoseMonitor.Init(cityManager);
@@ -79,12 +80,11 @@ public class Root : MonoBehaviour
 
         //********* Camera control *********
         SwipeHandler swipeHandler = new SwipeHandler(_leanSwipe);
-        CameraMover cameraMover = new CameraMover(_camera, swipeHandler, _pinchDetector);
-        
+        CameraMover cameraMover = new CameraMover(_camera, swipeHandler, _pinchDetector, currentLevel, _levelConfiguration);
+
         //********* Other ************************
         TextureAtlasReader atlas = _meshUpdater.GetComponent<TextureAtlasReader>();
-        _citySpawner.SpawnCity(new Vector2Int(0, 0), CitySize.Village, Side.Player);
-        _citySpawner.SpawnCity(new Vector2Int(9, 0), CitySize.Village, Side.Player);
+        cityInitializer.SpawnPlayerCities();
 
         //********* Sound ************************
         _soundInitializer.Init();
