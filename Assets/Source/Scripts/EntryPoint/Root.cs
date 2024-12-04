@@ -99,4 +99,22 @@ public class Root : MonoBehaviour
 
         SceneChangerSingleton.Instance.FadeOut();
     }
+
+    private void OnDrawGizmos()
+    {
+        if(_gridCreator.HexGrid == null)
+            return;
+
+        GUIStyle style = new GUIStyle();
+        style.fontSize = 60;
+
+        for (int x = 0; x < _gridCreator.HexGrid.Width; x++)
+        {
+            for (int z = 0; z < _gridCreator.HexGrid.Height; z++)
+            {
+                Vector3 cellPosition = _gridCreator.HexGrid.GetCellWorldPosition(x, z);
+                UnityEditor.Handles.Label(cellPosition + Vector3.up * 0.5f, $"{x},{z}", style);
+            }
+        }
+    }
 }
