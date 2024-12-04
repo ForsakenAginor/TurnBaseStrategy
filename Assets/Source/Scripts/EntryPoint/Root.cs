@@ -42,8 +42,11 @@ public class Root : MonoBehaviour
 
     private void Start()
     {
-        GameLevel currentLevel = GameLevel.First;
+        //******** Load Data ***********
+        SaveSystem saveSystem = new SaveSystem();
+        GameLevel currentLevel = saveSystem.Load();
 
+        //******** Init grid ***********
         _gridCreator.Init(currentLevel, _levelConfiguration);
         _meshUpdater.Init(_gridCreator.HexGrid);
         _cellSelector.Init(_gridCreator.HexGrid, _gridRaycaster);
@@ -74,7 +77,7 @@ public class Root : MonoBehaviour
         EnemyScaner scaner = new(cityManager.GetEnemyCities(), _unitSpawner, unitsGrid, _levelConfiguration.GetEnemySpawnerConfiguration(currentLevel));
 
         //********* Game state machine *******
-        _winLoseMonitor.Init(cityManager);
+        _winLoseMonitor.Init(cityManager, saveSystem, currentLevel);
         var resettables = unitManager.Units.Append(taxSystem);
         var stateMachine = _gameStateMachineCreator.Create(resettables, new List<IControllable>() { inputSorter }, waveSpawner, currentLevel);
 
