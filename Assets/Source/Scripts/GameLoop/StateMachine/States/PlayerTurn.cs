@@ -136,9 +136,15 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
     {
         private readonly IUIElement _winScreen;
 
-        public PlayerWon(IUIElement winScreen) : base(Array.Empty<Transition>())
+        public PlayerWon(IUIElement winScreen, IUIElement finishScreen, GameLevel level) : base(Array.Empty<Transition>())
         {
-            _winScreen = winScreen != null ? winScreen : throw new ArgumentNullException(nameof(winScreen));
+            if(winScreen == null)
+                throw new ArgumentNullException(nameof(winScreen));
+
+            if(finishScreen == null)
+                throw new ArgumentNullException(nameof(finishScreen));
+
+            _winScreen = (int) level == Enum.GetNames(typeof(GameLevel)).Length - 1 ? finishScreen : winScreen;
         }
 
         public override void DoThing()

@@ -1,5 +1,6 @@
 ﻿using Assets.Source.Scripts.GameLoop.StateMachine.States;
 using Assets.Source.Scripts.GameLoop.StateMachine.Transitions;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,9 +13,10 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine
         [SerializeField] private Button _nextTurnButton;
         [SerializeField] private UIElement _winScreen;
         [SerializeField] private UIElement _loseScreen;
+        [SerializeField] private UIElement _finishScreen;
         [SerializeField] private WinLoseMonitor _winLoseMonitor;
 
-        public GameStateMachine Create(IEnumerable<IResetable> resetables, IEnumerable<IControllable> controllables, EnemyWaveSpawner waveSpawner)
+        public GameStateMachine Create(IEnumerable<IResetable> resetables, IEnumerable<IControllable> controllables, EnemyWaveSpawner waveSpawner, GameLevel level)
         {
             if (resetables == null)
                 throw new System.ArgumentNullException(nameof(resetables));
@@ -51,7 +53,7 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine
                 toPlayerTurnTransition, toLoseTransition, toWinTransition
                 });
 
-            PlayerWon playerWon = new PlayerWon(_winScreen);
+            PlayerWon playerWon = new PlayerWon(_winScreen, _finishScreen, level);
             PlayerLose playerLose = new PlayerLose(_loseScreen);
 
             //transitions initialize
