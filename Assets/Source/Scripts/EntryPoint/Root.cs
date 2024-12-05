@@ -28,6 +28,7 @@ public class Root : MonoBehaviour
     [SerializeField] private CitySpawner _citySpawner;
 
     [Header("Gold")]
+    [SerializeField] private int _startGold = 20;
     [SerializeField] private WalletView _walletView;
     [SerializeField] private CityShopView _cityShop;
 
@@ -68,7 +69,7 @@ public class Root : MonoBehaviour
         FogOfWar fogOfWar = new(_gridCreator.Clouds, unitsGrid);
 
         //******** Wallet ***********
-        Resource wallet = new Resource(20, int.MaxValue);
+        Resource wallet = new Resource(_startGold, int.MaxValue);
         TaxSystem taxSystem = new TaxSystem(wallet, _citySpawner, _unitSpawner,
             _levelConfiguration.GetCityConfiguration(currentLevel), _levelConfiguration.GetUnitConfiguration(currentLevel));
         _walletView.Init(wallet);
