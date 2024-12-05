@@ -33,6 +33,9 @@ public class NewInputSorter : IControllable
     public void EnableControl()
     {
         _selectedCell = _fakeCell;
+        _selectedUnit = null;
+        _possibleWays = null;
+        _possibleAttacks = null;
         _cellSelector.CellClicked += OnCellClicked;
     }
 
