@@ -28,6 +28,7 @@ public class Root : MonoBehaviour
 
     [Header("Gold")]
     [SerializeField] private WalletView _walletView;
+    [SerializeField] private CityShopView _cityShop;
 
     [Header("Enemy")]
     [SerializeField] private EnemyBrain _enemyBrain;
@@ -62,6 +63,7 @@ public class Root : MonoBehaviour
         TaxSystem taxSystem = new TaxSystem(wallet, _citySpawner, _unitSpawner,
             _levelConfiguration.GetCityConfiguration(currentLevel), _levelConfiguration.GetUnitConfiguration(currentLevel));
         _walletView.Init(wallet);
+        _cityShop.Init(_levelConfiguration.GetUnitConfiguration(currentLevel));
 
         //********  Unit creation  ***********
         UnitsActionsManager unitManager = new UnitsActionsManager(inputSorter, unitsGrid, _enemyBrain);
@@ -73,7 +75,7 @@ public class Root : MonoBehaviour
         //********* EnemyLogic ***************
         _enemyBrain.Init(unitsGrid, _gridCreator.PathFinder, _unitSpawner, unitManager);
         cityInitializer.SpawnEnemyCities();
-        EnemyWaveSpawner waveSpawner = new(cityManager.GetEnemyCities(), _unitSpawner, _levelConfiguration.GetEnemyWaveConfiguration(currentLevel));
+        EnemyWaveSpawner waveSpawner = new(cityManager.GetEnemyCitiesUnits(), _unitSpawner, _levelConfiguration.GetEnemyWaveConfiguration(currentLevel));
         EnemyScaner scaner = new(cityManager.GetEnemyCities(), _unitSpawner, unitsGrid, _levelConfiguration.GetEnemySpawnerConfiguration(currentLevel));
 
         //********* Game state machine *******
