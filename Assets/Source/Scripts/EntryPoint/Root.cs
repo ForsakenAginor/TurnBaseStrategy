@@ -102,6 +102,7 @@ public class Root : MonoBehaviour
         SceneChangerSingleton.Instance.FadeOut();
     }
 
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         if(_gridCreator.HexGrid == null)
@@ -119,4 +120,5 @@ public class Root : MonoBehaviour
             }
         }
     }
+#endif
 }
