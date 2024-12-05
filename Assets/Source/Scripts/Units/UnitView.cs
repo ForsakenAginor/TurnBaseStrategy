@@ -6,6 +6,7 @@ public class UnitView : MonoBehaviour, IUIElement
 {
     [SerializeField] private TMP_Text _health;
     [SerializeField] private UIElement _viewCanvas;
+    [SerializeField] private UnitSoundsHandler _soundHandler;
 
     private Unit _unit;
 
@@ -24,12 +25,17 @@ public class UnitView : MonoBehaviour, IUIElement
         Unsubscribe();
     }
 
-    public virtual void Init(Unit unit)
+    public virtual void Init(Unit unit, Action<AudioSource> callback)
     {
         if (unit == null)
             throw new ArgumentNullException(nameof(unit));
 
+        if(callback == null)
+            throw new ArgumentNullException(nameof(callback));
+
         _unit = unit;
+        _soundHandler.Init(callback);
+        _soundHandler.Hire();
         _health.text = _unit.Health.ToString();
 
         _unit.HealthChanged += OnHealthChanged;
@@ -57,6 +63,7 @@ public class UnitView : MonoBehaviour, IUIElement
 
     private void OnUnitDied(Unit _)
     {
+        _soundHandler.Dying();
         DoOnUnitDiedAction();
     }
 

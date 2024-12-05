@@ -14,15 +14,17 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawner
     private Resource _wallet;
 
     public event Action<Unit> UnitSpawned;
+    public Action<AudioSource> AudioSourceCallback;
 
     public void Init(UnitsActionsManager manager, Resource wallet,
-        UnitsConfiguration configuration, HexGridXZ<Unit> grid, HexGridXZ<IBlockedCell> landGrid)
+        UnitsConfiguration configuration, HexGridXZ<Unit> grid, HexGridXZ<IBlockedCell> landGrid, Action<AudioSource> callback)
     {
         _unitsManager = manager != null ? manager : throw new ArgumentNullException(nameof(manager));
         _wallet = wallet != null ? wallet : throw new ArgumentNullException(nameof(wallet));
         _configuration = configuration != null ? configuration : throw new ArgumentNullException(nameof(configuration));
         _grid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
         _landGrid = landGrid != null ? landGrid : throw new ArgumentNullException(nameof(landGrid));
+        AudioSourceCallback = callback != null ? callback : throw new ArgumentNullException(nameof(callback));
         _factory = new UnitFactory(configuration);
     }
 
@@ -44,7 +46,7 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawner
         var unit = _factory.Create(side, type);
         var prefab = side == Side.Enemy ? _configuration.GetEnemyPrefab(type) : _configuration.GetPlayerPrefab(type);
         var facade = Instantiate(prefab, _grid.GetCellWorldPosition(neighbours[0]), Quaternion.identity);
-        facade.UnitView.Init(unit);
+        facade.UnitView.Init(unit, AudioSourceCallback);
         _unitsManager.AddUnit(unit, facade);
         UnitSpawned?.Invoke(unit);
 
