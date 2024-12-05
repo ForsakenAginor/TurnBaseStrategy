@@ -42,6 +42,11 @@ public class CitiesActionsManager
         return _cities.Where(city => city.Key.Side == Side.Enemy).Select(city => (_grid.GetXZ(city.Value.Position), city.Key.CitySize)).ToList();
     }
 
+    public IEnumerable<(Vector2Int position, CitySize size, CityUnit unit)> GetEnemyCitiesUnits()
+    {
+        return _cities.Where(city => city.Key.Side == Side.Enemy).Select(city => (_grid.GetXZ(city.Value.Position), city.Key.CitySize, city.Key)).ToList();
+    }
+
     public void AddCity(CityUnit unit, ICityFacade facade)
     {
         if (unit == null)

@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.HexGrid;
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +12,7 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
     [SerializeField] private Button _hireArcher;
     [SerializeField] private Button _hireKnight;
     [SerializeField] private UIElement _buttonCanvas;
+    [SerializeField] private TMP_Text _upgradeCostLabel;
 
     private CitiesConfiguration _configuration;
     private CitiesFactory _factory;
@@ -49,7 +51,8 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
         var facade = Instantiate(facadePrefab, _grid.GetCellWorldPosition(position), Quaternion.identity);
         facade.UnitView.Init(unit);
         facade.Menu.Init(TryHireUnit, TryUpgradeCity,
-            _upgradeButton, _hireInfantry, _hireSpearman, _hireArcher, _hireKnight, _buttonCanvas);
+            _upgradeButton, _hireInfantry, _hireSpearman, _hireArcher, _hireKnight, _buttonCanvas,
+            _upgradeCostLabel, _configuration.GetUpgradeCost(size));
         _unitsManager.AddCity(unit, facade);
 
         //todo: subscribe to city died event, for spawn opposite side village on died
@@ -80,6 +83,7 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
         _unitsManager.RemoveCity(city);
         size++;
         SpawnCity(cell, size, side);
+        _buttonCanvas.Disable();
         return true;
     }
 
