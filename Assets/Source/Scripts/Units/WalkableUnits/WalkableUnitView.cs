@@ -11,12 +11,9 @@ public class WalkableUnitView : UnitView
 
     private WalkableUnit _unit;
 
-    public override void Init(Unit unit)
+    public override void Init(Unit unit, Action<AudioSource> callback)
     {
-        if(unit == null)
-            throw new ArgumentNullException(nameof(unit));
-
-        base.Init(unit);
+        base.Init(unit, callback);
 
         if (unit is WalkableUnit == false)
             throw new ArgumentException("Wrong Type of unit");

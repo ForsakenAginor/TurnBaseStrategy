@@ -22,6 +22,7 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
     private Resource _wallet;
 
     public event Action<Unit> UnitSpawned;
+    public Action<AudioSource> AudioSourceCallback;
 
     private void OnDestroy()
     {
@@ -29,13 +30,14 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
     }
 
     public void Init(CitiesActionsManager manager, UnitSpawner unitSpawner, Resource wallet,
-        CitiesConfiguration configuration, HexGridXZ<Unit> grid)
+        CitiesConfiguration configuration, HexGridXZ<Unit> grid, Action<AudioSource> callback)
     {
         _unitsManager = manager != null ? manager : throw new ArgumentNullException(nameof(manager));
         _unitSpawner = unitSpawner != null ? unitSpawner : throw new ArgumentNullException(nameof(unitSpawner));
         _wallet = wallet != null ? wallet : throw new ArgumentNullException(nameof(wallet));
         _configuration = configuration != null ? configuration : throw new ArgumentNullException(nameof(configuration));
         _grid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
+        AudioSourceCallback = callback != null ? callback : throw new ArgumentNullException(nameof(callback));
         _factory = new CitiesFactory(configuration);
 
         _unitsManager.CityCaptured += OnCityCaptured;
@@ -49,7 +51,7 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
         var unit = _factory.Create(size, side);
         var facadePrefab = side == Side.Player ? _configuration.GetPlayerPrefab(size) : _configuration.GetEnemyPrefab(size);
         var facade = Instantiate(facadePrefab, _grid.GetCellWorldPosition(position), Quaternion.identity);
-        facade.UnitView.Init(unit);
+        facade.UnitView.Init(unit, AudioSourceCallback);
         facade.Menu.Init(TryHireUnit, TryUpgradeCity,
             _upgradeButton, _hireInfantry, _hireSpearman, _hireArcher, _hireKnight, _buttonCanvas,
             _upgradeCostLabel, _configuration.GetUpgradeCost(size));

@@ -3,6 +3,7 @@ using Assets.Scripts.HexGrid;
 using Assets.Scripts.Sound.AudioMixer;
 using Assets.Source.Scripts.GameLoop.StateMachine;
 using Lean.Touch;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -27,6 +28,7 @@ public class Root : MonoBehaviour
     [SerializeField] private CitySpawner _citySpawner;
 
     [Header("Gold")]
+    [SerializeField] private int _startGold = 20;
     [SerializeField] private WalletView _walletView;
     [SerializeField] private CityShopView _cityShop;
 
@@ -47,6 +49,14 @@ public class Root : MonoBehaviour
         SaveSystem saveSystem = new SaveSystem();
         GameLevel currentLevel = saveSystem.Load();
 
+        //********* Sound ************************
+        _soundInitializer.Init();
+
+        if (MusicSingleton.Instance.IsAdded == false)
+            _soundInitializer.AddMusicSource(MusicSingleton.Instance.Music);
+        else
+            _soundInitializer.AddMusicSourceWithoutVolumeChanging(MusicSingleton.Instance.Music);
+
         //******** Init grid ***********
         _gridCreator.Init(currentLevel, _levelConfiguration);
         _meshUpdater.Init(_gridCreator.HexGrid);
@@ -59,7 +69,7 @@ public class Root : MonoBehaviour
         FogOfWar fogOfWar = new(_gridCreator.Clouds, unitsGrid);
 
         //******** Wallet ***********
-        Resource wallet = new Resource(20, int.MaxValue);
+        Resource wallet = new Resource(_startGold, int.MaxValue);
         TaxSystem taxSystem = new TaxSystem(wallet, _citySpawner, _unitSpawner,
             _levelConfiguration.GetCityConfiguration(currentLevel), _levelConfiguration.GetUnitConfiguration(currentLevel));
         _walletView.Init(wallet);
@@ -67,9 +77,9 @@ public class Root : MonoBehaviour
 
         //********  Unit creation  ***********
         UnitsActionsManager unitManager = new UnitsActionsManager(inputSorter, unitsGrid, _enemyBrain);
-        _unitSpawner.Init(unitManager, wallet, _levelConfiguration.GetUnitConfiguration(currentLevel), unitsGrid, _gridCreator.BlockedCells);
+        _unitSpawner.Init(unitManager, wallet, _levelConfiguration.GetUnitConfiguration(currentLevel), unitsGrid, _gridCreator.BlockedCells, AddAudioSourceToMixer);
         CitiesActionsManager cityManager = new CitiesActionsManager(inputSorter, unitsGrid);
-        _citySpawner.Init(cityManager, _unitSpawner, wallet, _levelConfiguration.GetCityConfiguration(currentLevel), unitsGrid);
+        _citySpawner.Init(cityManager, _unitSpawner, wallet, _levelConfiguration.GetCityConfiguration(currentLevel), unitsGrid, AddAudioSourceToMixer);
         CityAtMapInitializer cityInitializer = new CityAtMapInitializer(currentLevel, _levelConfiguration, _citySpawner);
 
         //********* EnemyLogic ***************
@@ -91,15 +101,16 @@ public class Root : MonoBehaviour
         TextureAtlasReader atlas = _meshUpdater.GetComponent<TextureAtlasReader>();
         cityInitializer.SpawnPlayerCities();
 
-        //********* Sound ************************
-        _soundInitializer.Init();
-
-        if (MusicSingleton.Instance.IsAdded == false)
-            _soundInitializer.AddMusicSource(MusicSingleton.Instance.Music);
-        else
-            _soundInitializer.AddMusicSourceWithoutVolumeChanging(MusicSingleton.Instance.Music);
 
         SceneChangerSingleton.Instance.FadeOut();
+    }
+
+    private void AddAudioSourceToMixer(AudioSource audioSource)
+    {
+        if(audioSource == null)
+            throw new ArgumentNullException(nameof(audioSource));
+
+        _soundInitializer.AddEffectSource(audioSource);
     }
 
 #if UNITY_EDITOR
