@@ -9093,10 +9093,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83aab8cede03d7742a2e67dcb2510beb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _unitConfiguration: {fileID: 11400000, guid: b3e9461514ee68f44a938b0273be49ba, type: 2}
-  _cityConfiguration: {fileID: 11400000, guid: 67b8fa3fc224a5942ad0bf0eab6310e4, type: 2}
-  _enemySpawnerConfiguration: {fileID: 11400000, guid: af5b653e77d7c224f95116bcf818979b, type: 2}
-  _enemyWaveConfiguration: {fileID: 11400000, guid: 26f7d908ecfff5f4cb9eb19fddcdf366, type: 2}
+  _levelConfiguration: {fileID: 0}
   _gridColorConfiguration: {fileID: 11400000, guid: 4bc54be9597086f45a3a18613c5dcfea, type: 2}
   _gridCreator: {fileID: 994843276}
   _meshUpdater: {fileID: 994843272}
@@ -9106,7 +9103,9 @@ MonoBehaviour:
   _winLoseMonitor: {fileID: 1254421032}
   _unitSpawner: {fileID: 840627873}
   _citySpawner: {fileID: 840627874}
+  _startGold: 20
   _walletView: {fileID: 1128542883}
+  _cityShop: {fileID: 0}
   _enemyBrain: {fileID: 1990759396}
   _camera: {fileID: 330585546}
   _leanSwipe: {fileID: 579213601}
@@ -11548,6 +11547,7 @@ MonoBehaviour:
   _hireArcher: {fileID: 1198803864}
   _hireKnight: {fileID: 1400915470}
   _buttonCanvas: {fileID: 1493925539}
+  _upgradeCostLabel: {fileID: 0}
 --- !u!1001 &864958422
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13041,14 +13041,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00139ed8cd8b8b3428e04292ed0fc3d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _holder: {fileID: 1628944547}
-  _gridWidth: 10
-  _gridHeight: 10
   _gridCellSize: 1
   _height: 0.25
   _cloudHeight: 1
   _cloudPrefab: {fileID: 7233243436970453600, guid: aba13a55f7d33184c86d6a2083bd8c37, type: 3}
   _cloudsHolder: {fileID: 994843271}
+  _tilemapGrid: {fileID: 0}
 --- !u!114 &994843278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15039,7 +15037,8 @@ MonoBehaviour:
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -17011,6 +17010,7 @@ MonoBehaviour:
   _nextTurnButton: {fileID: 833771163}
   _winScreen: {fileID: 2112268963}
   _loseScreen: {fileID: 562002754}
+  _finishScreen: {fileID: 0}
   _winLoseMonitor: {fileID: 1254421032}
 --- !u!114 &1254421032
 MonoBehaviour:
@@ -22208,7 +22208,7 @@ TilemapRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
