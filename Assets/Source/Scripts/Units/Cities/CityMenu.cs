@@ -51,6 +51,11 @@ public class CityMenu : MonoBehaviour, IUIElement
         _buttonCanvas.Disable();
     }
 
+    //private void OnDisable() // Добавил с помощью ЧАТджпт, ошибка MissingReferenceException: The object of type 'UIElement' has been destroyed but you are still trying to access it.
+    //{
+    //    Disable();
+    //}
+
     private void OnDestroy()
     {
         Disable();
