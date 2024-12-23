@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8131a4f438226249b2f5a9017d37368, type: 3}
+  m_Name: UnitConfiguration 1
+  m_EditorClassIdentifier: 
+  _content:
+  - Key: 0
+    Value:
+      _attack: 4
+      _counterAttack: 2
+      _health: 10
+      _steps: 2
+      _cost: 2
+      _salary: 1
+      _prefabEnemy: {fileID: 341215497773594664, guid: bfbb93bf0b6da584aa6b5a17ed500599, type: 3}
+      _prefabPlayer: {fileID: -8173261334090171093, guid: 3f8227e24c63b9f438cf1c19822d3645, type: 3}
+  - Key: 1
+    Value:
+      _attack: 4
+      _counterAttack: 3
+      _health: 9
+      _steps: 2
+      _cost: 2
+      _salary: 1
+      _prefabEnemy: {fileID: 2677055923916815410, guid: c90f03d46680ee948998d8a861d3555d, type: 3}
+      _prefabPlayer: {fileID: -8173261334090171093, guid: 684d1c3f365f7b549a36d16f2c6f9862, type: 3}
+  - Key: 2
+    Value:
+      _attack: 5
+      _counterAttack: 3
+      _health: 8
+      _steps: 2
+      _cost: 3
+      _salary: 2
+      _prefabEnemy: {fileID: 7603879116437652999, guid: bb2c6a372d4d0314ab70b9f974064947, type: 3}
+      _prefabPlayer: {fileID: -8173261334090171093, guid: 8c1b0c97f58d8c34d9dce553e8a30d30, type: 3}
+  - Key: 3
+    Value:
+      _attack: 8
+      _counterAttack: 5
+      _health: 10
+      _steps: 2
+      _cost: 5
+      _salary: 3
+      _prefabEnemy: {fileID: 4267057834357896133, guid: f5309ae8c2d17f642950cc6d07ee5f4e, type: 3}
+      _prefabPlayer: {fileID: -8173261334090171093, guid: f674e09a397a3de47b6fd550cdc3a895, type: 3}
