@@ -1,23 +1,16 @@
 fileFormatVersion: 2
-guid: 45c3848418decf7449815f900620c8c2
-AssetOrigin:
-  serializedVersion: 1
-  productId: 122084
-  packageName: POLYGON MINI - Fantasy Character Pack
-  packageVersion: 1.6.1
-  assetPath: Assets/PolygonMiniFantasyCharacters/Models/Characters.fbx
-  uploadId: 645138
+guid: ecd3376397ec05740a9419e772b13249
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
   externalObjects: {}
   materials:
-    materialImportMode: 0
+    materialImportMode: 2
     materialName: 0
     materialSearch: 1
     materialLocation: 1
   animations:
-    legacyGenerateAnimations: 0
+    legacyGenerateAnimations: 4
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
@@ -36,7 +29,36 @@ ModelImporter:
     animationWrapMode: 0
     extraExposedTransformPaths: []
     extraUserProperties: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Attack_sword_shield
+      takeName: mixamo.com
+      internalID: -203655887218126122
+      firstFrame: 0
+      lastFrame: 55
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 0
   meshes:
     lODScreenPercentages: []
@@ -46,24 +68,24 @@ ModelImporter:
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
     importPhysicalCameras: 1
-    importVisibility: 0
-    importBlendShapes: 0
-    importCameras: 0
-    importLights: 0
-    nodeNameCollisionStrategy: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
     fileIdsGeneration: 2
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
     keepQuads: 0
-    weldVertices: 0
+    weldVertices: 1
     bakeAxisConversion: 0
     preserveHierarchy: 0
     skinWeightsMode: 0
     maxBonesPerVertex: 4
     minBoneWeight: 0.001
     optimizeBones: 1
-    meshOptimizationFlags: -3
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
@@ -75,15 +97,15 @@ ModelImporter:
     useFileScale: 1
     strictVertexDataChecks: 0
   tangentSpace:
-    normalSmoothAngle: 3
-    normalImportMode: 1
+    normalSmoothAngle: 60
+    normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
-    normalSmoothingSource: 2
+    normalSmoothingSource: 0
   referencedClips: []
-  importAnimation: 0
+  importAnimation: 1
   humanDescription:
     serializedVersion: 3
     human:
@@ -713,7 +735,7 @@ ModelImporter:
     - name: middle_01_l
       parentName: hand_l
       position: {x: 0.005163934, y: -0.01852005, z: 0.14083658}
-      rotation: {x: -0.018644918, y: 0.006023485, z: 0.087841615, w: 0.9959418}
+      rotation: {x: -0.018644927, y: 0.006023485, z: 0.08784165, w: 0.9959418}
       scale: {x: 1, y: 1, z: 1}
     - name: middle_02_l
       parentName: middle_01_l
@@ -768,7 +790,7 @@ ModelImporter:
     - name: thumb_01_r
       parentName: hand_r
       position: {x: 0.07694272, y: -0.0000004651619, z: 0.060073994}
-      rotation: {x: 0.039571833, y: 0.33795285, z: -0.03758472, w: 0.93957937}
+      rotation: {x: 0.03957183, y: 0.33795282, z: -0.037584715, w: 0.9395793}
       scale: {x: 1, y: 1, z: 1}
     - name: thumb_02_r
       parentName: thumb_01_r
@@ -792,12 +814,12 @@ ModelImporter:
       scale: {x: 1, y: 1, z: 1}
     - name: eyebrows
       parentName: head
-      position: {x: 0.051, y: 0.001, z: 0.489}
+      position: {x: 0.047496445, y: 0.00043929566, z: 0.49208823}
       rotation: {x: 0.00052459456, y: -0.3725621, z: -0.0004767939, w: 0.928007}
       scale: {x: 1, y: 1, z: 1}
     - name: eyes
       parentName: head
-      position: {x: 0.001, y: 0.001, z: 0.445}
+      position: {x: -0.0000005429568, y: 0.00032716655, z: 0.44662365}
       rotation: {x: 0.0020012239, y: -0.3725571, z: -0.0041549047, w: 0.9279978}
       scale: {x: 1, y: 1, z: 1}
     - name: thigh_l
@@ -862,13 +884,13 @@ ModelImporter:
     hasTranslationDoF: 0
     hasExtraRoot: 1
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 45c3848418decf7449815f900620c8c2, type: 3}
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 3
   humanoidOversampling: 1
-  avatarSetup: 1
+  avatarSetup: 2
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
-  importBlendShapeDeformPercent: 0
+  importBlendShapeDeformPercent: 1
   remapMaterialsIfMaterialImportModeIsNone: 0
   additionalBone: 0
   userData: 
