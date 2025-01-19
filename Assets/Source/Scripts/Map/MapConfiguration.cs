@@ -8,17 +8,14 @@ public class MapConfiguration
     [SerializeField] private int _width;
     [SerializeField] private int _height;
     [SerializeField] private Tilemap _prefab;
-    [SerializeField] private float _cameraMinX;
-    [SerializeField] private float _cameraMaxX;
-    [SerializeField] private float _cameraMinZ;
-    [SerializeField] private float _cameraMaxZ;
     [SerializeField] private SerializedPair<Vector2Int, CitySize>[] _enemyCities;
     [SerializeField] private SerializedPair<Vector2Int, CitySize>[] _playerCities;
-    [SerializeField] private Vector3 _cameraStartPosition;
+    [SerializeField] private Vector2Int _cameraStartPosition;
     [SerializeField] private UnitsConfiguration _unitConfiguration;
     [SerializeField] private CitiesConfiguration _cityConfiguration;
     [SerializeField] private EnemySpawnerConfiguration _enemySpawnerConfiguration;
     [SerializeField] private EnemyWaveConfiguration _enemyWaveConfiguration;
+    [SerializeField] private Vector2 _cameraMin = new (0, -2);
 
     public int Width => _width;
 
@@ -26,19 +23,15 @@ public class MapConfiguration
 
     public Tilemap Prefab => _prefab;
 
-    public float CameraMinX => _cameraMinX;
+    public Vector2 CameraMin => _cameraMin;
 
-    public float CameraMaxX => _cameraMaxX;
-
-    public float CameraMinZ => _cameraMinZ;
-
-    public float CameraMaxZ => _cameraMaxZ;
+    public Vector2 CameraMax => _cameraMin + new Vector2(_width, _height * 0.75f);
 
     public SerializedPair<Vector2Int, CitySize>[] EnemyCities => _enemyCities;
 
     public SerializedPair<Vector2Int, CitySize>[] PlayerCities => _playerCities;
 
-    public Vector3 CameraStartPosition => _cameraStartPosition;
+    public Vector2Int CameraStartPosition => _cameraStartPosition;
 
     public UnitsConfiguration UnitConfiguration => _unitConfiguration;
 

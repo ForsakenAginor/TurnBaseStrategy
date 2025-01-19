@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using Assets.Scripts.HexGrid;
+using DG.Tweening;
 using System;
 using UnityEngine;
 
@@ -6,44 +7,58 @@ public class CameraMover
 {
     private const float MaxZoomValue = 12f;
     private const float MinZoomValue = 5f;
+    private const float CameraYDefault = 6;
 
-    private readonly float _minX = 0;
-    private readonly float _minZ = -1;
-    private readonly float _maxX = 10;
-    private readonly float _maxZ = 6;
-
+    private readonly Vector3 _cameraMin;
+    private readonly Vector3 _cameraMax;
     private readonly Transform _camera;
     private readonly SwipeHandler _swipeHandler;
     private readonly PinchDetector _pinchDetector;
     private readonly float _zoomMultiplier = 2f;
     private readonly float _speed = 1f;
+    private readonly HexGridXZ<CellSprite> _grid;
+    private readonly EnemyScaner _enemyScaner;
 
     private Tween _tween;
 
-    public CameraMover(Transform camera, SwipeHandler swipeHandler, PinchDetector pinchDetector, GameLevel level, ICameraConfigurationGetter configuration)
+    public CameraMover(Transform camera, SwipeHandler swipeHandler, PinchDetector pinchDetector,
+        GameLevel level, ICameraConfigurationGetter configuration, HexGridXZ<CellSprite> grid, EnemyScaner enemyScaner)
     {
         _camera = camera != null ? camera : throw new ArgumentNullException(nameof(camera));
         _swipeHandler = swipeHandler != null ? swipeHandler : throw new ArgumentNullException(nameof(swipeHandler));
         _pinchDetector = pinchDetector != null ? pinchDetector : throw new ArgumentNullException(nameof(pinchDetector));
+        _grid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
+        _enemyScaner = enemyScaner != null ? enemyScaner : throw new ArgumentNullException(nameof(enemyScaner));
 
         if(configuration == null)
             throw new ArgumentNullException(nameof(configuration));
 
-        _minX = configuration.GetMinimumCameraPosition(level).x;
-        _minZ = configuration.GetMinimumCameraPosition(level).y;
-        _maxX = configuration.GetMaximumCameraPosition(level).x;
-        _maxZ = configuration.GetMaximumCameraPosition(level).y;
+        _cameraMin = new Vector3(configuration.GetMinimumCameraPosition(level).x, 0, configuration.GetMinimumCameraPosition(level).y);
+        _cameraMax = new Vector3(configuration.GetMaximumCameraPosition(level).x, 0, configuration.GetMaximumCameraPosition(level).y);
 
-        _tween = _camera.DOMove(configuration.GetCameraStartPosition(level), _speed);
+        var startedCell = configuration.GetCameraStartPosition(level);
+        FocusCameraOnCell(startedCell);
 
         _pinchDetector.GotPinchInput += OnPinch;
         _swipeHandler.SwipeInputReceived += OnSwipeInputReceived;
+        _enemyScaner.DefendersSpawned += FocusCameraOnCell;
     }
 
     ~CameraMover()
     {
         _pinchDetector.GotPinchInput -= OnPinch;
         _swipeHandler.SwipeInputReceived -= OnSwipeInputReceived;
+        _enemyScaner.DefendersSpawned -= FocusCameraOnCell;
+    }
+
+    private void FocusCameraOnCell(Vector2Int cell)
+    {
+        if(_tween != null)
+            _tween.Kill();
+
+        var cellPosition = _grid.GetCellWorldPosition(cell);
+        var cameraPosition = new Vector3(cellPosition.x, CameraYDefault, cellPosition.z) + _cameraMin;
+        _tween = _camera.DOMove(cameraPosition, _speed);
     }
 
     private void OnPinch(float value)
@@ -57,8 +72,8 @@ public class CameraMover
     private void OnSwipeInputReceived(Vector3 vector)
     {
         Vector3 target = _camera.position - vector;
-        target.x = Mathf.Clamp(target.x, _minX, _maxX);
-        target.z = Mathf.Clamp(target.z, _minZ, _maxZ);
+        target.x = Mathf.Clamp(target.x, _cameraMin.x, _cameraMax.x);
+        target.z = Mathf.Clamp(target.z, _cameraMin.z, _cameraMax.z);
         _tween.Kill();
         _tween = _camera.DOMove(target, _speed);
     }

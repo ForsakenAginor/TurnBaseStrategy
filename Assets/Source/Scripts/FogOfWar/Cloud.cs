@@ -40,13 +40,13 @@ public class FogOfWar
         _neighbours = _fogGrid.CashedFarNeighbours;
 
         _unitGrid.GridObjectChanged += OnGridChanged;
-        _enemyScaner.UnitsSpawned += OnDefendersSpawned;
+        _enemyScaner.DefendersSpawned += OnDefendersSpawned;
     }
 
     ~FogOfWar()
     {
         _unitGrid.GridObjectChanged -= OnGridChanged;
-        _enemyScaner.UnitsSpawned -= OnDefendersSpawned;
+        _enemyScaner.DefendersSpawned -= OnDefendersSpawned;
     }
 
     private void OnDefendersSpawned(Vector2Int cell)

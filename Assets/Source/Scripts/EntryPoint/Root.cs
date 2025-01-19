@@ -95,7 +95,8 @@ public class Root : MonoBehaviour
 
         //********* Camera control *********
         SwipeHandler swipeHandler = new SwipeHandler(_leanSwipe);
-        CameraMover cameraMover = new CameraMover(_camera, swipeHandler, _pinchDetector, currentLevel, _levelConfiguration);
+        CameraMover cameraMover = new CameraMover(_camera, swipeHandler, _pinchDetector, currentLevel, _levelConfiguration,
+            _gridCreator.HexGrid, scaner);
 
         //********* Other ************************
         TextureAtlasReader atlas = _meshUpdater.GetComponent<TextureAtlasReader>();
