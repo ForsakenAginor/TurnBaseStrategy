@@ -65,9 +65,6 @@ public class Root : MonoBehaviour
         NewInputSorter inputSorter = new NewInputSorter(unitsGrid, _cellSelector, _gridCreator.BlockedCells);
         _cellHighlighter = new(inputSorter, _gridCreator.HexGrid, _gridColorConfiguration);
 
-        //******** FogOfWar *********
-        FogOfWar fogOfWar = new(_gridCreator.Clouds, unitsGrid);
-
         //******** Wallet ***********
         Resource wallet = new Resource(_startGold, int.MaxValue);
         TaxSystem taxSystem = new TaxSystem(wallet, _citySpawner, _unitSpawner,
@@ -87,6 +84,9 @@ public class Root : MonoBehaviour
         cityInitializer.SpawnEnemyCities();
         EnemyWaveSpawner waveSpawner = new(cityManager.GetEnemyCitiesUnits(), _unitSpawner, _levelConfiguration.GetEnemyWaveConfiguration(currentLevel));
         EnemyScaner scaner = new(cityManager.GetEnemyCities(), _unitSpawner, unitsGrid, _levelConfiguration.GetEnemySpawnerConfiguration(currentLevel));
+
+        //******** FogOfWar *********
+        FogOfWar fogOfWar = new(_gridCreator.Clouds, unitsGrid, scaner);
 
         //********* Game state machine *******
         _winLoseMonitor.Init(cityManager, saveSystem, currentLevel);
