@@ -17,7 +17,6 @@ public class Attacker : MonoBehaviour
         _model.transform.LookAt(target);
         StartCoroutine(WaitUntilAnimationEnd(target, onComleteCallback, onDealDamageCallback));
         _controller.Attack();
-        _soundHandler.Attack();
     }
 
     private IEnumerator WaitUntilAnimationEnd(Vector3 target, Action onComleteCallback, Action onDealDamageCallback)
@@ -27,6 +26,7 @@ public class Attacker : MonoBehaviour
         WaitForSeconds thirdPartDelay = new WaitForSeconds(_animationDuration - _timeBeforeHit);
         yield return firstPartDelay;
         PlayEffect(target);
+        _soundHandler.Attack();
         yield return secondPartDelay;
         onDealDamageCallback?.Invoke();
         yield return thirdPartDelay;
