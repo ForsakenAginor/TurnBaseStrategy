@@ -16,4 +16,12 @@ public class Mover : MonoBehaviour
         _controller.Walk();
         _soundHandler.Walk();
     }
+
+    public void MoveFast(Vector3 target, Action onComleteCallback)
+    {
+        float duration = 0.05f;
+        _model.transform.LookAt(target);
+        transform.DOMove(target, duration).SetEase(Ease.Linear).OnComplete(() => { onComleteCallback.Invoke(); _controller.Stop(); });
+        _controller.Walk();
+    }
 }
