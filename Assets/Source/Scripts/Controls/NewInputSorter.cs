@@ -7,7 +7,7 @@ using UnityEngine;
 public class NewInputSorter : IControllable
 {
     private readonly HexGridXZ<Unit> _hexGrid;
-    private readonly HexGridXZ<IBlockedCell> _blockedCells;
+    private readonly HexGridXZ<IHexOnScene> _blockedCells;
     private readonly CellSelector _cellSelector;
     private readonly Vector2Int _fakeCell = new Vector2Int(-10000, -10000);
 
@@ -16,7 +16,7 @@ public class NewInputSorter : IControllable
     private List<Vector2Int> _possibleAttacks;
     private WalkableUnit _selectedUnit;
 
-    public NewInputSorter(HexGridXZ<Unit> grid, CellSelector selector, HexGridXZ<IBlockedCell> blockedCells)
+    public NewInputSorter(HexGridXZ<Unit> grid, CellSelector selector, HexGridXZ<IHexOnScene> blockedCells)
     {
         _hexGrid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
         _blockedCells = blockedCells != null ? blockedCells : throw new ArgumentNullException(nameof(blockedCells));

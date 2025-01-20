@@ -10,14 +10,14 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawner
     private UnitFactory _factory;
     private UnitsActionsManager _unitsManager;
     private HexGridXZ<Unit> _grid;
-    private HexGridXZ<IBlockedCell> _landGrid;
+    private HexGridXZ<IHexOnScene> _landGrid;
     private Resource _wallet;
 
     public event Action<Unit> UnitSpawned;
     public Action<AudioSource> AudioSourceCallback;
 
     public void Init(UnitsActionsManager manager, Resource wallet,
-        UnitsConfiguration configuration, HexGridXZ<Unit> grid, HexGridXZ<IBlockedCell> landGrid, Action<AudioSource> callback)
+        UnitsConfiguration configuration, HexGridXZ<Unit> grid, HexGridXZ<IHexOnScene> landGrid, Action<AudioSource> callback)
     {
         _unitsManager = manager != null ? manager : throw new ArgumentNullException(nameof(manager));
         _wallet = wallet != null ? wallet : throw new ArgumentNullException(nameof(wallet));

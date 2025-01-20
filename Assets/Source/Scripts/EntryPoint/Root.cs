@@ -64,6 +64,7 @@ public class Root : MonoBehaviour
         var unitsGrid = _gridCreator.UnitsGrid;
         NewInputSorter inputSorter = new NewInputSorter(unitsGrid, _cellSelector, _gridCreator.BlockedCells);
         _cellHighlighter = new(inputSorter, _gridCreator.HexGrid, _gridColorConfiguration);
+        _ = new HexContentSwitcher(unitsGrid, _gridCreator.BlockedCells);
 
         //******** Wallet ***********
         Resource wallet = new Resource(_startGold, int.MaxValue);
