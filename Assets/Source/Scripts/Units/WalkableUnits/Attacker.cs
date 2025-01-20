@@ -10,24 +10,34 @@ public class Attacker : MonoBehaviour
     [SerializeField] private float _timeBeforeHit;
     [SerializeField] private float _timeBeforeEffectPlayed;
     [SerializeField] private UnitSoundsHandler _soundHandler;
+    [SerializeField] private ShootingEffect _effect;
 
     public void Attack(Vector3 target, Action onComleteCallback, Action onDealDamageCallback)
     {
         _model.transform.LookAt(target);
-        StartCoroutine(WaitUntilAnimationEnd(onComleteCallback, onDealDamageCallback));
+        StartCoroutine(WaitUntilAnimationEnd(target, onComleteCallback, onDealDamageCallback));
         _controller.Attack();
         _soundHandler.Attack();
     }
 
-    private IEnumerator WaitUntilAnimationEnd(Action onComleteCallback, Action onDealDamageCallback)
+    private IEnumerator WaitUntilAnimationEnd(Vector3 target, Action onComleteCallback, Action onDealDamageCallback)
     {
         WaitForSeconds firstPartDelay = new WaitForSeconds(_timeBeforeEffectPlayed);
         WaitForSeconds secondPartDelay = new WaitForSeconds(_timeBeforeHit - _timeBeforeEffectPlayed);
         WaitForSeconds thirdPartDelay = new WaitForSeconds(_animationDuration - _timeBeforeHit);
         yield return firstPartDelay;
+        PlayEffect(target);
         yield return secondPartDelay;
         onDealDamageCallback?.Invoke();
         yield return thirdPartDelay;
         onComleteCallback?.Invoke();
+    }
+
+    private void PlayEffect(Vector3 target)
+    {
+        if (_effect == null)
+            return;
+
+        _effect.PlayEffect(transform.position, target);
     }
 }
