@@ -78,6 +78,7 @@ MonoBehaviour:
   _attack: {fileID: 8675907174044110110}
   _moving: {fileID: 3757932577972915099}
   _unitController: {fileID: 1504578835764714884}
+  _timeToDie: 2.3
 --- !u!114 &5259155121437217633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -117,7 +118,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _model: {fileID: 5368600285895205518}
   _controller: {fileID: 1504578835764714884}
-  _duration: 0.5
+  _animationDuration: 2.75
+  _timeBeforeHit: 2.7
+  _timeBeforeEffectPlayed: 2
   _soundHandler: {fileID: 6118582582965993747}
 --- !u!114 &6118582582965993747
 MonoBehaviour:

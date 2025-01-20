@@ -96,12 +96,12 @@ public class UnitsActionsManager
     {
         IUnitFacade unitFacade = _units[unit1];
 
-        if (unit1.TryAttack(unit2))
+        if (unit1.CanAttack)
         {
             if (unitFacade is IWalkableUnitFacade facade)
-                facade.Attacker.Attack(targetPosition, callback);
+                facade.Attacker.Attack(targetPosition, callback, () => unit1.TryAttack(unit2));
             else
-                throw new Exception("You are moving unmovable object");
+                throw new Exception();
         }
         else
         {
