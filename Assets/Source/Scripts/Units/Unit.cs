@@ -26,6 +26,8 @@ public class Unit
     }
 
     public event Action HealthChanged;
+    public event Action<int> Healed;
+    public event Action<int> TookDamage;
     public event Action<Unit> Destroyed;
     public event Action<Unit> Captured;
 
@@ -39,11 +41,21 @@ public class Unit
 
     public int CounterAttackPower => _counterAttackPower;
 
-    public void TakeDamage(int amount) => _health.Spent(amount);
-
     public void SufferPaymentDamage() => TakeDamage(LackOfPaymentDamage);
 
-    public void HealingUnit() => _health.Add(HealingValue);
+    public void HealingUnit()
+    {
+        if (_health.Amount < _health.Maximum)
+            Healed?.Invoke(HealingValue);
+
+        _health.Add(HealingValue);
+    }
+
+    public void TakeDamage(int amount)
+    {
+        _health.Spent(amount);
+        TookDamage?.Invoke(amount);
+    }
 
     protected void Kill() => Destroyed?.Invoke(this);
 
