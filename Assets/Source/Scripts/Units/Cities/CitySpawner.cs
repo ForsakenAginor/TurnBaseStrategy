@@ -13,6 +13,7 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
     [SerializeField] private Button _hireKnight;
     [SerializeField] private UIElement _buttonCanvas;
     [SerializeField] private TMP_Text _upgradeCostLabel;
+    [SerializeField] private UIElement _upgradePanel;
 
     private CitiesConfiguration _configuration;
     private CitiesFactory _factory;
@@ -54,7 +55,7 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
         facade.UnitView.Init(unit, AudioSourceCallback);
         facade.Menu.Init(TryHireUnit, TryUpgradeCity,
             _upgradeButton, _hireInfantry, _hireSpearman, _hireArcher, _hireKnight, _buttonCanvas,
-            _upgradeCostLabel, _configuration.GetUpgradeCost(size));
+            _upgradeCostLabel, _configuration.GetUpgradeCost(size), _upgradePanel);
         _unitsManager.AddCity(unit, facade);
 
         //todo: subscribe to city died event, for spawn opposite side village on died
