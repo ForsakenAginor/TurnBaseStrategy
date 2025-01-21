@@ -31,6 +31,7 @@ public class Root : MonoBehaviour
     [SerializeField] private int _startGold = 20;
     [SerializeField] private WalletView _walletView;
     [SerializeField] private CityShopView _cityShop;
+    [SerializeField] private IncomeView _incomeView;
 
     [Header("Enemy")]
     [SerializeField] private EnemyBrain _enemyBrain;
@@ -72,6 +73,7 @@ public class Root : MonoBehaviour
             _levelConfiguration.GetCityConfiguration(currentLevel), _levelConfiguration.GetUnitConfiguration(currentLevel));
         _walletView.Init(wallet);
         _cityShop.Init(_levelConfiguration.GetUnitConfiguration(currentLevel));
+        _incomeView.Init(taxSystem);
 
         //********  Unit creation  ***********
         UnitsActionsManager unitManager = new UnitsActionsManager(inputSorter, unitsGrid, _enemyBrain, _gridCreator.Clouds);

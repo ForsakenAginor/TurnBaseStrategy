@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public class TaxSystem : IResetable
+public class TaxSystem : IResetable, IIncome
 {
     private readonly Resource _wallet;
     private readonly IUnitSpawner _citySpawner;
@@ -32,6 +32,8 @@ public class TaxSystem : IResetable
         _citySpawner.UnitSpawned -= OnCitySpawned;
         _unitSpawner.UnitSpawned -= OnUnitSpawned;
     }
+
+    public event Action<int> IncomeChanged;
 
     public void Reset()
     {
@@ -77,6 +79,8 @@ public class TaxSystem : IResetable
             _enemyUnits.Add(walkableUnit);
         else
             _units.Add(unit, _unitConfiguration.GetUnitSalary(walkableUnit.UnitType));
+
+        CalcIncome();
     }
 
     private void OnUnitDied(Unit unit)
@@ -87,6 +91,8 @@ public class TaxSystem : IResetable
             _enemyUnits.Remove(unit);
 
         unit.Destroyed -= OnUnitDied;
+
+        CalcIncome();
     }
 
     private void OnCityDestroyed(Unit unit)
@@ -97,6 +103,8 @@ public class TaxSystem : IResetable
             _enemyCities.Remove(unit);
 
         unit.Destroyed -= OnCityDestroyed;
+
+        CalcIncome();
     }
 
     private void OnCitySpawned(Unit unit)
@@ -108,5 +116,26 @@ public class TaxSystem : IResetable
             _enemyCities.Add(city);
         else
             _cities.Add(unit, _cityEconomicConfiguration.GetGoldIncome(city.CitySize));
+
+        CalcIncome();
+    }
+
+    private void CalcIncome()
+    {
+         int income = 0;
+
+        foreach (var city in _cities.Keys)
+            income += _cities[city];
+
+        foreach (var unit in _units.Keys)
+            income -= _units[unit];        
+
+        IncomeChanged?.Invoke(income);
     }
 }
+
+public interface IIncome
+{
+    public event Action<int> IncomeChanged;
+}
+
