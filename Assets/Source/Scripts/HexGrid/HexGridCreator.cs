@@ -22,14 +22,14 @@ public class HexGridCreator : MonoBehaviour
     private Tilemap _tilemapPrefab;
 
     [Header("Grids")]
-    private HexGridXZ<IBlockedCell> _blockedCells;
+    private HexGridXZ<IHexOnScene> _blockedCells;
     private HexGridXZ<CellSprite> _hexGrid;
     private HexGridXZ<Unit> _unitsGrid;
     private HexGridXZ<ICloud> _clouds;
     private HexPathFinder _pathFinder;
     private HexOnScene[] _views;
 
-    public HexGridXZ<IBlockedCell> BlockedCells => _blockedCells;
+    public HexGridXZ<IHexOnScene> BlockedCells => _blockedCells;
 
     public HexGridXZ<CellSprite> HexGrid => _hexGrid;
 
@@ -52,7 +52,7 @@ public class HexGridCreator : MonoBehaviour
         Vector3 cloudPosition = new Vector3(0, _cloudHeight, 0);
         _hexGrid = new(_gridWidth, _gridHeight, _gridCellSize, position);
         _unitsGrid = new(_gridWidth, _gridHeight, _gridCellSize, position);
-        _blockedCells = new HexGridXZ<IBlockedCell>(_gridWidth, _gridHeight, _gridCellSize, position);
+        _blockedCells = new HexGridXZ<IHexOnScene>(_gridWidth, _gridHeight, _gridCellSize, position);
         _clouds = new HexGridXZ<ICloud>(_gridWidth, _gridHeight, _gridCellSize, cloudPosition);
         _pathFinder = new HexPathFinder(_gridWidth, _gridHeight, _gridCellSize);
 

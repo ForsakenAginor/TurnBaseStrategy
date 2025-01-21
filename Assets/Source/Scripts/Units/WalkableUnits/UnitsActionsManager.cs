@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class UnitsActionsManager
@@ -10,14 +11,16 @@ public class UnitsActionsManager
     private readonly NewInputSorter _inputSorter;
     private readonly HexGridXZ<Unit> _grid;
     private readonly EnemyBrain _enemyBrain;
+    private readonly HexGridXZ<ICloud> _fogOfWar;
 
     private IUIElement _selectedUnit;
 
-    public UnitsActionsManager(NewInputSorter inputSorter, HexGridXZ<Unit> grid, EnemyBrain enemyBrain)
+    public UnitsActionsManager(NewInputSorter inputSorter, HexGridXZ<Unit> grid, EnemyBrain enemyBrain, HexGridXZ<ICloud> cloudGrid)
     {
         _inputSorter = inputSorter != null ? inputSorter : throw new ArgumentNullException(nameof(inputSorter));
         _grid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
         _enemyBrain = enemyBrain != null ? enemyBrain : throw new ArgumentNullException(nameof(enemyBrain));
+        _fogOfWar = cloudGrid != null ? cloudGrid : throw new ArgumentNullException(nameof(cloudGrid));
 
         _inputSorter.MovableUnitSelected += OnUnitSelected;
         _inputSorter.FriendlyCitySelected += OnCitySelected;
@@ -96,12 +99,12 @@ public class UnitsActionsManager
     {
         IUnitFacade unitFacade = _units[unit1];
 
-        if (unit1.TryAttack(unit2))
+        if (unit1.CanAttack)
         {
             if (unitFacade is IWalkableUnitFacade facade)
-                facade.Attacker.Attack(targetPosition, callback);
+                facade.Attacker.Attack(targetPosition, callback, () => unit1.TryAttack(unit2));
             else
-                throw new Exception("You are moving unmovable object");
+                throw new Exception();
         }
         else
         {
@@ -117,9 +120,19 @@ public class UnitsActionsManager
         if (unit.TryMoving(step))
         {
             if (_units[unit] is IWalkableUnitFacade facade)
-                facade.Mover.Move(_grid.GetCellWorldPosition(target), callback);
+            {
+                var cloud = _fogOfWar.GetGridObject(target);
+
+                if (cloud == null || cloud.IsDissappeared == true)
+                    facade.Mover.Move(_grid.GetCellWorldPosition(target), callback);
+                else
+                    facade.Mover.MoveFast(_grid.GetCellWorldPosition(target), callback);
+            }
             else
+            {
+
                 throw new Exception("You are moving unmovable object");
+            }
 
             Vector3 position = _units[unit].Position;
             _grid.SetGridObject(position, null);

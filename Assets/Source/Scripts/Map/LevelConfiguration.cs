@@ -6,7 +6,7 @@ using UnityEngine.Tilemaps;
 public class LevelConfiguration : UpdatableConfiguration<GameLevel, MapConfiguration>,
     ICameraConfigurationGetter, IMapInfoGetter, ICityCoordinatesGetter, ICongigurationGetter
 {
-    public Vector3 GetCameraStartPosition(GameLevel level) => Content.First(o => o.Key == level).Value.CameraStartPosition;
+    public Vector2Int GetCameraStartPosition(GameLevel level) => Content.First(o => o.Key == level).Value.CameraStartPosition;
 
     public SerializedPair<Vector2Int, CitySize>[] GetEnemyCities(GameLevel level) =>
         Content.First(o => o.Key == level).Value.EnemyCities;
@@ -33,15 +33,11 @@ public class LevelConfiguration : UpdatableConfiguration<GameLevel, MapConfigura
 
     public Vector2 GetMaximumCameraPosition(GameLevel level)
     {
-        float x = Content.First(o => o.Key == level).Value.CameraMaxX;
-        float z = Content.First(o => o.Key == level).Value.CameraMaxZ;
-        return new Vector2(x, z);
+        return Content.First(o => o.Key == level).Value.CameraMax;
     }
 
     public Vector2 GetMinimumCameraPosition(GameLevel level)
     {
-        float x = Content.First(o => o.Key == level).Value.CameraMinX;
-        float z = Content.First(o => o.Key == level).Value.CameraMinZ;
-        return new Vector2(x, z);
+        return Content.First(o => o.Key == level).Value.CameraMin;
     }
 }

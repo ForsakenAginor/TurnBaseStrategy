@@ -8,15 +8,13 @@ public class WalkableUnitView : UnitView
     [SerializeField] private TMP_Text _attack;
     [SerializeField] private TMP_Text _moving;
     [SerializeField] private UnitAnimationController _unitController;
+    [SerializeField] private float _timeToDie;
 
     private WalkableUnit _unit;
 
-    public override void Init(Unit unit)
+    public override void Init(Unit unit, Action<AudioSource> callback)
     {
-        if(unit == null)
-            throw new ArgumentNullException(nameof(unit));
-
-        base.Init(unit);
+        base.Init(unit, callback);
 
         if (unit is WalkableUnit == false)
             throw new ArgumentException("Wrong Type of unit");
@@ -45,12 +43,9 @@ public class WalkableUnitView : UnitView
 
     private IEnumerator StartDying()
     {
-        float duration = 1f;
-        WaitForSeconds delay = new WaitForSeconds(duration);
-        yield return delay;
+        WaitForSeconds animationDelay = new WaitForSeconds(_timeToDie);
         _unitController.Die();
-        yield return delay;
-        yield return delay;
+        yield return animationDelay;
         gameObject.SetActive(false);
     }
 }

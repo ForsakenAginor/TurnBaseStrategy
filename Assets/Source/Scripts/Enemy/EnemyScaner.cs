@@ -29,6 +29,8 @@ public class EnemyScaner
         _grid.GridObjectChanged -= OnGridChanged;
     }
 
+    public event Action<Vector2Int> DefendersSpawned;
+
     private void OnGridChanged(Vector2Int coordinates)
     {
         var cell = _grid.GetGridObject(coordinates);
@@ -57,5 +59,7 @@ public class EnemyScaner
 
         foreach (var unit in units)
             _unitSpawner.TrySpawnUnit(position, unit, Side.Enemy);
+
+        DefendersSpawned?.Invoke(position);
     }
 }
