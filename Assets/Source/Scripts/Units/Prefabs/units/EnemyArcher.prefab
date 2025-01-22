@@ -78,6 +78,7 @@ MonoBehaviour:
   _damagingMessage: {fileID: 4679881723017174778}
   _animationDuration: 1
   _animationDistance: 0.3
+  _title: {fileID: 0}
   _attack: {fileID: 447487843121024143}
   _moving: {fileID: 5364934556582464010}
   _unitController: {fileID: 1115851083676393838}
@@ -1987,9 +1988,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4047769612130058}
     m_Modifications:
+    - target: {fileID: 1768190825564210037, guid: 0d81b0e82a2928249a9edefc969915bb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2347733801361822139, guid: 0d81b0e82a2928249a9edefc969915bb, type: 3}
       propertyPath: m_Name
       value: UnitCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 5271917127845825942, guid: 0d81b0e82a2928249a9edefc969915bb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7177627507542882039, guid: 0d81b0e82a2928249a9edefc969915bb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8522516651302973818, guid: 0d81b0e82a2928249a9edefc969915bb, type: 3}
       propertyPath: m_Pivot.x
@@ -2157,6 +2170,38 @@ PrefabInstance:
       value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 201817815334874980, guid: 4150e8356bc80d143b85642d5aeaeaf0, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1438691613084624715, guid: 4150e8356bc80d143b85642d5aeaeaf0, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 1438691613084624715, guid: 4150e8356bc80d143b85642d5aeaeaf0, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 1438691613084624715, guid: 4150e8356bc80d143b85642d5aeaeaf0, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1438691613084624715, guid: 4150e8356bc80d143b85642d5aeaeaf0, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1438691613084624715, guid: 4150e8356bc80d143b85642d5aeaeaf0, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1438691613084624715, guid: 4150e8356bc80d143b85642d5aeaeaf0, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1438691613084624715, guid: 4150e8356bc80d143b85642d5aeaeaf0, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1438691613084624715, guid: 4150e8356bc80d143b85642d5aeaeaf0, type: 3}
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}

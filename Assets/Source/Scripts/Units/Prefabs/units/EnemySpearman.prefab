@@ -77,6 +77,7 @@ MonoBehaviour:
   _damagingMessage: {fileID: 610218526468008001}
   _animationDuration: 1
   _animationDistance: 0.3
+  _title: {fileID: 0}
   _attack: {fileID: 5670140744002452020}
   _moving: {fileID: 212155890233785521}
   _unitController: {fileID: -9111103023324173811}
@@ -2002,6 +2003,38 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1438691613084624715, guid: 4150e8356bc80d143b85642d5aeaeaf0, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 1438691613084624715, guid: 4150e8356bc80d143b85642d5aeaeaf0, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 1438691613084624715, guid: 4150e8356bc80d143b85642d5aeaeaf0, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1438691613084624715, guid: 4150e8356bc80d143b85642d5aeaeaf0, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1438691613084624715, guid: 4150e8356bc80d143b85642d5aeaeaf0, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1438691613084624715, guid: 4150e8356bc80d143b85642d5aeaeaf0, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1438691613084624715, guid: 4150e8356bc80d143b85642d5aeaeaf0, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1438691613084624715, guid: 4150e8356bc80d143b85642d5aeaeaf0, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2295069918319849686, guid: 4150e8356bc80d143b85642d5aeaeaf0, type: 3}
       propertyPath: m_Color.b
       value: 0.43529412
@@ -2155,9 +2188,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4386176656722256}
     m_Modifications:
+    - target: {fileID: 1768190825564210037, guid: 0d81b0e82a2928249a9edefc969915bb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2347733801361822139, guid: 0d81b0e82a2928249a9edefc969915bb, type: 3}
       propertyPath: m_Name
       value: UnitCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 5271917127845825942, guid: 0d81b0e82a2928249a9edefc969915bb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7177627507542882039, guid: 0d81b0e82a2928249a9edefc969915bb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8522516651302973818, guid: 0d81b0e82a2928249a9edefc969915bb, type: 3}
       propertyPath: m_Pivot.x
