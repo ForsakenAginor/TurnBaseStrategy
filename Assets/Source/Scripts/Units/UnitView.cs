@@ -14,6 +14,7 @@ public class UnitView : MonoBehaviour, IUIElement
     [SerializeField] private TMP_Text _damagingMessage;
     [SerializeField] private float _animationDuration = 2f;
     [SerializeField] private float _animationDistance = 1f;
+    [SerializeField] private UIElement _title;
 
     private Vector3 _position;
     private Vector3 _targetPosition;
@@ -64,6 +65,11 @@ public class UnitView : MonoBehaviour, IUIElement
         _unit.TookDamage += OnTookDamage;
         _unit.Healed += OnHealed;
         _unit.Destroyed += OnUnitDied;
+    }
+
+    public void ShowTitle()
+    {
+        _title.Enable();
     }
 
     protected virtual void DoOnDestroyAction()

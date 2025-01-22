@@ -60,6 +60,7 @@ MonoBehaviour:
   _damagingMessage: {fileID: 2326348812929975601}
   _animationDuration: 1
   _animationDistance: 0.5
+  _title: {fileID: 8111264070538806672}
 --- !u!114 &686546503763744741
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -457,6 +458,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3210946603160930138}
     m_Modifications:
+    - target: {fileID: 47272012389370682, guid: 4150e8356bc80d143b85642d5aeaeaf0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3173339225792955821, guid: 4150e8356bc80d143b85642d5aeaeaf0, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -561,10 +566,30 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 47272012389370682, guid: 4150e8356bc80d143b85642d5aeaeaf0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8111264070538806672}
     - targetCorrespondingSourceObject: {fileID: 3173339225792955821, guid: 4150e8356bc80d143b85642d5aeaeaf0, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6181090677206239134}
   m_SourcePrefab: {fileID: 100100000, guid: 4150e8356bc80d143b85642d5aeaeaf0, type: 3}
+--- !u!1 &652502089903551200 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 47272012389370682, guid: 4150e8356bc80d143b85642d5aeaeaf0, type: 3}
+  m_PrefabInstance: {fileID: 696323550724749786}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8111264070538806672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 652502089903551200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 917a056742e2d7b4498b1753bdb3f750, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &900286068833479506 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 420985394530783880, guid: 4150e8356bc80d143b85642d5aeaeaf0, type: 3}
