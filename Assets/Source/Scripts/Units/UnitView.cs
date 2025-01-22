@@ -8,9 +8,7 @@ public class UnitView : MonoBehaviour, IUIElement
 {
     [SerializeField] private TMP_Text _health;
     [SerializeField] private Slider _hpBar;
-
     [SerializeField] private UIElement _viewCanvas;
-    
     [SerializeField] private UnitSoundsHandler _soundHandler;
     [SerializeField] private TMP_Text _healingMessage;
     [SerializeField] private TMP_Text _damagingMessage;
@@ -38,6 +36,9 @@ public class UnitView : MonoBehaviour, IUIElement
 
     public void Disable()
     {
+        if (_unit.IsAlive && _unit.HealthMaximum != _unit.Health)
+            return;
+
         _viewCanvas.Disable();
     }
 
@@ -129,7 +130,7 @@ public class UnitView : MonoBehaviour, IUIElement
         if (_unit.IsAlive && _unit.HealthMaximum != _unit.Health)
         {
             _hpBar.gameObject.SetActive(true);
-            _hpBar.value = (float)_unit.Health / _unit.HealthMaximum; 
+            _hpBar.value = (float)_unit.Health / _unit.HealthMaximum;
             _health.text = _unit.Health.ToString();
         }
         else

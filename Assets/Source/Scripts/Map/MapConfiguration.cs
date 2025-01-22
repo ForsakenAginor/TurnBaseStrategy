@@ -10,6 +10,7 @@ public class MapConfiguration
     [SerializeField] private Tilemap _prefab;
     [SerializeField] private SerializedPair<Vector2Int, CitySize>[] _enemyCities;
     [SerializeField] private SerializedPair<Vector2Int, CitySize>[] _playerCities;
+    [SerializeField] private SerializedPair<Vector2Int, string>[] _citiesNames;
     [SerializeField] private Vector2Int _cameraStartPosition;
     [SerializeField] private UnitsConfiguration _unitConfiguration;
     [SerializeField] private CitiesConfiguration _cityConfiguration;
@@ -30,6 +31,8 @@ public class MapConfiguration
     public SerializedPair<Vector2Int, CitySize>[] EnemyCities => _enemyCities;
 
     public SerializedPair<Vector2Int, CitySize>[] PlayerCities => _playerCities;
+
+    public SerializedPair<Vector2Int, string>[] CitiesNames => _citiesNames;
 
     public Vector2Int CameraStartPosition => _cameraStartPosition;
 
