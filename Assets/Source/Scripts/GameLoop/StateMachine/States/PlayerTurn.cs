@@ -8,15 +8,22 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
 {
     public class PlayerTurn : State
     {
+        private readonly IDayView _view;
         private readonly Button _nextTurnButton;
         private readonly IEnumerable<IResetable> _resetables;
         private readonly IEnumerable<IControllable> _controllables;
         private readonly IWinLoseEventThrower _winLoseMonitor;
 
-        public PlayerTurn(Button nextTurnButton, IWinLoseEventThrower winLoseMonitor, IEnumerable<IResetable> resetables,
+        private int _currentDay = 0;
+
+        public PlayerTurn(IDayView dayView, Button nextTurnButton, IWinLoseEventThrower winLoseMonitor, IEnumerable<IResetable> resetables,
             IEnumerable<IControllable> controllables, Transition[] transitions)
             : base(transitions)
         {
+            _view = dayView != null ?
+                dayView :
+                throw new ArgumentNullException(nameof(dayView));
+
             _nextTurnButton = nextTurnButton != null ?
                 nextTurnButton :
                 throw new ArgumentNullException(nameof(nextTurnButton));
@@ -53,6 +60,9 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
 
             foreach (var resetable in _resetables)
                 resetable.Reset();
+
+            _currentDay++;
+            _view.ShowCurrentDay(_currentDay);
         }
 
         private void OnPlayerWon()

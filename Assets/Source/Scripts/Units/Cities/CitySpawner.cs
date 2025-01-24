@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.HexGrid;
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +14,7 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
     [SerializeField] private Button _hireKnight;
     [SerializeField] private UIElement _buttonCanvas;
     [SerializeField] private TMP_Text _upgradeCostLabel;
+    [SerializeField] private UIElement _upgradePanel;
 
     private CitiesConfiguration _configuration;
     private CitiesFactory _factory;
@@ -20,6 +22,7 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
     private HexGridXZ<Unit> _grid;
     private UnitSpawner _unitSpawner;
     private Resource _wallet;
+    private Dictionary<Vector2Int, string> _citiesNames = new ();
 
     public event Action<Unit> UnitSpawned;
     public Action<AudioSource> AudioSourceCallback;
@@ -29,7 +32,7 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
         _unitsManager.CityCaptured -= OnCityCaptured;
     }
 
-    public void Init(CitiesActionsManager manager, UnitSpawner unitSpawner, Resource wallet,
+    public void Init(SerializedPair<Vector2Int, string>[] citiesNames, CitiesActionsManager manager, UnitSpawner unitSpawner, Resource wallet,
         CitiesConfiguration configuration, HexGridXZ<Unit> grid, Action<AudioSource> callback)
     {
         _unitsManager = manager != null ? manager : throw new ArgumentNullException(nameof(manager));
@@ -39,6 +42,16 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
         _grid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
         AudioSourceCallback = callback != null ? callback : throw new ArgumentNullException(nameof(callback));
         _factory = new CitiesFactory(configuration);
+
+        if (citiesNames != null)
+        {
+            foreach (var item in citiesNames)
+                _citiesNames.Add(item.Key, item.Value);
+        }
+        else
+        {
+            throw new ArgumentNullException(nameof(citiesNames));
+        }
 
         _unitsManager.CityCaptured += OnCityCaptured;
     }
@@ -54,7 +67,8 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
         facade.UnitView.Init(unit, AudioSourceCallback);
         facade.Menu.Init(TryHireUnit, TryUpgradeCity,
             _upgradeButton, _hireInfantry, _hireSpearman, _hireArcher, _hireKnight, _buttonCanvas,
-            _upgradeCostLabel, _configuration.GetUpgradeCost(size));
+            _upgradeCostLabel, _configuration.GetUpgradeCost(size), _upgradePanel);
+        facade.CityName.Init(_citiesNames[position]);
         _unitsManager.AddCity(unit, facade);
 
         //todo: subscribe to city died event, for spawn opposite side village on died

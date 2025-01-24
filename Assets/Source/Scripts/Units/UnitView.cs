@@ -2,16 +2,19 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UnitView : MonoBehaviour, IUIElement
 {
     [SerializeField] private TMP_Text _health;
+    [SerializeField] private Slider _hpBar;
     [SerializeField] private UIElement _viewCanvas;
     [SerializeField] private UnitSoundsHandler _soundHandler;
     [SerializeField] private TMP_Text _healingMessage;
     [SerializeField] private TMP_Text _damagingMessage;
     [SerializeField] private float _animationDuration = 2f;
     [SerializeField] private float _animationDistance = 1f;
+    [SerializeField] private UIElement _title;
 
     private Vector3 _position;
     private Vector3 _targetPosition;
@@ -34,6 +37,9 @@ public class UnitView : MonoBehaviour, IUIElement
 
     public void Disable()
     {
+        if (_unit.IsAlive && _unit.HealthMaximum != _unit.Health)
+            return;
+
         _viewCanvas.Disable();
     }
 
@@ -47,7 +53,7 @@ public class UnitView : MonoBehaviour, IUIElement
         if (unit == null)
             throw new ArgumentNullException(nameof(unit));
 
-        if(callback == null)
+        if (callback == null)
             throw new ArgumentNullException(nameof(callback));
 
         _unit = unit;
@@ -59,6 +65,11 @@ public class UnitView : MonoBehaviour, IUIElement
         _unit.TookDamage += OnTookDamage;
         _unit.Healed += OnHealed;
         _unit.Destroyed += OnUnitDied;
+    }
+
+    public void ShowTitle()
+    {
+        _title.Enable();
     }
 
     protected virtual void DoOnDestroyAction()
@@ -122,6 +133,15 @@ public class UnitView : MonoBehaviour, IUIElement
 
     private void OnHealthChanged()
     {
-        _health.text = _unit.Health.ToString();
+        if (_unit.IsAlive && _unit.HealthMaximum != _unit.Health)
+        {
+            _hpBar.gameObject.SetActive(true);
+            _hpBar.value = (float)_unit.Health / _unit.HealthMaximum;
+            _health.text = _unit.Health.ToString();
+        }
+        else
+        {
+            _hpBar.gameObject.SetActive(false);
+        }
     }
 }

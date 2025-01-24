@@ -10,6 +10,7 @@ public class CitiesActionsManager
     private readonly NewInputSorter _inputSorter;
     private readonly HexGridXZ<Unit> _grid;
 
+    private EnemyScaner _enemyScaner;
     private IUIElement _selectedUnit;
     private IUIElement _selectedUnitMenu;
 
@@ -30,6 +31,7 @@ public class CitiesActionsManager
         _inputSorter.FriendlyCitySelected -= OnCitySelected;
         _inputSorter.EnemySelected -= OnCitySelected;
         _inputSorter.BecomeInactive -= OnDeselect;
+        _enemyScaner.DefendersSpawned -= OnDefendersSpawned;
     }
 
     public event Action<Vector2Int, Side> CityCaptured;
@@ -47,6 +49,12 @@ public class CitiesActionsManager
         return _cities.Where(city => city.Key.Side == Side.Enemy).Select(city => (_grid.GetXZ(city.Value.Position), city.Key.CitySize, city.Key)).ToList();
     }
 
+    public void SetScaner(EnemyScaner scaner)
+    {
+        _enemyScaner = scaner != null ? scaner : throw new ArgumentNullException(nameof(scaner));
+        _enemyScaner.DefendersSpawned += OnDefendersSpawned;
+    }
+
     public void AddCity(CityUnit unit, ICityFacade facade)
     {
         if (unit == null)
@@ -61,6 +69,9 @@ public class CitiesActionsManager
         _cities.Add(unit, facade);
         CitiesChanged?.Invoke();
         _grid.SetGridObject(facade.Position, unit);
+
+        if (unit.Side == Side.Player)
+            facade.UnitView.ShowTitle();
 
         unit.Captured += OnCityCaptured;
         unit.Destroyed += OnUnitDied;
@@ -124,5 +135,11 @@ public class CitiesActionsManager
         _grid.SetGridObject(position, null);
         _cities.Remove(city);
         CitiesChanged?.Invoke();
+    }
+
+    private void OnDefendersSpawned(Vector2Int position)
+    {
+        var city = _grid.GetGridObject(position) as CityUnit;
+        _cities[city].UnitView.ShowTitle();
     }
 }

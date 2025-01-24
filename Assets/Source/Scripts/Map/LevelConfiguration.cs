@@ -14,6 +14,9 @@ public class LevelConfiguration : UpdatableConfiguration<GameLevel, MapConfigura
     public SerializedPair<Vector2Int, CitySize>[] GetPlayerCities(GameLevel level) =>
         Content.First(o => o.Key == level).Value.PlayerCities;
 
+    public SerializedPair<Vector2Int, string>[] GetCitiesNames(GameLevel level) =>
+        Content.First(o => o.Key == level).Value.CitiesNames;
+
     public Tilemap GetMapPrefab(GameLevel level) => Content.First(o => o.Key == level).Value.Prefab;
 
     public UnitsConfiguration GetUnitConfiguration(GameLevel level) => Content.First(o => o.Key == level).Value.UnitConfiguration;
@@ -40,4 +43,5 @@ public class LevelConfiguration : UpdatableConfiguration<GameLevel, MapConfigura
     {
         return Content.First(o => o.Key == level).Value.CameraMin;
     }
+
 }

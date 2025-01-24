@@ -31,6 +31,7 @@ public class Root : MonoBehaviour
     [SerializeField] private int _startGold = 20;
     [SerializeField] private WalletView _walletView;
     [SerializeField] private CityShopView _cityShop;
+    [SerializeField] private IncomeView _incomeView;
 
     [Header("Enemy")]
     [SerializeField] private EnemyBrain _enemyBrain;
@@ -72,12 +73,14 @@ public class Root : MonoBehaviour
             _levelConfiguration.GetCityConfiguration(currentLevel), _levelConfiguration.GetUnitConfiguration(currentLevel));
         _walletView.Init(wallet);
         _cityShop.Init(_levelConfiguration.GetUnitConfiguration(currentLevel));
+        _incomeView.Init(taxSystem);
 
         //********  Unit creation  ***********
         UnitsActionsManager unitManager = new UnitsActionsManager(inputSorter, unitsGrid, _enemyBrain, _gridCreator.Clouds);
         _unitSpawner.Init(unitManager, wallet, _levelConfiguration.GetUnitConfiguration(currentLevel), unitsGrid, _gridCreator.BlockedCells, AddAudioSourceToMixer);
         CitiesActionsManager cityManager = new CitiesActionsManager(inputSorter, unitsGrid);
-        _citySpawner.Init(cityManager, _unitSpawner, wallet, _levelConfiguration.GetCityConfiguration(currentLevel), unitsGrid, AddAudioSourceToMixer);
+        _citySpawner.Init(_levelConfiguration.GetCitiesNames(currentLevel),
+            cityManager, _unitSpawner, wallet, _levelConfiguration.GetCityConfiguration(currentLevel), unitsGrid, AddAudioSourceToMixer);
         CityAtMapInitializer cityInitializer = new CityAtMapInitializer(currentLevel, _levelConfiguration, _citySpawner);
 
         //********* EnemyLogic ***************
@@ -85,6 +88,7 @@ public class Root : MonoBehaviour
         cityInitializer.SpawnEnemyCities();
         EnemyWaveSpawner waveSpawner = new(cityManager.GetEnemyCitiesUnits(), _unitSpawner, _levelConfiguration.GetEnemyWaveConfiguration(currentLevel));
         EnemyScaner scaner = new(cityManager.GetEnemyCities(), _unitSpawner, unitsGrid, _levelConfiguration.GetEnemySpawnerConfiguration(currentLevel));
+        cityManager.SetScaner(scaner);
 
         //******** FogOfWar *********
         FogOfWar fogOfWar = new(_gridCreator.Clouds, unitsGrid, scaner);

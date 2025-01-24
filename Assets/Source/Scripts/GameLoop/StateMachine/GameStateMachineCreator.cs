@@ -1,6 +1,5 @@
 ﻿using Assets.Source.Scripts.GameLoop.StateMachine.States;
 using Assets.Source.Scripts.GameLoop.StateMachine.Transitions;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +14,7 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine
         [SerializeField] private UIElement _loseScreen;
         [SerializeField] private UIElement _finishScreen;
         [SerializeField] private WinLoseMonitor _winLoseMonitor;
+        [SerializeField] private DayView _dayView;
 
         public GameStateMachine Create(IEnumerable<IResetable> resetables, IEnumerable<IControllable> controllables, EnemyWaveSpawner waveSpawner, GameLevel level)
         {
@@ -35,6 +35,7 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine
 
             //states
             PlayerTurn playerTurn = new PlayerTurn(
+                _dayView,
                 _nextTurnButton,
                 _winLoseMonitor,
                 resetables,
