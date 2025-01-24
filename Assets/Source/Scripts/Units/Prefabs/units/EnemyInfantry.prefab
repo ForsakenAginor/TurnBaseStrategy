@@ -82,6 +82,7 @@ MonoBehaviour:
   _moving: {fileID: 3326171945683186830}
   _unitController: {fileID: 1656595010479663040}
   _timeToDie: 3.5
+  _onDeathEffect: {fileID: 0}
 --- !u!114 &-7004828117983463329
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2307,6 +2308,10 @@ PrefabInstance:
     - target: {fileID: 4102300228293870551, guid: 4150e8356bc80d143b85642d5aeaeaf0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6538763044688280016, guid: 4150e8356bc80d143b85642d5aeaeaf0, type: 3}
+      propertyPath: m_fontSize
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 7449812035856556013, guid: 4150e8356bc80d143b85642d5aeaeaf0, type: 3}
       propertyPath: m_PresetInfoIsWorld
