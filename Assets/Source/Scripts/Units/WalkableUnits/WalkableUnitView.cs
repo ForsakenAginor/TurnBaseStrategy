@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sirenix.OdinInspector;
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -9,6 +10,7 @@ public class WalkableUnitView : UnitView
     [SerializeField] private TMP_Text _moving;
     [SerializeField] private UnitAnimationController _unitController;
     [SerializeField] private float _timeToDie;
+    [SerializeField] private PlayerUnitOnDeathEffect _onDeathEffect;
 
     private WalkableUnit _unit;
 
@@ -33,8 +35,19 @@ public class WalkableUnitView : UnitView
 
     protected override void DoOnUnitDiedAction()
     {
+        if (_onDeathEffect != null)
+            _onDeathEffect.Enable();
+
         StartCoroutine(StartDying());
     }
+
+#if UNITY_EDITOR
+    [Button]
+    private void TestDying()
+    {
+        DoOnUnitDiedAction();
+    }
+#endif
 
     private void OnUnitMoved()
     {
@@ -46,6 +59,11 @@ public class WalkableUnitView : UnitView
         WaitForSeconds animationDelay = new WaitForSeconds(_timeToDie);
         _unitController.Die();
         yield return animationDelay;
+
+        if (_onDeathEffect != null)
+            _onDeathEffect.Disable();
+
         gameObject.SetActive(false);
+        Destroy(gameObject, _timeToDie);
     }
 }

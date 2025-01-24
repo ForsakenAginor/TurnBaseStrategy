@@ -92,6 +92,10 @@ public class UnitsActionsManager
         unit.Destroyed -= OnUnitDied;
         Vector3 position = _units[unit].Position;
         _grid.SetGridObject(position, null);
+
+        if (_selectedUnit == _units[unit].UnitView)
+            _selectedUnit = null;
+
         _units.Remove(unit);
     }
 
