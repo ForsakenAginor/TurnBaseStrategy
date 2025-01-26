@@ -1,5 +1,4 @@
 using DG.Tweening;
-using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,7 +13,6 @@ public class BlinkHPBarEffect : MonoBehaviour
 
     private Tween _tween;
 
-    [Button]
     public void PlayEffect(float max, float current, float next)
     {
         _tween?.Kill();

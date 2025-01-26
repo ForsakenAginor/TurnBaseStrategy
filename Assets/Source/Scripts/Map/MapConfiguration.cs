@@ -11,6 +11,7 @@ public class MapConfiguration
     [SerializeField] private SerializedPair<Vector2Int, CitySize>[] _enemyCities;
     [SerializeField] private SerializedPair<Vector2Int, CitySize>[] _playerCities;
     [SerializeField] private SerializedPair<Vector2Int, string>[] _citiesNames;
+    [SerializeField] private SerializedPair<Vector2Int, SerializedPair<Sprite, string>>[] _spawnMessages;
     [SerializeField] private Vector2Int _cameraStartPosition;
     [SerializeField] private UnitsConfiguration _unitConfiguration;
     [SerializeField] private CitiesConfiguration _cityConfiguration;
@@ -33,6 +34,8 @@ public class MapConfiguration
     public SerializedPair<Vector2Int, CitySize>[] PlayerCities => _playerCities;
 
     public SerializedPair<Vector2Int, string>[] CitiesNames => _citiesNames;
+
+    public SerializedPair<Vector2Int, SerializedPair<Sprite, string>>[] SpawnMessages => _spawnMessages;
 
     public Vector2Int CameraStartPosition => _cameraStartPosition;
 

@@ -41,6 +41,9 @@ public class Root : MonoBehaviour
     [SerializeField] private LeanFingerSwipe _leanSwipe;
     [SerializeField] private PinchDetector _pinchDetector;
 
+    [Header("Dialogue")]
+    [SerializeField] private DialogueView _dialogueView;
+
     [Header("Other")]
     [SerializeField] private SoundInitializer _soundInitializer;
 
@@ -102,6 +105,10 @@ public class Root : MonoBehaviour
         SwipeHandler swipeHandler = new SwipeHandler(_leanSwipe);
         CameraMover cameraMover = new CameraMover(_camera, swipeHandler, _pinchDetector, currentLevel, _levelConfiguration,
             _gridCreator.HexGrid, scaner);
+
+        //********* Dialogue *********
+        Dialogue dialogue = new Dialogue(_levelConfiguration.GetCitiesBossInfo(currentLevel), scaner);
+        _dialogueView.Init(dialogue);
 
         //********* Other ************************
         TextureAtlasReader atlas = _meshUpdater.GetComponent<TextureAtlasReader>();
