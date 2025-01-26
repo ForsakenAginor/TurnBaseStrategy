@@ -17,7 +17,6 @@ public class Root : MonoBehaviour
     [Header("Grid")]
     [SerializeField] private HexGridCreator _gridCreator;
     [SerializeField] private MeshUpdater _meshUpdater;
-    [SerializeField] private CellHighlighter _cellHighlighter;
     [SerializeField] private GridRaycaster _gridRaycaster;
     [SerializeField] private CellSelector _cellSelector;
 
@@ -32,6 +31,7 @@ public class Root : MonoBehaviour
     [SerializeField] private WalletView _walletView;
     [SerializeField] private CityShopView _cityShop;
     [SerializeField] private IncomeView _incomeView;
+    [SerializeField] private IncomeCompositionView _incomeCompositionView;
 
     [Header("Enemy")]
     [SerializeField] private EnemyBrain _enemyBrain;
@@ -67,7 +67,7 @@ public class Root : MonoBehaviour
         _cellSelector.Init(_gridCreator.HexGrid, _gridRaycaster);
         var unitsGrid = _gridCreator.UnitsGrid;
         NewInputSorter inputSorter = new NewInputSorter(unitsGrid, _cellSelector, _gridCreator.BlockedCells);
-        _cellHighlighter = new(inputSorter, _gridCreator.HexGrid, _gridColorConfiguration);
+        CellHighlighter _cellHighlighter = new(inputSorter, _gridCreator.HexGrid, _gridColorConfiguration);
         _ = new HexContentSwitcher(unitsGrid, _gridCreator.BlockedCells);
 
         //******** Wallet ***********
@@ -77,6 +77,7 @@ public class Root : MonoBehaviour
         _walletView.Init(wallet);
         _cityShop.Init(_levelConfiguration.GetUnitConfiguration(currentLevel));
         _incomeView.Init(taxSystem);
+        _incomeCompositionView.Init(taxSystem);
 
         //********  Unit creation  ***********
         UnitsActionsManager unitManager = new UnitsActionsManager(inputSorter, unitsGrid, _enemyBrain, _gridCreator.Clouds);

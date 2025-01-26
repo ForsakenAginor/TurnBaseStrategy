@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public interface ICityCoordinatesGetter
+public interface ICityCoordinatesGetter : ICityNamesGetter
 {
     public SerializedPair<Vector2Int, CitySize>[] GetEnemyCities(GameLevel level);
 
