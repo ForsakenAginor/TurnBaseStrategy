@@ -17,7 +17,7 @@ public class EnemyBrain : MonoBehaviour, IControllable
     private bool _isReady;
     private Coroutine _coroutine;
 
-    public event Action<WalkableUnit, Vector2Int, Action> UnitMoving;
+    public event Action<WalkableUnit, IEnumerable<Vector2Int>, Action> UnitMoving;
     public event Action<WalkableUnit, Vector3, Unit, Action> UnitAttacking;
     public event Action TurnEnded;
 
@@ -114,7 +114,7 @@ public class EnemyBrain : MonoBehaviour, IControllable
                 {
                     if (CanMove(position, out Vector2Int target))
                     {
-                        UnitMoving?.Invoke(unit, target, WaitAnimationCallback);
+                        UnitMoving?.Invoke(unit, new List<Vector2Int>() { target }, WaitAnimationCallback);
                         yield return waitUntilAnimationPlayed;
                         _isReady = false;
 

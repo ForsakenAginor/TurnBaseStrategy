@@ -98,7 +98,7 @@ public class CitiesActionsManager
         CityCaptured?.Invoke(position, side);
     }
 
-    private void OnUnitSelected(Vector2Int _, IEnumerable<Vector2Int> _1,
+    private void OnUnitSelected(Vector2Int _, IEnumerable<IEnumerable<Vector2Int>> _1,
         IEnumerable<Vector2Int> _2, IEnumerable<Vector2Int> _3, IEnumerable<Vector2Int> _4)
     {
         OnDeselect();

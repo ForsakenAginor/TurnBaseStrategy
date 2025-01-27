@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TMPro;
 using UnityEngine;
 
 public class UnitsActionsManager
@@ -74,7 +73,7 @@ public class UnitsActionsManager
     private void OnEnemySelected(Vector2Int position) => OnUnitSelected(position, null, null, null, null);
 
     private void OnUnitSelected(Vector2Int unitPosition,
-        IEnumerable<Vector2Int> _, IEnumerable<Vector2Int> _1,
+        IEnumerable<IEnumerable<Vector2Int>> _, IEnumerable<Vector2Int> _1,
         IEnumerable<Vector2Int> _2, IEnumerable<Vector2Int> _3)
     {
         _selectedUnit?.Disable();
@@ -117,20 +116,29 @@ public class UnitsActionsManager
         }
     }
 
-    private void OnUnitMoving(WalkableUnit unit, Vector2Int target, Action callback)
+    private void OnUnitMoving(WalkableUnit unit, IEnumerable<Vector2Int> target, Action callback)
     {
-        int step = 1;
+        int steps = 0;
 
-        if (unit.TryMoving(step))
+        if (target != null)
+            steps = target.Count();
+        else
+            callback.Invoke();
+
+        if (unit.TryMoving(steps))
         {
             if (_units[unit] is IWalkableUnitFacade facade)
             {
-                var cloud = _fogOfWar.GetGridObject(target);
+                var cloud = _fogOfWar.GetGridObject(target.Last());
+                List<Vector3> way = new();
+
+                foreach (var step in target)
+                    way.Add(_grid.GetCellWorldPosition(step));
 
                 if (cloud == null || cloud.IsDissappeared == true)
-                    facade.Mover.Move(_grid.GetCellWorldPosition(target), callback);
+                    facade.Mover.Move(way, callback);
                 else
-                    facade.Mover.MoveFast(_grid.GetCellWorldPosition(target), callback);
+                    facade.Mover.MoveFast(way, callback);
             }
             else
             {
@@ -140,7 +148,7 @@ public class UnitsActionsManager
 
             Vector3 position = _units[unit].Position;
             _grid.SetGridObject(position, null);
-            _grid.SetGridObject(target.x, target.y, unit);
+            _grid.SetGridObject(target.Last().x, target.Last().y, unit);
         }
         else
         {
