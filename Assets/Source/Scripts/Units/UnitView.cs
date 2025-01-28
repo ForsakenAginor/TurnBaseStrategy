@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using Sirenix.OdinInspector;
 using System;
 using TMPro;
 using UnityEngine;
@@ -16,18 +17,21 @@ public class UnitView : MonoBehaviour, IUIElement
     [SerializeField] private float _animationDistance = 1f;
     [SerializeField] private UIElement _title;
 
-    private Vector3 _position;
-    private Vector3 _targetPosition;
-    private Tween _healingDisplay;
-    private Tween _damagingDisplay;
-    private Tween _healingFadeoutDisplay;
-    private Tween _damagingFadeoutDisplay;
+    private Vector3 _healingPosition;
+    private Vector3 _healingTargetPosition;
+    private Vector3 _damagingPosition;
+    private Vector3 _damagingTargetPosition;
+    private Vector3 _startScale = new Vector3(0.4f, 0.4f, 0.4f);
+    private Sequence _healingDisplay = DOTween.Sequence();
+    private Sequence _damagingDisplay = DOTween.Sequence();
     private Unit _unit;
 
     private void Awake()
     {
-        _position = _healingMessage.transform.localPosition;
-        _targetPosition = _position + new Vector3(0, _animationDistance, 0);
+        _healingPosition = _healingMessage.transform.localPosition;
+        _damagingPosition = _damagingMessage.transform.localPosition;
+        _healingTargetPosition = _healingPosition + new Vector3(-_animationDistance / 2, _animationDistance, 0);
+        _damagingTargetPosition = _damagingPosition + new Vector3(_animationDistance / 2, _animationDistance, 0);
     }
 
     public void Enable()
@@ -93,35 +97,38 @@ public class UnitView : MonoBehaviour, IUIElement
         DoOnDestroyAction();
     }
 
+    [Button]
+    private void TestPopupDisplay()
+    {
+        OnTookDamage(1);
+        OnHealed(1);
+    }
+
     private void OnTookDamage(int value)
     {
-        if (_damagingDisplay != null)
-        {
-            _damagingDisplay.Kill();
-            _damagingFadeoutDisplay.Kill();
-        }
+        _damagingDisplay.Kill();
 
         _damagingMessage.alpha = 1f;
-        _damagingMessage.transform.localPosition = _position;
-        _damagingFadeoutDisplay = _damagingMessage.DOFade(0f, _animationDuration).SetEase(Ease.Linear);
-        _damagingDisplay = _damagingMessage.transform.DOLocalMove(_targetPosition, _animationDuration)
-            .SetEase(Ease.Linear);
+        _damagingMessage.transform.localScale = _startScale;
+        _damagingMessage.transform.localPosition = _damagingPosition;
+        _damagingDisplay.Append(_damagingMessage.DOFade(0f, _animationDuration).SetEase(Ease.Linear));
+        _damagingDisplay.Join(_damagingMessage.transform.DOLocalMove(_damagingTargetPosition, _animationDuration)
+            .SetEase(Ease.Linear));
+        _damagingDisplay.Join(_damagingMessage.transform.DOScale(Vector3.one, _animationDuration));
         _damagingMessage.text = $"- {value}";
     }
 
     private void OnHealed(int value)
     {
-        if (_healingDisplay != null)
-        {
-            _healingDisplay.Kill();
-            _healingFadeoutDisplay.Kill();
-        }
+        _healingDisplay.Kill();
 
         _healingMessage.alpha = 1f;
-        _healingMessage.transform.localPosition = _position;
-        _healingFadeoutDisplay = _healingMessage.DOFade(0f, _animationDuration).SetEase(Ease.Linear);
-        _healingDisplay = _healingMessage.transform.DOLocalMove(_targetPosition, _animationDuration)
-            .SetEase(Ease.Linear);
+        _healingMessage.transform.localScale = _startScale;
+        _healingMessage.transform.localPosition = _healingPosition;
+        _healingDisplay.Append(_healingMessage.DOFade(0f, _animationDuration ).SetEase(Ease.Linear));
+        _healingDisplay.Join(_healingMessage.transform.DOLocalMove(_healingTargetPosition, _animationDuration)
+            .SetEase(Ease.Linear));
+        _healingDisplay.Join(_healingMessage.transform.DOScale(Vector3.one, _animationDuration));
         _healingMessage.text = $"+ {value}";
     }
 
