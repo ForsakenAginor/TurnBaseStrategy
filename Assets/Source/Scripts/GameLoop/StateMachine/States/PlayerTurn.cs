@@ -99,7 +99,7 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
 
         private void OnAnimationComplete()
         {
-            _inputSorter.AnimationComplete -= ChangeState;
+            _inputSorter.AnimationComplete -= OnAnimationComplete;
             ChangeState();
         }
 

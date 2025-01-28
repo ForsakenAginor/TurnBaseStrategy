@@ -123,7 +123,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &6958064919464028736
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -398,8 +398,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 8522516651302973818}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: -0.5, y: 0.5}
-  m_AnchorMax: {x: -0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 5, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -433,8 +433,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f710fbaa11614b0db0b868c75039949, type: 2}
+  m_sharedMaterial: {fileID: 7908499825950019370, guid: 8f710fbaa11614b0db0b868c75039949, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -606,8 +606,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: + 8
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f710fbaa11614b0db0b868c75039949, type: 2}
+  m_sharedMaterial: {fileID: 7908499825950019370, guid: 8f710fbaa11614b0db0b868c75039949, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -858,6 +858,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5019304860029307261}
   - component: {fileID: 3408683011390633291}
+  - component: {fileID: 6188569814958442988}
   m_Layer: 0
   m_Name: Panel
   m_TagString: Untagged
@@ -899,6 +900,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 917a056742e2d7b4498b1753bdb3f750, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!222 &6188569814958442988
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7304758122942714298}
+  m_CullTransparentMesh: 1
 --- !u!1 &7816475484878006235
 GameObject:
   m_ObjectHideFlags: 0
