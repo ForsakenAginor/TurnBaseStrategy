@@ -42,7 +42,7 @@ public class NewInputSorter : IControllable, IWaitAnimation
     public event Action BecomeInactive;
     public event Action AnimationComplete;
 
-    public bool IsAnimationPlayed { get; private set; }
+    public bool IsAnimationPlayed { get; private set; } = true;
 
 
     public void EnableControl()
