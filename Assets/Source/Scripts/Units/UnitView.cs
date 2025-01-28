@@ -13,7 +13,7 @@ public class UnitView : MonoBehaviour, IUIElement
     [SerializeField] private UnitSoundsHandler _soundHandler;
     [SerializeField] private TMP_Text _healingMessage;
     [SerializeField] private TMP_Text _damagingMessage;
-    [SerializeField] private float _animationDuration = 2f;
+    [SerializeField] private float _animationDuration = 3f;
     [SerializeField] private float _animationDistance = 1f;
     [SerializeField] private UIElement _title;
 
@@ -111,7 +111,7 @@ public class UnitView : MonoBehaviour, IUIElement
         _damagingMessage.alpha = 1f;
         _damagingMessage.transform.localScale = _startScale;
         _damagingMessage.transform.localPosition = _damagingPosition;
-        _damagingDisplay.Append(_damagingMessage.DOFade(0f, _animationDuration).SetEase(Ease.Linear));
+        _damagingDisplay.Append(_damagingMessage.DOFade(0f, _animationDuration).SetEase(Ease.InQuint));
         _damagingDisplay.Join(_damagingMessage.transform.DOLocalMove(_damagingTargetPosition, _animationDuration)
             .SetEase(Ease.Linear));
         _damagingDisplay.Join(_damagingMessage.transform.DOScale(Vector3.one, _animationDuration));
@@ -125,7 +125,7 @@ public class UnitView : MonoBehaviour, IUIElement
         _healingMessage.alpha = 1f;
         _healingMessage.transform.localScale = _startScale;
         _healingMessage.transform.localPosition = _healingPosition;
-        _healingDisplay.Append(_healingMessage.DOFade(0f, _animationDuration ).SetEase(Ease.Linear));
+        _healingDisplay.Append(_healingMessage.DOFade(0f, _animationDuration ).SetEase(Ease.InQuint));
         _healingDisplay.Join(_healingMessage.transform.DOLocalMove(_healingTargetPosition, _animationDuration)
             .SetEase(Ease.Linear));
         _healingDisplay.Join(_healingMessage.transform.DOScale(Vector3.one, _animationDuration));

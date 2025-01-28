@@ -75,13 +75,15 @@ MonoBehaviour:
   _soundHandler: {fileID: -5949451220727321141}
   _healingMessage: {fileID: 678665020208235115}
   _damagingMessage: {fileID: 5386732795483873510}
-  _animationDuration: 1
+  _animationDuration: 1.5
   _animationDistance: 0.3
   _title: {fileID: 0}
   _attack: {fileID: 866389447493792403}
-  _moving: {fileID: 4631900281030554646}
+  _oneStep: {fileID: 0}
+  _twoStep: {fileID: 0}
   _unitController: {fileID: 3189714480065555389}
   _timeToDie: 3.5
+  _onDeathEffect: {fileID: 0}
 --- !u!114 &-1938017611766523652
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2339,17 +2341,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8522516651302973818, guid: 0d81b0e82a2928249a9edefc969915bb, type: 3}
   m_PrefabInstance: {fileID: 7810249908478363572}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4631900281030554646 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3180742186362401698, guid: 0d81b0e82a2928249a9edefc969915bb, type: 3}
-  m_PrefabInstance: {fileID: 7810249908478363572}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &4840674479438410495 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3408683011390633291, guid: 0d81b0e82a2928249a9edefc969915bb, type: 3}
