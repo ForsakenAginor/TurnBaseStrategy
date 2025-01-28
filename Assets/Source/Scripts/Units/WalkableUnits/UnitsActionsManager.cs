@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class UnitsActionsManager
+public class UnitsActionsManager : IEnemyUnitOversight
 {
     private readonly Dictionary<Unit, IUnitFacade> _units = new Dictionary<Unit, IUnitFacade>();
     private readonly NewInputSorter _inputSorter;
@@ -44,6 +44,8 @@ public class UnitsActionsManager
         _enemyBrain.UnitMoving -= OnUnitMoving;
         _enemyBrain.UnitAttacking -= OnUnitAttacking;
     }
+
+    public event Action<Vector2Int> EnemyMoved;
 
     public IEnumerable<IResetable> Units => _units.Keys.Where(o => o is WalkableUnit).Select(o => o as IResetable);
 
@@ -136,9 +138,14 @@ public class UnitsActionsManager
                     way.Add(_grid.GetCellWorldPosition(step));
 
                 if (cloud == null || cloud.IsDissappeared == true)
+                {
                     facade.Mover.Move(way, callback);
+                    EnemyMoved?.Invoke(target.Last());
+                }
                 else
+                {
                     facade.Mover.MoveFast(way, callback);
+                }
             }
             else
             {
@@ -155,4 +162,9 @@ public class UnitsActionsManager
             callback.Invoke();
         }
     }
+}
+
+public interface IEnemyUnitOversight
+{
+    public event Action<Vector2Int> EnemyMoved;
 }

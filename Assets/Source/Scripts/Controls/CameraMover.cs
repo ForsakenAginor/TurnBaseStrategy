@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.HexGrid;
 using DG.Tweening;
 using System;
+using System.Linq;
 using UnityEngine;
 
 public class CameraMover
@@ -18,17 +19,21 @@ public class CameraMover
     private readonly float _speed = 1f;
     private readonly HexGridXZ<CellSprite> _grid;
     private readonly EnemyScaner _enemyScaner;
+    private readonly IEnemyUnitOversight _enemyOversight;
 
     private Tween _tween;
+    private Vector2Int _currentFocus;
 
     public CameraMover(Transform camera, SwipeHandler swipeHandler, PinchDetector pinchDetector,
-        GameLevel level, ICameraConfigurationGetter configuration, HexGridXZ<CellSprite> grid, EnemyScaner enemyScaner)
+        GameLevel level, ICameraConfigurationGetter configuration, HexGridXZ<CellSprite> grid, EnemyScaner enemyScaner,
+        IEnemyUnitOversight enemyOversight)
     {
         _camera = camera != null ? camera : throw new ArgumentNullException(nameof(camera));
         _swipeHandler = swipeHandler != null ? swipeHandler : throw new ArgumentNullException(nameof(swipeHandler));
         _pinchDetector = pinchDetector != null ? pinchDetector : throw new ArgumentNullException(nameof(pinchDetector));
         _grid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
         _enemyScaner = enemyScaner != null ? enemyScaner : throw new ArgumentNullException(nameof(enemyScaner));
+        _enemyOversight = enemyOversight != null ? enemyOversight : throw new ArgumentNullException(nameof(enemyOversight));
 
         if(configuration == null)
             throw new ArgumentNullException(nameof(configuration));
@@ -42,6 +47,7 @@ public class CameraMover
         _pinchDetector.GotPinchInput += OnPinch;
         _swipeHandler.SwipeInputReceived += OnSwipeInputReceived;
         _enemyScaner.DefendersSpawned += FocusCameraOnCell;
+        _enemyOversight.EnemyMoved += FocusCameraOnCell;
     }
 
     ~CameraMover()
@@ -49,10 +55,16 @@ public class CameraMover
         _pinchDetector.GotPinchInput -= OnPinch;
         _swipeHandler.SwipeInputReceived -= OnSwipeInputReceived;
         _enemyScaner.DefendersSpawned -= FocusCameraOnCell;
+        _enemyOversight.EnemyMoved -= FocusCameraOnCell;
     }
 
     private void FocusCameraOnCell(Vector2Int cell)
     {
+        if (_grid.CashedFarNeighbours[_currentFocus].Contains(cell))
+            return;
+
+        _currentFocus = cell;
+
         if(_tween != null)
             _tween.Kill();
 

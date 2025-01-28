@@ -107,7 +107,7 @@ public class Root : MonoBehaviour
         //********* Camera control *********
         SwipeHandler swipeHandler = new SwipeHandler(_leanSwipe);
         CameraMover cameraMover = new CameraMover(_camera, swipeHandler, _pinchDetector, currentLevel, _levelConfiguration,
-            _gridCreator.HexGrid, scaner);
+            _gridCreator.HexGrid, scaner, unitManager);
 
         //********* Dialogue *********
         Dialogue dialogue = new Dialogue(_levelConfiguration.GetCitiesBossInfo(currentLevel), scaner);
