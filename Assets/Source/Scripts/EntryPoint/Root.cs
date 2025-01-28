@@ -32,6 +32,7 @@ public class Root : MonoBehaviour
     [SerializeField] private CityShopView _cityShop;
     [SerializeField] private IncomeView _incomeView;
     [SerializeField] private IncomeCompositionView _incomeCompositionView;
+    [SerializeField] private BunkruptView _bakruptView;
 
     [Header("Enemy")]
     [SerializeField] private EnemyBrain _enemyBrain;
@@ -78,6 +79,7 @@ public class Root : MonoBehaviour
         _cityShop.Init(_levelConfiguration.GetUnitConfiguration(currentLevel));
         _incomeView.Init(taxSystem);
         _incomeCompositionView.Init(taxSystem);
+        _bakruptView.Init(taxSystem);
 
         //********  Unit creation  ***********
         UnitsActionsManager unitManager = new UnitsActionsManager(inputSorter, unitsGrid, _enemyBrain, _gridCreator.Clouds);
