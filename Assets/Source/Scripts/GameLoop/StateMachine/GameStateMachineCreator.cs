@@ -16,8 +16,12 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine
         [SerializeField] private WinLoseMonitor _winLoseMonitor;
         [SerializeField] private DayView _dayView;
 
-        public GameStateMachine Create(IEnumerable<IResetable> resetables, IEnumerable<IControllable> controllables, EnemyWaveSpawner waveSpawner, GameLevel level)
+        public GameStateMachine Create(IEnumerable<IResetable> resetables, IEnumerable<IControllable> controllables,
+            IWaitAnimation waitAnimation, EnemyWaveSpawner waveSpawner, GameLevel level)
         {
+            if(waitAnimation == null)
+                throw new System.ArgumentNullException(nameof(waitAnimation));
+
             if (resetables == null)
                 throw new System.ArgumentNullException(nameof(resetables));
 
@@ -34,7 +38,7 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine
             ToPlayerTurnTransition toPlayerTurnTransition = new ToPlayerTurnTransition();
 
             //states
-            PlayerTurn playerTurn = new PlayerTurn(
+            PlayerTurn playerTurn = new PlayerTurn(waitAnimation,
                 _dayView,
                 _nextTurnButton,
                 _winLoseMonitor,

@@ -8,6 +8,7 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
 {
     public class PlayerTurn : State
     {
+        private readonly IWaitAnimation _inputSorter;
         private readonly IDayView _view;
         private readonly Button _nextTurnButton;
         private readonly IEnumerable<IResetable> _resetables;
@@ -16,10 +17,15 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
 
         private int _currentDay = 0;
 
-        public PlayerTurn(IDayView dayView, Button nextTurnButton, IWinLoseEventThrower winLoseMonitor, IEnumerable<IResetable> resetables,
+        public PlayerTurn(IWaitAnimation inputSorter,
+            IDayView dayView, Button nextTurnButton, IWinLoseEventThrower winLoseMonitor, IEnumerable<IResetable> resetables,
             IEnumerable<IControllable> controllables, Transition[] transitions)
             : base(transitions)
         {
+            _inputSorter = inputSorter != null ?
+                inputSorter :
+                throw new ArgumentNullException(nameof(inputSorter));
+
             _view = dayView != null ?
                 dayView :
                 throw new ArgumentNullException(nameof(dayView));
@@ -85,6 +91,20 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
             foreach (var controllable in _controllables)
                 controllable.DisableControl();
 
+            if (_inputSorter.IsAnimationPlayed == true)
+                ChangeState();
+            else
+                _inputSorter.AnimationComplete += OnAnimationComplete;
+        }
+
+        private void OnAnimationComplete()
+        {
+            _inputSorter.AnimationComplete -= ChangeState;
+            ChangeState();
+        }
+
+        private void ChangeState()
+        {
             Transitions.First(o => o is ToEnemyTurnTransition).SetIsReady(true);
             CallBecomeReadyToTransitEvent();
         }
@@ -148,13 +168,13 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
 
         public PlayerWon(IUIElement winScreen, IUIElement finishScreen, GameLevel level) : base(Array.Empty<Transition>())
         {
-            if(winScreen == null)
+            if (winScreen == null)
                 throw new ArgumentNullException(nameof(winScreen));
 
-            if(finishScreen == null)
+            if (finishScreen == null)
                 throw new ArgumentNullException(nameof(finishScreen));
 
-            _winScreen = (int) level == Enum.GetNames(typeof(GameLevel)).Length - 1 ? finishScreen : winScreen;
+            _winScreen = (int)level == Enum.GetNames(typeof(GameLevel)).Length - 1 ? finishScreen : winScreen;
         }
 
         public override void DoThing()

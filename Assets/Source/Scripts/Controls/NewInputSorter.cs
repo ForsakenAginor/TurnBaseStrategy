@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class NewInputSorter : IControllable
+public class NewInputSorter : IControllable, IWaitAnimation
 {
     private readonly HexGridXZ<Unit> _hexGrid;
     private readonly HexGridXZ<IHexOnScene> _blockedCells;
@@ -17,6 +17,7 @@ public class NewInputSorter : IControllable
     private List<List<Vector2Int>> _possibleWays;
     private List<Vector2Int> _possibleAttacks;
     private WalkableUnit _selectedUnit;
+    private bool _isActive;
 
     public NewInputSorter(HexGridXZ<Unit> grid, CellSelector selector, HexGridXZ<IHexOnScene> blockedCells, HexPathFinder pathFinder)
     {
@@ -39,6 +40,10 @@ public class NewInputSorter : IControllable
     public event Action<Vector2Int> FriendlyCitySelected;
     public event Action<Vector2Int> EnemySelected;
     public event Action BecomeInactive;
+    public event Action AnimationComplete;
+
+    public bool IsAnimationPlayed { get; private set; }
+
 
     public void EnableControl()
     {
@@ -47,12 +52,14 @@ public class NewInputSorter : IControllable
         _possibleWays = null;
         _possibleAttacks = null;
         _cellSelector.CellClicked += OnCellClicked;
+        _isActive = true;
     }
 
     public void DisableControl()
     {
         BecomeInactive?.Invoke();
         _cellSelector.CellClicked -= OnCellClicked;
+        _isActive = false;
     }
 
     private void OnGridObjectChanged(Vector2Int position)
@@ -109,10 +116,15 @@ public class NewInputSorter : IControllable
             _possibleWays = null;
             _possibleAttacks = null;
             _cellSelector.CellClicked -= OnCellClicked;
+            IsAnimationPlayed = false;
 
             UnitIsMoving?.Invoke(_selectedUnit, path, () =>
                 {
-                    _cellSelector.CellClicked += OnCellClicked;
+                    if (_isActive)
+                        _cellSelector.CellClicked += OnCellClicked;
+
+                    IsAnimationPlayed = true;
+                    AnimationComplete?.Invoke();
                     OnCellClicked(worldPosition, position);
                 });
             return;
@@ -124,10 +136,15 @@ public class NewInputSorter : IControllable
             _possibleWays = null;
             _possibleAttacks = null;
             _cellSelector.CellClicked -= OnCellClicked;
+            IsAnimationPlayed = false;
 
             UnitIsAttacking?.Invoke(_selectedUnit, worldPosition, unit, () =>
                 {
-                    _cellSelector.CellClicked += OnCellClicked;
+                    if (_isActive)
+                        _cellSelector.CellClicked += OnCellClicked;
+
+                    IsAnimationPlayed = true;
+                    AnimationComplete?.Invoke();
                     OnCellClicked(worldPosition, position);
                 });
             return;
@@ -161,10 +178,10 @@ public class NewInputSorter : IControllable
     {
         path = null;
         bool result = false;
-        
+
         foreach (var way in _possibleWays)
         {
-            if(way.Last() == position)
+            if (way.Last() == position)
             {
                 path = way;
                 result = true;
@@ -222,4 +239,11 @@ public class NewInputSorter : IControllable
         var cell = _hexGrid.GetGridObject(position);
         return unit.CanAttack && cell != null && cell.Side == Side.Player;
     }
+}
+
+public interface IWaitAnimation
+{
+    public bool IsAnimationPlayed { get; }
+
+    public event Action AnimationComplete;
 }

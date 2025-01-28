@@ -100,7 +100,7 @@ public class Root : MonoBehaviour
         //********* Game state machine *******
         _winLoseMonitor.Init(cityManager, saveSystem, currentLevel);
         var resettables = unitManager.Units.Append(taxSystem);
-        var stateMachine = _gameStateMachineCreator.Create(resettables, new List<IControllable>() { inputSorter }, waveSpawner, currentLevel);
+        var stateMachine = _gameStateMachineCreator.Create(resettables, new List<IControllable>() { inputSorter }, inputSorter, waveSpawner, currentLevel);
 
         //********* Camera control *********
         SwipeHandler swipeHandler = new SwipeHandler(_leanSwipe);

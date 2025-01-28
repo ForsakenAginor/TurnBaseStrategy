@@ -9,8 +9,8 @@ public class HexGridCreator : MonoBehaviour
     [Header("Grid")]
     [SerializeField] private float _gridCellSize = 1;
     [SerializeField] private float _height = 0.25f;
-    private int _gridWidth = 10;
-    private int _gridHeight = 10;
+    private int _gridWidth;
+    private int _gridHeight;
 
     [Header("Clouds")]
     [SerializeField] private float _cloudHeight = 1;
