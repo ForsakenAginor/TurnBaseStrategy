@@ -17,20 +17,20 @@ MonoBehaviour:
     Value:
       _width: 21
       _height: 21
-      _prefab: {fileID: 5930082090335126094, guid: 9b71c656e8e27ae4da864c981fd3dc02, type: 3}
+      _prefab: {fileID: 3300018562082572810, guid: a26677bd0d6e492439b779058d2f4af2, type: 3}
       _enemyCities:
       - Key: {x: 5, y: 8}
         Value: 0
-      - Key: {x: 2, y: 17}
-        Value: 2
-      - Key: {x: 8, y: 19}
+      - Key: {x: 2, y: 18}
         Value: 1
-      - Key: {x: 11, y: 1}
+      - Key: {x: 9, y: 15}
+        Value: 1
+      - Key: {x: 11, y: 2}
         Value: 1
       - Key: {x: 18, y: 2}
         Value: 2
-      - Key: {x: 17, y: 11}
-        Value: 2
+      - Key: {x: 18, y: 10}
+        Value: 3
       - Key: {x: 18, y: 18}
         Value: 3
       _playerCities:
@@ -78,7 +78,7 @@ MonoBehaviour:
         Value:
           Key: {fileID: 21300000, guid: 44822dd71d1e11b40ac68f3e8e3f40dd, type: 3}
           Value: Your conquest ends here, Heretic
-      _cameraStartPosition: {x: 1, y: 1}
+      _cameraStartPosition: {x: 2, y: 2}
       _unitConfiguration: {fileID: 11400000, guid: 067302e0fddc3334db28d0c265b12cd5, type: 2}
       _cityConfiguration: {fileID: 11400000, guid: 7bae7d8d6a0f82a4dad7cb959e2df015, type: 2}
       _enemySpawnerConfiguration: {fileID: 11400000, guid: 1839e44a4b792d14b9ba27888635a4d0, type: 2}
@@ -88,7 +88,7 @@ MonoBehaviour:
     Value:
       _width: 21
       _height: 21
-      _prefab: {fileID: 5930082090335126094, guid: 9b71c656e8e27ae4da864c981fd3dc02, type: 3}
+      _prefab: {fileID: 3300018562082572810, guid: afa36f01f9298df409d2b59aea86713f, type: 3}
       _enemyCities:
       - Key: {x: 5, y: 8}
         Value: 0
@@ -114,4 +114,19 @@ MonoBehaviour:
       _cityConfiguration: {fileID: 11400000, guid: c48f650ac6791ff43b116fdc2ad3d842, type: 2}
       _enemySpawnerConfiguration: {fileID: 11400000, guid: 5a8b829e0ccda4b4cab40a18520f0fd9, type: 2}
       _enemyWaveConfiguration: {fileID: 11400000, guid: b2e08fe25bc03b1408bbfc0c741bf4ff, type: 2}
+      _cameraMin: {x: 0, y: -2}
+  - Key: 1
+    Value:
+      _width: 0
+      _height: 0
+      _prefab: {fileID: 0}
+      _enemyCities: []
+      _playerCities: []
+      _citiesNames: []
+      _spawnMessages: []
+      _cameraStartPosition: {x: 0, y: 0}
+      _unitConfiguration: {fileID: 0}
+      _cityConfiguration: {fileID: 0}
+      _enemySpawnerConfiguration: {fileID: 0}
+      _enemyWaveConfiguration: {fileID: 0}
       _cameraMin: {x: 0, y: -2}
