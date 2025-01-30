@@ -2,7 +2,7 @@ using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class ShootingEffect : MonoBehaviour
+public class ShootingEffect : UnitEffect
 {
     [SerializeField] private float _height;
     [SerializeField] private float _halfDuration;
@@ -26,7 +26,7 @@ public class ShootingEffect : MonoBehaviour
     private void FixedUpdate()
     {
 
-        if(gameObject.activeSelf == false)
+        if (gameObject.activeSelf == false)
             return;
 
         var direction = (transform.position - _position) + transform.position;
@@ -35,11 +35,16 @@ public class ShootingEffect : MonoBehaviour
     }
 
     [Button]
-    public void PlayEffect(Vector3 start, Vector3 end)
+    public override void PlayEffect(Vector3 start, Vector3 end)
     {
         gameObject.SetActive(true);
         transform.position = start;
         transform.DOMove(end, _halfDuration * 2f).SetEase(Ease.Linear).OnComplete(() => gameObject.SetActive(false));
         transform.DOMoveY(end.y + _height, _halfDuration).SetLoops(2, LoopType.Yoyo);
     }
+}
+
+public abstract class UnitEffect : MonoBehaviour
+{
+    public abstract void PlayEffect(Vector3 start, Vector3 end);
 }

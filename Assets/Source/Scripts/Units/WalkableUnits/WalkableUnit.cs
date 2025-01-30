@@ -62,10 +62,11 @@ public class WalkableUnit : Unit, IResetable
         Moved?.Invoke();
         target.TakeDamage(_attackPower + dealingDamageFactor);
 
-        // Archer ignore counter attack logic
-        if (_type != UnitType.Archer)
-            TakeDamage(target.CounterAttackPower + takingDamageFactor);
+        // Archer and Wizard ignore counter attack logic
+        if (_type == UnitType.Archer || _type == UnitType.Wizard)
+            return true;
 
+        TakeDamage(target.CounterAttackPower + takingDamageFactor);
         return true;
     }
 }

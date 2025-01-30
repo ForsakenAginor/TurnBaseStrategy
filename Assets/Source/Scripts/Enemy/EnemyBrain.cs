@@ -144,10 +144,10 @@ public class EnemyBrain : MonoBehaviour, IControllable
         targetWorldPosition = Vector3.zero;
         List<Vector2Int> neighbours;
 
-        if (_unitGrid.GetGridObject(position) is WalkableUnit unit && unit.UnitType != UnitType.Archer)
-            neighbours = _unitGrid.CashedNeighbours[position].Where(o => _unitGrid.IsValidGridPosition(o)).ToList();
-        else
+        if (_unitGrid.GetGridObject(position) is WalkableUnit unit && (unit.UnitType == UnitType.Archer || unit.UnitType == UnitType.Wizard))
             neighbours = _unitGrid.CashedFarNeighbours[position].Where(o => _unitGrid.IsValidGridPosition(o)).ToList();
+        else
+            neighbours = _unitGrid.CashedNeighbours[position].Where(o => _unitGrid.IsValidGridPosition(o)).ToList();
 
         var possibleTargets = neighbours.Where(o => IsCellContainEnemy(o)).ToList();
 
