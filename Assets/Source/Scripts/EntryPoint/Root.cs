@@ -47,6 +47,7 @@ public class Root : MonoBehaviour
 
     [Header("Other")]
     [SerializeField] private SoundInitializer _soundInitializer;
+    [SerializeField] private Quests _quests;
 
     private void Start()
     {
@@ -116,6 +117,7 @@ public class Root : MonoBehaviour
         //********* Other ************************
         TextureAtlasReader atlas = _meshUpdater.GetComponent<TextureAtlasReader>();
         cityInitializer.SpawnPlayerCities();
+        _quests.Init(cityManager, _levelConfiguration.GetCitiesNames(currentLevel));
 
 
         SceneChangerSingleton.Instance.FadeOut();

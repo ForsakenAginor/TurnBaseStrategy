@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class CitiesActionsManager
+public class CitiesActionsManager : ICitiesGetter
 {
     private readonly Dictionary<CityUnit, ICityFacade> _cities = new Dictionary<CityUnit, ICityFacade>();
     private readonly NewInputSorter _inputSorter;
@@ -47,6 +47,11 @@ public class CitiesActionsManager
     public IEnumerable<(Vector2Int position, CitySize size, CityUnit unit)> GetEnemyCitiesUnits()
     {
         return _cities.Where(city => city.Key.Side == Side.Enemy).Select(city => (_grid.GetXZ(city.Value.Position), city.Key.CitySize, city.Key)).ToList();
+    }
+
+    public Dictionary<Vector2Int, Side> GetCities()
+    {
+        return _cities.ToDictionary(key => _grid.GetXZ(key.Value.Position), value => value.Key.Side);
     }
 
     public void SetScaner(EnemyScaner scaner)
@@ -142,4 +147,9 @@ public class CitiesActionsManager
         var city = _grid.GetGridObject(position) as CityUnit;
         _cities[city].UnitView.ShowTitle();
     }
+}
+
+public interface ICitiesGetter
+{
+    public Dictionary<Vector2Int, Side> GetCities();
 }
