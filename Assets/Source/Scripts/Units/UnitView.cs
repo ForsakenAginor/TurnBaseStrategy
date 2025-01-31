@@ -16,6 +16,7 @@ public class UnitView : MonoBehaviour, IUIElement
     [SerializeField] private float _animationDuration = 3f;
     [SerializeField] private float _animationDistance = 1f;
     [SerializeField] private UIElement _title;
+    [SerializeField] private ParticleSystem _cityDestroyEffect;
 
     private Vector3 _healingPosition;
     private Vector3 _healingTargetPosition;
@@ -82,6 +83,12 @@ public class UnitView : MonoBehaviour, IUIElement
 
     protected virtual void DoOnUnitDiedAction()
     {
+        if(_cityDestroyEffect != null)
+        {
+            var effect = Instantiate(_cityDestroyEffect, transform.position, Quaternion.identity);
+            effect.transform.SetParent(null);
+        }
+
         gameObject.SetActive(false);
     }
 
@@ -97,12 +104,26 @@ public class UnitView : MonoBehaviour, IUIElement
         DoOnDestroyAction();
     }
 
+#if UNITY_EDITOR
     [Button]
     private void TestPopupDisplay()
     {
         OnTookDamage(1);
         OnHealed(1);
     }
+#endif
+
+#if UNITY_EDITOR
+    [Button]
+    private void TestSmoke()
+    {
+        if (_cityDestroyEffect != null)
+        {
+            var effect = Instantiate(_cityDestroyEffect, transform.position, Quaternion.identity);
+            effect.transform.SetParent(null);
+        }
+    }
+#endif
 
     private void OnTookDamage(int value)
     {
