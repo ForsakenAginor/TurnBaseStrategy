@@ -7,6 +7,14 @@ using UnityEngine.UI;
 
 public class CitySpawner : MonoBehaviour, IUnitSpawner
 {
+    private readonly Dictionary<CitySize, string> _citiesUpgradesSymbols = new Dictionary<CitySize, string>()
+    {
+        {CitySize.Village, "II" },
+        {CitySize.Town, "III" },
+        {CitySize.City, "IV" },
+        {CitySize.Castle, "V" },
+    };
+
     [SerializeField] private Button _upgradeButton;
     [SerializeField] private Button _hireInfantry;
     [SerializeField] private Button _hireSpearman;
@@ -15,6 +23,7 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
     [SerializeField] private UIElement _buttonCanvas;
     [SerializeField] private TMP_Text _upgradeCostLabel;
     [SerializeField] private UIElement _upgradePanel;
+    [SerializeField] private TMP_Text _upgradeIcon;
 
     private CitiesConfiguration _configuration;
     private CitiesFactory _factory;
@@ -67,7 +76,8 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
         facade.UnitView.Init(unit, AudioSourceCallback);
         facade.Menu.Init(TryHireUnit, TryUpgradeCity,
             _upgradeButton, _hireInfantry, _hireSpearman, _hireArcher, _hireKnight, _buttonCanvas,
-            _upgradeCostLabel, _configuration.GetUpgradeCost(size), _upgradePanel);
+            _upgradeCostLabel, _configuration.GetUpgradeCost(size), _upgradePanel,
+            _upgradeIcon, _citiesUpgradesSymbols[size]);
         facade.CityName.Init(_citiesNames[position]);
         _unitsManager.AddCity(unit, facade);
 
