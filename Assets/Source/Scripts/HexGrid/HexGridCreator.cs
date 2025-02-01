@@ -76,5 +76,7 @@ public class HexGridCreator : MonoBehaviour
                 _clouds.SetGridObject(i, j, cloud);
             }
         }
+
+        Debug.Log("ok");
     }
 }
