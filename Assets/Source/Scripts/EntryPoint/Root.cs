@@ -48,12 +48,13 @@ public class Root : MonoBehaviour
     [Header("Other")]
     [SerializeField] private SoundInitializer _soundInitializer;
     [SerializeField] private Quests _quests;
+    [SerializeField] private SaveSystemView _saveSystemView;
 
     private void Start()
     {
         //******** Load Data ***********
-        SaveSystem saveSystem = new SaveSystem();
-        GameLevel currentLevel = saveSystem.Load();
+        SaveLevelSystem saveLevelSystem = new SaveLevelSystem();
+        GameLevel currentLevel = saveLevelSystem.LoadLevel();
 
         //********* Sound ************************
         _soundInitializer.Init();
@@ -101,9 +102,10 @@ public class Root : MonoBehaviour
         FogOfWar fogOfWar = new(_gridCreator.Clouds, unitsGrid, scaner);
 
         //********* Game state machine *******
-        _winLoseMonitor.Init(cityManager, saveSystem, currentLevel);
+        _winLoseMonitor.Init(cityManager, saveLevelSystem, currentLevel);
         var resettables = unitManager.Units.Append(taxSystem);
-        var stateMachine = _gameStateMachineCreator.Create(resettables, new List<IControllable>() { inputSorter }, inputSorter, waveSpawner, currentLevel);
+        var stateMachine = _gameStateMachineCreator.Create(resettables, new List<IControllable>() { inputSorter, _saveSystemView },
+            inputSorter, waveSpawner, currentLevel);
 
         //********* Camera control *********
         SwipeHandler swipeHandler = new SwipeHandler(_leanSwipe);
@@ -118,7 +120,8 @@ public class Root : MonoBehaviour
         TextureAtlasReader atlas = _meshUpdater.GetComponent<TextureAtlasReader>();
         cityInitializer.SpawnPlayerCities();
         _quests.Init(cityManager, _levelConfiguration.GetCitiesNames(currentLevel));
-
+        SaveSystem saveSystem = new SaveSystem(fogOfWar, unitManager, cityManager, wallet, currentLevel);
+        _saveSystemView.Init(saveSystem);
 
         SceneChangerSingleton.Instance.FadeOut();
     }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class UnitsActionsManager : IEnemyUnitOversight
+public class UnitsActionsManager : IEnemyUnitOversight, ISavedUnits
 {
     private readonly Dictionary<Unit, IUnitFacade> _units = new Dictionary<Unit, IUnitFacade>();
     private readonly NewInputSorter _inputSorter;
@@ -48,6 +48,11 @@ public class UnitsActionsManager : IEnemyUnitOversight
     public event Action<Vector2Int> EnemyMoved;
 
     public IEnumerable<IResetable> Units => _units.Keys.Where(o => o is WalkableUnit).Select(o => o as IResetable);
+
+    public Dictionary<Vector2Int, WalkableUnit> GetInfo()
+    {
+        return _units.ToDictionary(key => _grid.GetXZ(key.Value.Position), value => value.Key as WalkableUnit);
+    }
 
     public void AddUnit(Unit unit, IUnitFacade facade)
     {
@@ -167,4 +172,9 @@ public class UnitsActionsManager : IEnemyUnitOversight
 public interface IEnemyUnitOversight
 {
     public event Action<Vector2Int> EnemyMoved;
+}
+
+public interface ISavedUnits
+{
+    public Dictionary<Vector2Int, WalkableUnit> GetInfo();
 }
