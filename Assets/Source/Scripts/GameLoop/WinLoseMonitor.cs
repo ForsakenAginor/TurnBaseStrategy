@@ -5,7 +5,7 @@ using UnityEngine;
 public class WinLoseMonitor : MonoBehaviour, IWinLoseEventThrower
 {
     private CitiesActionsManager _actionsManager;
-    private SaveSystem _saveSystem;
+    private SaveLevelSystem _saveSystem;
     private GameLevel _gameLevel;
     private bool _isCheckNeeded;
 
@@ -32,7 +32,7 @@ public class WinLoseMonitor : MonoBehaviour, IWinLoseEventThrower
             else
                 nextLevel = _gameLevel + 1;
 
-            _saveSystem.Save(nextLevel);
+            _saveSystem.SaveLevel(nextLevel);
             PlayerWon?.Invoke();
         }
     }
@@ -42,7 +42,7 @@ public class WinLoseMonitor : MonoBehaviour, IWinLoseEventThrower
         _actionsManager.CitiesChanged -= OnCitiesChanged;        
     }
 
-    public void Init(CitiesActionsManager actionsManager, SaveSystem saveSystem, GameLevel level)
+    public void Init(CitiesActionsManager actionsManager, SaveLevelSystem saveSystem, GameLevel level)
     {
         _actionsManager = actionsManager != null ? actionsManager : throw new ArgumentNullException(nameof(actionsManager));
         _saveSystem = saveSystem != null ? saveSystem : throw new ArgumentNullException(nameof(saveSystem));

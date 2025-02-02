@@ -34,6 +34,8 @@ public class TaxSystem : IResetable, IIncome
 
     public event Action<int> IncomeChanged;
     public event Action<List<KeyValuePair<string, int>>> IncomeCompositionChanged;
+    public event Action CloseToBankrupt;
+    public event Action FarToBankrupt;
 
     public void Reset()
     {
@@ -123,7 +125,7 @@ public class TaxSystem : IResetable, IIncome
     private void CalcIncome()
     {
         int income = 0;
-        List<KeyValuePair<string, int>> incomeParts = new (); 
+        List<KeyValuePair<string, int>> incomeParts = new();
 
         foreach (var city in _cities.Keys)
         {
@@ -139,8 +141,14 @@ public class TaxSystem : IResetable, IIncome
             incomeParts.Add(new KeyValuePair<string, int>(walkableUnit.UnitType.ToString(), -_units[unit]));
         }
 
+        int nextValue = _wallet.Amount + income;
+
+        if (nextValue < 0)
+            CloseToBankrupt?.Invoke();
+        else
+            FarToBankrupt?.Invoke();
+
         IncomeChanged?.Invoke(income);
         IncomeCompositionChanged?.Invoke(incomeParts);
     }
 }
-

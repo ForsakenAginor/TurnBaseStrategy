@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class EnemyScaner
+public class EnemyScaner : ISavedScaner
 {
     private readonly Dictionary<Vector2Int, Action<Vector2Int>> _enemyCities = new();
     private readonly UnitSpawner _unitSpawner;
@@ -12,14 +12,14 @@ public class EnemyScaner
     private readonly int _detectDistance = 4;
     private readonly EnemySpawnerConfiguration _configuration;
 
-    public EnemyScaner(IEnumerable<(Vector2Int position, CitySize size)> cities, UnitSpawner unitSpawner, HexGridXZ<Unit> grid, EnemySpawnerConfiguration configuration)
+    public EnemyScaner(IEnumerable<Vector2Int> cities, UnitSpawner unitSpawner, HexGridXZ<Unit> grid, EnemySpawnerConfiguration configuration)
     {
         _unitSpawner = unitSpawner != null ? unitSpawner : throw new ArgumentNullException(nameof(unitSpawner));
         _grid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
         _configuration = configuration != null ? configuration : throw new ArgumentNullException(nameof(configuration));
 
         foreach (var city in cities)
-            _enemyCities.Add(city.position, SpawnEnemies);
+            _enemyCities.Add(city, SpawnEnemies);
 
         _grid.GridObjectChanged += OnGridChanged;
     }
@@ -30,6 +30,8 @@ public class EnemyScaner
     }
 
     public event Action<Vector2Int> DefendersSpawned;
+
+    public IEnumerable<Vector2Int> Cities => _enemyCities.Keys.ToList();
 
     private void OnGridChanged(Vector2Int coordinates)
     {
@@ -62,4 +64,9 @@ public class EnemyScaner
 
         DefendersSpawned?.Invoke(position);
     }
+}
+
+public interface ISavedScaner
+{
+    public IEnumerable<Vector2Int> Cities { get; }
 }

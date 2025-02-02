@@ -10,7 +10,7 @@ public class Attacker : MonoBehaviour
     [SerializeField] private float _timeBeforeHit;
     [SerializeField] private float _timeBeforeEffectPlayed;
     [SerializeField] private UnitSoundsHandler _soundHandler;
-    [SerializeField] private ShootingEffect _effect;
+    [SerializeField] private UnitEffect _effect;
 
     public void Attack(Vector3 target, Action onComleteCallback, Action onDealDamageCallback)
     {

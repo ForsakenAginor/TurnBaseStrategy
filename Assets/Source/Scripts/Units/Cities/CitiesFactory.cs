@@ -9,10 +9,10 @@ public class CitiesFactory
         _configuration = configuration != null ? configuration : throw new ArgumentNullException(nameof(configuration));
     }
 
-    public CityUnit Create(CitySize size, Side side)
+    public CityUnit Create(CitySize size, Side side, bool mustCreateWithMaxHealth = true, int currentHealth = int.MinValue)
     {
         var tuple = _configuration.GetCityBattleInfo(size);
-        Resource health = new(tuple.health);
+        Resource health = mustCreateWithMaxHealth ? new (tuple.health) : new (currentHealth, tuple.health);
         return new CityUnit(size, side, health, tuple.counterAttack);
     }
 }

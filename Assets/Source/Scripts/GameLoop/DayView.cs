@@ -1,17 +1,27 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
 
-public class DayView : MonoBehaviour, IDayView
+public class DayView : MonoBehaviour
 {
     [SerializeField] private TMP_Text _dayTextField;
+    private DaySystem _daySystem;
 
-    public void ShowCurrentDay(int day)
+    private void OnDestroy()
     {
-        _dayTextField.text = $"Day {day}";
+        _daySystem.DayChanged -= OnDayChanged;
     }
-}   
 
-public interface IDayView
-{
-    public void ShowCurrentDay(int day);
+    public void Init(DaySystem daySystem)
+    {
+        _daySystem = daySystem != null ? daySystem : throw new ArgumentNullException(nameof(daySystem));
+        OnDayChanged(daySystem.CurrentDay);
+        
+        _daySystem.DayChanged += OnDayChanged;
+    }
+
+    private void OnDayChanged(int value)
+    {
+        _dayTextField.text = $"Day {value}";
+    }
 }

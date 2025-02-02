@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class PlayerUnitOnDeathEffect : MonoBehaviour, IUIElement
 {
+    private const string MaterialAlpha = "_AlphaCliping";
+
     [SerializeField] private UIElement _fire;
     [SerializeField] private float _duration;
     [SerializeField] private float _durationDissolve;
@@ -14,6 +16,12 @@ public class PlayerUnitOnDeathEffect : MonoBehaviour, IUIElement
     {
         _material = new Material(_renderer.material);
         _renderer.material = _material;
+        _material.SetFloat(MaterialAlpha, 1f);
+    }
+
+    private void Start()
+    {
+        _material.DOFloat(0f, MaterialAlpha, 1).SetEase(Ease.Linear);        
     }
 
     public void Disable()
@@ -25,6 +33,6 @@ public class PlayerUnitOnDeathEffect : MonoBehaviour, IUIElement
     {
         _fire.Enable();
         _fire.transform.DOScale(Vector3.one, _duration).SetLoops(2, LoopType.Yoyo);
-        _material.DOFloat(1f, "_AlphaCliping", _durationDissolve).SetEase(Ease.Linear);
+        _material.DOFloat(1f, MaterialAlpha, _durationDissolve).SetEase(Ease.Linear);
     }
 }

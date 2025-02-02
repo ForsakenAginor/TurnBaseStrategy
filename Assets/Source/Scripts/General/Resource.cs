@@ -1,6 +1,6 @@
 using System;
 
-public class Resource : IResource
+public class Resource : IResource, ISavedWallet
 {
     private int _amount;
     private int _maximum;
@@ -61,4 +61,9 @@ public class Resource : IResource
             ResourceOver?.Invoke();
         }
     }
+}
+
+public interface ISavedWallet
+{
+    public int Amount { get; }
 }

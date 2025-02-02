@@ -7,6 +7,14 @@ using UnityEngine.UI;
 
 public class CitySpawner : MonoBehaviour, IUnitSpawner
 {
+    private readonly Dictionary<CitySize, string> _citiesUpgradesSymbols = new Dictionary<CitySize, string>()
+    {
+        {CitySize.Village, "II" },
+        {CitySize.Town, "III" },
+        {CitySize.City, "IV" },
+        {CitySize.Castle, "V" },
+    };
+
     [SerializeField] private Button _upgradeButton;
     [SerializeField] private Button _hireInfantry;
     [SerializeField] private Button _hireSpearman;
@@ -15,6 +23,7 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
     [SerializeField] private UIElement _buttonCanvas;
     [SerializeField] private TMP_Text _upgradeCostLabel;
     [SerializeField] private UIElement _upgradePanel;
+    [SerializeField] private TMP_Text _upgradeIcon;
 
     private CitiesConfiguration _configuration;
     private CitiesFactory _factory;
@@ -56,22 +65,22 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
         _unitsManager.CityCaptured += OnCityCaptured;
     }
 
-    public void SpawnCity(Vector2Int position, CitySize size, Side side)
+    public void SpawnCity(Vector2Int position, CitySize size, Side side, bool mustCreateWithMaxHealth = true, int health = int.MinValue)
     {
         if (_grid.GetGridObject(position) != null)
             throw new Exception("Can't create city: cell is not empty");
 
-        var unit = _factory.Create(size, side);
+        var unit = _factory.Create(size, side, mustCreateWithMaxHealth, health);
         var facadePrefab = side == Side.Player ? _configuration.GetPlayerPrefab(size) : _configuration.GetEnemyPrefab(size);
         var facade = Instantiate(facadePrefab, _grid.GetCellWorldPosition(position), Quaternion.identity);
         facade.UnitView.Init(unit, AudioSourceCallback);
         facade.Menu.Init(TryHireUnit, TryUpgradeCity,
             _upgradeButton, _hireInfantry, _hireSpearman, _hireArcher, _hireKnight, _buttonCanvas,
-            _upgradeCostLabel, _configuration.GetUpgradeCost(size), _upgradePanel);
+            _upgradeCostLabel, _configuration.GetUpgradeCost(size), _upgradePanel,
+            _upgradeIcon, _citiesUpgradesSymbols[size]);
         facade.CityName.Init(_citiesNames[position]);
         _unitsManager.AddCity(unit, facade);
 
-        //todo: subscribe to city died event, for spawn opposite side village on died
         UnitSpawned?.Invoke(unit);
     }
 
