@@ -153,7 +153,7 @@ public class Root : MonoBehaviour
             _unitSpawner.SpawnLoadedUnits(loadedGame.Units);
 
         _quests.Init(cityManager, _levelConfiguration.GetCitiesNames(currentLevel));
-        saveSystem.Init(fogOfWar, unitManager, cityManager, wallet, daySystem, currentLevel);
+        saveSystem.Init(fogOfWar, unitManager, cityManager, wallet, daySystem, currentLevel, scaner);
         _saveSystemView.Init(saveSystem);
 
         SceneChangerSingleton.Instance.FadeOut();

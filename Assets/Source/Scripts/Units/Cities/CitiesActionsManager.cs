@@ -39,9 +39,9 @@ public class CitiesActionsManager : ICitiesGetter, ISavedCities
 
     public IEnumerable<Side> Cities => _cities.Keys.Select(o => o.Side);
 
-    public IEnumerable<(Vector2Int position, CitySize size)> GetEnemyCities()
+    public IEnumerable<Vector2Int> GetEnemyCities()
     {
-        return _cities.Where(city => city.Key.Side == Side.Enemy).Select(city => (_grid.GetXZ(city.Value.Position), city.Key.CitySize)).ToList();
+        return _cities.Where(city => city.Key.Side == Side.Enemy).Select(city => _grid.GetXZ(city.Value.Position)).ToList();
     }
 
     public IEnumerable<(Vector2Int position, CitySize size, CityUnit unit)> GetEnemyCitiesUnits()

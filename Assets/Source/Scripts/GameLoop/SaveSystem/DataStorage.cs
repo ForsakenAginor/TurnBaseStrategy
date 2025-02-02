@@ -56,6 +56,7 @@ public class DataStorage<T>
 public class SavedData
 {
     public IEnumerable<Vector2Int> DiscoveredCells;
+    public IEnumerable<Vector2Int> CitiesWithAvailableSpawns;
     public int Wallet;
     public int Day;
     public SerializedPair<Vector2Int, UnitData>[] Units;
@@ -66,7 +67,7 @@ public class SavedData
     public SavedData(IEnumerable<Vector2Int> discoveredCells, int wallet, int day,
     SerializedPair<Vector2Int, UnitData>[] units,
     SerializedPair<Vector2Int, CityData>[] cities,
-    GameLevel gameLevel)
+    GameLevel gameLevel, IEnumerable<Vector2Int> citiesWithAvailableSpawns)
     {
         DiscoveredCells = discoveredCells != null ? discoveredCells : throw new ArgumentNullException(nameof(discoveredCells));
         Wallet = wallet >= 0 ? wallet : throw new ArgumentNullException(nameof(wallet));
@@ -74,30 +75,38 @@ public class SavedData
         GameLevel = gameLevel;
         Units = units != null ? units : throw new ArgumentNullException(nameof(units));
         Cities = cities != null ? cities : throw new ArgumentNullException(nameof(cities));
+        CitiesWithAvailableSpawns = citiesWithAvailableSpawns != null ?
+            citiesWithAvailableSpawns :
+            throw new ArgumentNullException(nameof(citiesWithAvailableSpawns));
+
     }
 
     public SavedData(IEnumerable<Vector2Int> discoveredCells, int wallet, int day,
-        Dictionary<Vector2Int, WalkableUnit> units, Dictionary<Vector2Int, CityUnit> cities, GameLevel gameLevel)
+        Dictionary<Vector2Int, WalkableUnit> units, Dictionary<Vector2Int, CityUnit> cities, GameLevel gameLevel,
+        IEnumerable<Vector2Int> citiesWithAvailableSpawns)
     {
         DiscoveredCells = discoveredCells != null ? discoveredCells : throw new ArgumentNullException(nameof(discoveredCells));
         Wallet = wallet >= 0 ? wallet : throw new ArgumentNullException(nameof(wallet));
         Day = day >= 0 ? day : throw new ArgumentNullException(nameof(day));
         GameLevel = gameLevel;
+        CitiesWithAvailableSpawns = citiesWithAvailableSpawns != null ?
+            citiesWithAvailableSpawns :
+            throw new ArgumentNullException(nameof(citiesWithAvailableSpawns));
 
         if (units == null)
             throw new ArgumentNullException(nameof(units));
 
-        if(cities == null)
+        if (cities == null)
             throw new ArgumentNullException(nameof(cities));
 
         Units = units.
-            Select(o => 
+            Select(o =>
                 new SerializedPair<Vector2Int, UnitData>(o.Key,
                     new UnitData(o.Value.Health, o.Value.RemainingSteps, o.Value.Side, o.Value.CanAttack, o.Value.UnitType))).
             ToArray();
 
         Cities = cities.
-            Select(o => 
+            Select(o =>
                 new SerializedPair<Vector2Int, CityData>(o.Key, new CityData(o.Value.Health, o.Value.Side, o.Value.CitySize))).
             ToArray();
     }
