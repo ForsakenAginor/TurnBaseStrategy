@@ -13,6 +13,8 @@ public class PlayerPrefsStringSaveLoadService : IStringSaveLoadService
         _playerPrefsKey = key;
     }
 
+    public bool CanLoad => PlayerPrefs.HasKey(_playerPrefsKey);
+
     public string GetSavedInfo()
     {
         if (PlayerPrefs.HasKey(_playerPrefsKey) == false)

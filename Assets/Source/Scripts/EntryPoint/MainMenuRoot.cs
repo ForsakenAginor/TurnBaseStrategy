@@ -19,6 +19,11 @@ public class MainMenuRoot : MonoBehaviour
 
         SceneChangerSingleton.Instance.FadeOut();
 
+        SaveSystem saveSystem = new SaveSystem();
+
+        if(saveSystem.CanLoad)
+            _continueButton.interactable = true;
+
         _continueButton.onClick.AddListener(OnContinueButtonClick);
     }
 

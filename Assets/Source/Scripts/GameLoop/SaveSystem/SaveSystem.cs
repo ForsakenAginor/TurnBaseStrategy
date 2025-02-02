@@ -20,6 +20,8 @@ public class SaveSystem
         _storage = new(LevelData);
     }
 
+    public bool CanLoad => _storage.CanLoad;
+
     public void Init(ISavedFogOfWar fogOfWar, ISavedUnits units, ISavedCities cities,
         ISavedWallet wallet, ISavedDaySystem day, GameLevel level, ISavedScaner scaner)
     {

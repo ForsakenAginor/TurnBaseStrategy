@@ -33,8 +33,7 @@ public class FogOfWar : ISavedFogOfWar
 
     public void ApplyLoadedData(IEnumerable<Vector2Int> discoveredCells)
     {
-        foreach (var discoveredCell in discoveredCells)
-            DisappearFogOfWar(discoveredCell);
+        DestroyFogAtCells(discoveredCells.ToList());
     }
 
     private void OnDefendersSpawned(Vector2Int cell)
@@ -58,6 +57,11 @@ public class FogOfWar : ISavedFogOfWar
         disappearedCells.Add(cell);
         disappearedCells = disappearedCells.Where(o => _fogGrid.IsValidGridPosition(o) && _fogGrid.GetGridObject(o) != null).ToList();
 
+        DestroyFogAtCells(disappearedCells);
+    }
+
+    private void DestroyFogAtCells(List<Vector2Int> disappearedCells)
+    {
         foreach (var item in disappearedCells)
         {
             _discoveredCells.Add(item);

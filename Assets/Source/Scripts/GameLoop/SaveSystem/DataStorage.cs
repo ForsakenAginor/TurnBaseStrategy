@@ -16,6 +16,8 @@ public class DataStorage<T>
         _saveLoadService = new PlayerPrefsStringSaveLoadService(keyWord);
     }
 
+    public bool CanLoad => _saveLoadService.CanLoad;
+
     public T LoadData()
     {
         T result = default;
