@@ -7,19 +7,22 @@ public class EnemyWaveSpawner
     private readonly Dictionary<CityUnit, KeyValuePair<Vector2Int, int>> _cities = new();
     private readonly UnitSpawner _unitSpawner;
     private readonly EnemyWaveConfiguration _configuration;
-    private int _iterator;
+    private readonly DaySystem _daySystem;
 
     public EnemyWaveSpawner(IEnumerable<(Vector2Int position, CitySize size, CityUnit unit)> cities, UnitSpawner unitSpawner,
-        EnemyWaveConfiguration configuration)
+        EnemyWaveConfiguration configuration, DaySystem daySystem)
     {
         _unitSpawner = unitSpawner != null ? unitSpawner : throw new ArgumentNullException(nameof(unitSpawner));
         _configuration = configuration != null ? configuration : throw new ArgumentNullException(nameof(configuration));
+        _daySystem = daySystem != null ? daySystem : throw new ArgumentNullException(nameof(daySystem));
 
         foreach (var city in cities)
         {
             _cities.Add(city.unit, new KeyValuePair<Vector2Int, int>(city.position, _configuration.GetSpawnFrequency(city.size)));
             city.unit.Captured += OnCityCaptured;
         }
+
+        _daySystem.DayChanged += OnDayChanged;
     }
 
     ~EnemyWaveSpawner()
@@ -28,9 +31,9 @@ public class EnemyWaveSpawner
             city.Captured -= OnCityCaptured;
     }
 
-    public void SpawnWave()
+    public void OnDayChanged(int currentDay)
     {
-        int iterator = ++_iterator;
+        int iterator = currentDay;
 
         foreach (var city in _cities.Keys)
         {

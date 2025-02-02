@@ -118,7 +118,7 @@ public class Root : MonoBehaviour
         else
             cityInitializer.SpawnEnemyCities();
 
-        EnemyWaveSpawner waveSpawner = new(cityManager.GetEnemyCitiesUnits(), _unitSpawner, _levelConfiguration.GetEnemyWaveConfiguration(currentLevel));
+        EnemyWaveSpawner waveSpawner = new(cityManager.GetEnemyCitiesUnits(), _unitSpawner, _levelConfiguration.GetEnemyWaveConfiguration(currentLevel), daySystem);
         EnemyScaner scaner = new(cityManager.GetEnemyCities(), _unitSpawner, unitsGrid, _levelConfiguration.GetEnemySpawnerConfiguration(currentLevel));
         cityManager.SetScaner(scaner);
 
@@ -133,7 +133,7 @@ public class Root : MonoBehaviour
         var resettables = unitManager.Units.Append(taxSystem);
         resettables = resettables.Append(daySystem);
         var stateMachine = _gameStateMachineCreator.Create(resettables, new List<IControllable>() { inputSorter, _saveSystemView },
-            inputSorter, waveSpawner, currentLevel);
+            inputSorter, currentLevel);
 
         //********* Camera control *********
         SwipeHandler swipeHandler = new SwipeHandler(_leanSwipe);
