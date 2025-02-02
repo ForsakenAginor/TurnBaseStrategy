@@ -80,6 +80,7 @@ MonoBehaviour:
   _animationDuration: 1.5
   _animationDistance: 0.3
   _title: {fileID: 0}
+  _cityDestroyEffect: {fileID: 0}
   _attack: {fileID: 447487843121024143}
   _oneStep: {fileID: 0}
   _twoStep: {fileID: 0}
@@ -127,7 +128,7 @@ MonoBehaviour:
   _controller: {fileID: 1115851083676393838}
   _animationDuration: 2.75
   _timeBeforeHit: 2
-  _timeBeforeEffectPlayed: 1
+  _timeBeforeEffectPlayed: 0.2
   _soundHandler: {fileID: -1735448518439143519}
   _effect: {fileID: 3783180159856572307}
 --- !u!114 &-1735448518439143519
@@ -142,9 +143,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f9b81dd5ac627a478226c57608f0291, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _walking: {fileID: 8300000, guid: e59e46a085581db40adcaae8d3ac1580, type: 3}
-  _attacking: {fileID: 8300000, guid: 6e92b8b8a95926643982232e9473bb2c, type: 3}
-  _diying: {fileID: 8300000, guid: 9ba55c1554f8f9d479548ce2eba96a6e, type: 3}
+  _walking: {fileID: 8300000, guid: 40e2d0310e1caa449b5d051f6c54896a, type: 3}
+  _attacking: {fileID: 8300000, guid: 943e5228dd689fb4aaa7cf9d1ce8ab4e, type: 3}
+  _diying: {fileID: 8300000, guid: 217868e6264855848b65d1aae43abb66, type: 3}
   _hiring: {fileID: 0}
   _audioSource: {fileID: 1907932420311101243}
 --- !u!82 &1907932420311101243
@@ -157,8 +158,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 6e92b8b8a95926643982232e9473bb2c, type: 3}
-  m_Resource: {fileID: 8300000, guid: 6e92b8b8a95926643982232e9473bb2c, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 943e5228dd689fb4aaa7cf9d1ce8ab4e, type: 3}
+  m_Resource: {fileID: 8300000, guid: 943e5228dd689fb4aaa7cf9d1ce8ab4e, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -258,7 +259,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _aura: {fileID: 4449195550946133544}
   _lightning: {fileID: 2277105367494264902}
-  _duration: 1
+  _duration: 1.2
 --- !u!1 &3231147799258748139
 GameObject:
   m_ObjectHideFlags: 0

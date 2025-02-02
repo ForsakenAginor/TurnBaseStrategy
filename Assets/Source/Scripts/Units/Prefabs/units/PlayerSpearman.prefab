@@ -80,6 +80,7 @@ MonoBehaviour:
   _animationDuration: 1.5
   _animationDistance: 0.3
   _title: {fileID: 0}
+  _cityDestroyEffect: {fileID: 0}
   _attack: {fileID: 150606933014386147}
   _oneStep: {fileID: 1840853120948630368}
   _twoStep: {fileID: 7168815775049206933}
@@ -142,9 +143,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f9b81dd5ac627a478226c57608f0291, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _walking: {fileID: 8300000, guid: e59e46a085581db40adcaae8d3ac1580, type: 3}
-  _attacking: {fileID: 8300000, guid: 7b9bcb23cd8ff4a4b9d8c543872da38b, type: 3}
-  _diying: {fileID: 8300000, guid: ed43e1586ff48bc409fa946435d38350, type: 3}
+  _walking: {fileID: 8300000, guid: 40e2d0310e1caa449b5d051f6c54896a, type: 3}
+  _attacking: {fileID: 8300000, guid: c23cee5d57735b74fad0a80cc2a58056, type: 3}
+  _diying: {fileID: 8300000, guid: a9c3f0f86712a9b43a96234ea0a41258, type: 3}
   _hiring: {fileID: 8300000, guid: 5b47359a9b001cf438b87817fa696df2, type: 3}
   _audioSource: {fileID: -6419310513369581464}
 --- !u!82 &-6419310513369581464
@@ -772,6 +773,9 @@ PrefabInstance:
     - {fileID: 1460727982938073315, guid: d2504f16d250d2a40bca8eb64e3d2647, type: 3}
     - {fileID: 8961104367603952555, guid: d2504f16d250d2a40bca8eb64e3d2647, type: 3}
     - {fileID: 3787824832519422685, guid: d2504f16d250d2a40bca8eb64e3d2647, type: 3}
+    - {fileID: 931454913378334670, guid: d2504f16d250d2a40bca8eb64e3d2647, type: 3}
+    - {fileID: 8551186414798691802, guid: d2504f16d250d2a40bca8eb64e3d2647, type: 3}
+    - {fileID: 461297850280087787, guid: d2504f16d250d2a40bca8eb64e3d2647, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 4602183283553086685, guid: d2504f16d250d2a40bca8eb64e3d2647, type: 3}
       insertIndex: -1
