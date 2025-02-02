@@ -8,11 +8,12 @@ public class WalkableUnit : Unit, IResetable
     private bool _canAttack = true;
 
     public WalkableUnit(UnitMover mover, int attackPower, UnitType type,
-        Side side, Resource health, int counterAttackPower) : base(side, health, counterAttackPower)
+        Side side, Resource health, int counterAttackPower, bool canAttackStatus = true) : base(side, health, counterAttackPower)
     {
         _mover = mover != null ? mover : throw new ArgumentNullException(nameof(mover));
         _attackPower = attackPower > 0 ? attackPower : throw new ArgumentOutOfRangeException(nameof(attackPower));
         _type = type;
+        _canAttack = canAttackStatus;
     }
 
     public event Action Moved;
@@ -62,10 +63,11 @@ public class WalkableUnit : Unit, IResetable
         Moved?.Invoke();
         target.TakeDamage(_attackPower + dealingDamageFactor);
 
-        // Archer ignore counter attack logic
-        if (_type != UnitType.Archer)
-            TakeDamage(target.CounterAttackPower + takingDamageFactor);
+        // Archer and Wizard ignore counter attack logic
+        if (_type == UnitType.Archer || _type == UnitType.Wizard)
+            return true;
 
+        TakeDamage(target.CounterAttackPower + takingDamageFactor);
         return true;
     }
 }

@@ -9,6 +9,6 @@ public class UIElement : MonoBehaviour, IUIElement
 
     public void Disable()
     {
-        gameObject.SetActive(false);
+            gameObject.SetActive(false);
     }
 }

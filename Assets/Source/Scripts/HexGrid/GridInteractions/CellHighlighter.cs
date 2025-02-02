@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.HexGrid;
 using UnityEngine;
 
@@ -19,8 +20,8 @@ public class CellHighlighter
     {
         _inputSorter = inputSorter != null ? inputSorter : throw new ArgumentNullException(nameof(inputSorter));
         _hexGrid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
-        
-        if(configuration == null)
+
+        if (configuration == null)
             throw new ArgumentNullException(nameof(configuration));
 
         _unitColor = configuration.GetAllyCellColor();
@@ -56,18 +57,18 @@ public class CellHighlighter
     }
 
     private void OnMovableUnitSelected(Vector2Int selectedUnit,
-        IEnumerable<Vector2Int> possibleWays, IEnumerable<Vector2Int> blockedCells,
+        IEnumerable<IEnumerable<Vector2Int>> possibleWays, IEnumerable<Vector2Int> blockedCells,
         IEnumerable<Vector2Int> friendlyCells, IEnumerable<Vector2Int> possiblesAttacks)
     {
         ClearGrid();
 
         ColorizeSelectedCell(selectedUnit, _selectedUnitColor);
 
-        foreach (var cell in possibleWays)
-            ColorizeSelectedCell(cell, _availableColor);
+        foreach (var way in possibleWays)
+            ColorizeSelectedCell(way.Last(), _availableColor);
 
         foreach (var cell in blockedCells)
-            ColorizeSelectedCell(cell, _notAvailableColor); 
+            ColorizeSelectedCell(cell, _notAvailableColor);
 
         foreach (var cell in friendlyCells)
             ColorizeSelectedCell(cell, _unitColor);

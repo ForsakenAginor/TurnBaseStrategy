@@ -17,7 +17,7 @@ public class EnemyBrain : MonoBehaviour, IControllable
     private bool _isReady;
     private Coroutine _coroutine;
 
-    public event Action<WalkableUnit, Vector2Int, Action> UnitMoving;
+    public event Action<WalkableUnit, IEnumerable<Vector2Int>, Action> UnitMoving;
     public event Action<WalkableUnit, Vector3, Unit, Action> UnitAttacking;
     public event Action TurnEnded;
 
@@ -114,7 +114,7 @@ public class EnemyBrain : MonoBehaviour, IControllable
                 {
                     if (CanMove(position, out Vector2Int target))
                     {
-                        UnitMoving?.Invoke(unit, target, WaitAnimationCallback);
+                        UnitMoving?.Invoke(unit, new List<Vector2Int>() { target }, WaitAnimationCallback);
                         yield return waitUntilAnimationPlayed;
                         _isReady = false;
 
@@ -144,10 +144,10 @@ public class EnemyBrain : MonoBehaviour, IControllable
         targetWorldPosition = Vector3.zero;
         List<Vector2Int> neighbours;
 
-        if (_unitGrid.GetGridObject(position) is WalkableUnit unit && unit.UnitType != UnitType.Archer)
-            neighbours = _unitGrid.CashedNeighbours[position].Where(o => _unitGrid.IsValidGridPosition(o)).ToList();
-        else
+        if (_unitGrid.GetGridObject(position) is WalkableUnit unit && (unit.UnitType == UnitType.Archer || unit.UnitType == UnitType.Wizard))
             neighbours = _unitGrid.CashedFarNeighbours[position].Where(o => _unitGrid.IsValidGridPosition(o)).ToList();
+        else
+            neighbours = _unitGrid.CashedNeighbours[position].Where(o => _unitGrid.IsValidGridPosition(o)).ToList();
 
         var possibleTargets = neighbours.Where(o => IsCellContainEnemy(o)).ToList();
 
