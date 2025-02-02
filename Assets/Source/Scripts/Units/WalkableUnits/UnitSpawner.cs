@@ -56,7 +56,7 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawner
     }
 
     private void CreateUnit(UnitType type, Side side, Vector2Int position,
-        bool mustBeNewUnit = true, int health = int.MinValue, int steps = int.MinValue, bool canAttack = false)
+        bool mustBeNewUnit = true, int health = int.MinValue, int steps = int.MinValue, bool canAttack = true)
     {
         var unit = _factory.Create(side, type, mustBeNewUnit, health, steps, canAttack);
         var prefab = side == Side.Enemy ? _configuration.GetEnemyPrefab(type) : _configuration.GetPlayerPrefab(type);
