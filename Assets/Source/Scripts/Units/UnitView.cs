@@ -65,6 +65,7 @@ public class UnitView : MonoBehaviour, IUIElement
         _soundHandler.Init(callback);
         _soundHandler.Hire();
         _health.text = _unit.Health.ToString();
+        OnHealthChanged();
 
         _unit.HealthChanged += OnHealthChanged;
         _unit.TookDamage += OnTookDamage;
