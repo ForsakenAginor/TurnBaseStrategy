@@ -9,26 +9,21 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
     public class PlayerTurn : State
     {
         private readonly IWaitAnimation _inputSorter;
-        private readonly IDayView _view;
         private readonly Button _nextTurnButton;
         private readonly IEnumerable<IResetable> _resetables;
         private readonly IEnumerable<IControllable> _controllables;
         private readonly IWinLoseEventThrower _winLoseMonitor;
 
-        private int _currentDay = 0;
+        private bool _isFirstCycle = true;
 
         public PlayerTurn(IWaitAnimation inputSorter,
-            IDayView dayView, Button nextTurnButton, IWinLoseEventThrower winLoseMonitor, IEnumerable<IResetable> resetables,
+            Button nextTurnButton, IWinLoseEventThrower winLoseMonitor, IEnumerable<IResetable> resetables,
             IEnumerable<IControllable> controllables, Transition[] transitions)
             : base(transitions)
         {
             _inputSorter = inputSorter != null ?
                 inputSorter :
                 throw new ArgumentNullException(nameof(inputSorter));
-
-            _view = dayView != null ?
-                dayView :
-                throw new ArgumentNullException(nameof(dayView));
 
             _nextTurnButton = nextTurnButton != null ?
                 nextTurnButton :
@@ -64,11 +59,14 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
             foreach (var controllable in _controllables)
                 controllable.EnableControl();
 
+            if (_isFirstCycle)
+            {
+                _isFirstCycle = false;
+                return;
+            }
+
             foreach (var resetable in _resetables)
                 resetable.Reset();
-
-            _currentDay++;
-            _view.ShowCurrentDay(_currentDay);
         }
 
         private void OnPlayerWon()

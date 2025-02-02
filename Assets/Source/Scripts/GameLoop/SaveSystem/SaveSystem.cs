@@ -1,0 +1,50 @@
+﻿using System;
+
+public class SaveSystem
+{
+    private const string LevelData = nameof(LevelData);
+
+    private readonly DataStorage<SavedData> _storage;
+
+    private ISavedFogOfWar _fogOfWar;
+    private ISavedUnits _units;
+    private ISavedCities _cities;
+    private ISavedWallet _wallet;
+    private ISavedDaySystem _daySystem;
+    private GameLevel _level;
+    private bool _isInited;
+
+    public SaveSystem()
+    {
+        _storage = new(LevelData);
+    }
+
+    public void Init(ISavedFogOfWar fogOfWar, ISavedUnits units, ISavedCities cities, ISavedWallet wallet, ISavedDaySystem day, GameLevel level)
+    {
+        if (_isInited)
+            throw new InvalidOperationException("SaveSystem already inited");
+
+        _fogOfWar = fogOfWar != null ? fogOfWar : throw new ArgumentNullException(nameof(fogOfWar));
+        _units = units != null ? units : throw new ArgumentNullException(nameof(units));
+        _cities = cities != null ? cities : throw new ArgumentNullException(nameof(cities));
+        _wallet = wallet != null ? wallet : throw new ArgumentNullException(nameof(wallet));
+        _daySystem = day != null ? day : throw new ArgumentNullException(nameof(day));
+        _level = level;
+
+        _isInited = true;
+    }
+
+    public void Save()
+    {
+        if (_isInited == false)
+            throw new Exception("SaveSystem not inited yet");
+
+        SavedData data = new SavedData(_fogOfWar.DiscoveredCells, _wallet.Amount, _daySystem.CurrentDay, _units.GetInfo(), _cities.GetInfo(), _level);
+        _storage.SaveData(data);
+    }
+
+    public SavedData Load()
+    {
+        return _storage.LoadData();
+    }
+}

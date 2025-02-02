@@ -31,6 +31,12 @@ public class FogOfWar : ISavedFogOfWar
 
     public IEnumerable<Vector2Int> DiscoveredCells => _discoveredCells.ToList();
 
+    public void ApplyLoadedData(IEnumerable<Vector2Int> discoveredCells)
+    {
+        foreach (var discoveredCell in discoveredCells)
+            DisappearFogOfWar(discoveredCell);
+    }
+
     private void OnDefendersSpawned(Vector2Int cell)
     {
         DisappearFogOfWar(cell);

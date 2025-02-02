@@ -65,12 +65,12 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
         _unitsManager.CityCaptured += OnCityCaptured;
     }
 
-    public void SpawnCity(Vector2Int position, CitySize size, Side side)
+    public void SpawnCity(Vector2Int position, CitySize size, Side side, bool mustCreateWithMaxHealth = true, int health = int.MinValue)
     {
         if (_grid.GetGridObject(position) != null)
             throw new Exception("Can't create city: cell is not empty");
 
-        var unit = _factory.Create(size, side);
+        var unit = _factory.Create(size, side, mustCreateWithMaxHealth, health);
         var facadePrefab = side == Side.Player ? _configuration.GetPlayerPrefab(size) : _configuration.GetEnemyPrefab(size);
         var facade = Instantiate(facadePrefab, _grid.GetCellWorldPosition(position), Quaternion.identity);
         facade.UnitView.Init(unit, AudioSourceCallback);
@@ -81,7 +81,6 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
         facade.CityName.Init(_citiesNames[position]);
         _unitsManager.AddCity(unit, facade);
 
-        //todo: subscribe to city died event, for spawn opposite side village on died
         UnitSpawned?.Invoke(unit);
     }
 

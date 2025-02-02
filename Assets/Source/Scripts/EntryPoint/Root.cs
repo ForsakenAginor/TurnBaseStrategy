@@ -48,13 +48,32 @@ public class Root : MonoBehaviour
     [Header("Other")]
     [SerializeField] private SoundInitializer _soundInitializer;
     [SerializeField] private Quests _quests;
+    [SerializeField] private DayView _dayView;
     [SerializeField] private SaveSystemView _saveSystemView;
 
     private void Start()
     {
         //******** Load Data ***********
+        GameLevel currentLevel;
         SaveLevelSystem saveLevelSystem = new SaveLevelSystem();
-        GameLevel currentLevel = saveLevelSystem.LoadLevel();
+        SaveSystem saveSystem = new SaveSystem();
+        DaySystem daySystem;
+        SavedData loadedGame = null;
+        bool isLoaded = LoadGameSingleton.Instance.IsContinueGame;
+
+        if (isLoaded)
+        {
+            loadedGame = saveSystem.Load();
+            currentLevel = loadedGame.GameLevel;
+            daySystem = new DaySystem(loadedGame.Day);
+        }
+        else
+        {
+            currentLevel = saveLevelSystem.LoadLevel();
+            daySystem = new ();
+        }
+
+        _dayView.Init(daySystem);
 
         //********* Sound ************************
         _soundInitializer.Init();
@@ -74,7 +93,7 @@ public class Root : MonoBehaviour
         _ = new HexContentSwitcher(unitsGrid, _gridCreator.BlockedCells);
 
         //******** Wallet ***********
-        Resource wallet = new Resource(_startGold, int.MaxValue);
+        Resource wallet = isLoaded ? new Resource(loadedGame.Wallet, int.MaxValue) : new Resource(_startGold, int.MaxValue);
         TaxSystem taxSystem = new TaxSystem(wallet, _citySpawner, _unitSpawner,
             _levelConfiguration.GetCityConfiguration(currentLevel), _levelConfiguration.GetUnitConfiguration(currentLevel));
         _walletView.Init(wallet);
@@ -93,7 +112,12 @@ public class Root : MonoBehaviour
 
         //********* EnemyLogic ***************
         _enemyBrain.Init(unitsGrid, _gridCreator.PathFinderAI, _unitSpawner, unitManager);
-        cityInitializer.SpawnEnemyCities();
+
+        if (isLoaded)
+            cityInitializer.SpawnCitiesFromLoadedData(loadedGame.Cities);
+        else
+            cityInitializer.SpawnEnemyCities();
+
         EnemyWaveSpawner waveSpawner = new(cityManager.GetEnemyCitiesUnits(), _unitSpawner, _levelConfiguration.GetEnemyWaveConfiguration(currentLevel));
         EnemyScaner scaner = new(cityManager.GetEnemyCities(), _unitSpawner, unitsGrid, _levelConfiguration.GetEnemySpawnerConfiguration(currentLevel));
         cityManager.SetScaner(scaner);
@@ -101,9 +125,13 @@ public class Root : MonoBehaviour
         //******** FogOfWar *********
         FogOfWar fogOfWar = new(_gridCreator.Clouds, unitsGrid, scaner);
 
+        if (isLoaded)
+            fogOfWar.ApplyLoadedData(loadedGame.DiscoveredCells);
+
         //********* Game state machine *******
         _winLoseMonitor.Init(cityManager, saveLevelSystem, currentLevel);
         var resettables = unitManager.Units.Append(taxSystem);
+        resettables = resettables.Append(daySystem);
         var stateMachine = _gameStateMachineCreator.Create(resettables, new List<IControllable>() { inputSorter, _saveSystemView },
             inputSorter, waveSpawner, currentLevel);
 
@@ -118,9 +146,14 @@ public class Root : MonoBehaviour
 
         //********* Other ************************
         TextureAtlasReader atlas = _meshUpdater.GetComponent<TextureAtlasReader>();
-        cityInitializer.SpawnPlayerCities();
+
+        if (isLoaded == false)
+            cityInitializer.SpawnPlayerCities();
+        else
+            _unitSpawner.SpawnLoadedUnits(loadedGame.Units);
+
         _quests.Init(cityManager, _levelConfiguration.GetCitiesNames(currentLevel));
-        SaveSystem saveSystem = new SaveSystem(fogOfWar, unitManager, cityManager, wallet, currentLevel);
+        saveSystem.Init(fogOfWar, unitManager, cityManager, wallet, daySystem, currentLevel);
         _saveSystemView.Init(saveSystem);
 
         SceneChangerSingleton.Instance.FadeOut();
@@ -128,7 +161,7 @@ public class Root : MonoBehaviour
 
     private void AddAudioSourceToMixer(AudioSource audioSource)
     {
-        if(audioSource == null)
+        if (audioSource == null)
             throw new ArgumentNullException(nameof(audioSource));
 
         _soundInitializer.AddEffectSource(audioSource);
@@ -137,7 +170,7 @@ public class Root : MonoBehaviour
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        if(_gridCreator.HexGrid == null)
+        if (_gridCreator.HexGrid == null)
             return;
 
         GUIStyle style = new GUIStyle();

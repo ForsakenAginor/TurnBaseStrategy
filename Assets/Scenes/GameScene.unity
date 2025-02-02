@@ -2609,6 +2609,7 @@ MonoBehaviour:
   _dialogueView: {fileID: 1360230338}
   _soundInitializer: {fileID: 2749841344956656380}
   _quests: {fileID: 717580003}
+  _dayView: {fileID: 1254421033}
   _saveSystemView: {fileID: 977130284}
 --- !u!4 &717580000
 Transform:
@@ -2744,7 +2745,6 @@ GameObject:
   - component: {fileID: 747799091}
   - component: {fileID: 747799090}
   - component: {fileID: 747799089}
-  - component: {fileID: 747799088}
   m_Layer: 5
   m_Name: Save
   m_TagString: Untagged
@@ -2771,20 +2771,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &747799088
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 747799086}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9217a3b97dcd33f479bab839343b8804, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _targetWindow: {fileID: 2096382864}
-  _currentWindow: {fileID: 733177072}
 --- !u!114 &747799089
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5135,7 +5121,6 @@ MonoBehaviour:
   _loseScreen: {fileID: 702697323}
   _finishScreen: {fileID: 1035493679}
   _winLoseMonitor: {fileID: 1254421032}
-  _dayView: {fileID: 1254421033}
 --- !u!114 &1254421032
 MonoBehaviour:
   m_ObjectHideFlags: 0

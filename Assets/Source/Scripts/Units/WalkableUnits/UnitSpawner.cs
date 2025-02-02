@@ -1,8 +1,9 @@
 ﻿using Assets.Scripts.HexGrid;
 using System;
-using System.Drawing;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static SavedData;
 
 public class UnitSpawner : MonoBehaviour, IUnitSpawner
 {
@@ -28,9 +29,9 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawner
         _factory = new UnitFactory(configuration);
     }
 
-    public bool TrySpawnUnit(Vector2Int position, UnitType type, Side side)
+    public bool TrySpawnUnit(Vector2Int cityPosition, UnitType type, Side side)
     {
-        var neighbours = _grid.CashedNeighbours[position].
+        var neighbours = _grid.CashedNeighbours[cityPosition].
             Where(o => _grid.IsValidGridPosition(o) && _grid.GetGridObject(o) == null && _landGrid.GetGridObject(o).IsBlocked == false).
             ToList();
 
@@ -43,13 +44,25 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawner
             if (_wallet.TrySpent(cost) == false)
                 return false;
 
-        var unit = _factory.Create(side, type);
+        CreateUnit(type, side, neighbours[0]);
+
+        return true;
+    }
+
+    public void SpawnLoadedUnits(SerializedPair<Vector2Int, UnitData>[] units)
+    {
+        foreach (var unit in units)
+            CreateUnit(unit.Value.Type, unit.Value.Side, unit.Key, false, unit.Value.Health, unit.Value.Steps, unit.Value.CanAttack);
+    }
+
+    private void CreateUnit(UnitType type, Side side, Vector2Int position,
+        bool mustBeNewUnit = true, int health = int.MinValue, int steps = int.MinValue, bool canAttack = false)
+    {
+        var unit = _factory.Create(side, type, mustBeNewUnit, health, steps, canAttack);
         var prefab = side == Side.Enemy ? _configuration.GetEnemyPrefab(type) : _configuration.GetPlayerPrefab(type);
-        var facade = Instantiate(prefab, _grid.GetCellWorldPosition(neighbours[0]), Quaternion.identity);
+        var facade = Instantiate(prefab, _grid.GetCellWorldPosition(position), Quaternion.identity);
         facade.UnitView.Init(unit, AudioSourceCallback);
         _unitsManager.AddUnit(unit, facade);
         UnitSpawned?.Invoke(unit);
-
-        return true;
     }
 }

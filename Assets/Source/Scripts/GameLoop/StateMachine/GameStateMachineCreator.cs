@@ -14,7 +14,6 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine
         [SerializeField] private UIElement _loseScreen;
         [SerializeField] private UIElement _finishScreen;
         [SerializeField] private WinLoseMonitor _winLoseMonitor;
-        [SerializeField] private DayView _dayView;
 
         public GameStateMachine Create(IEnumerable<IResetable> resetables, IEnumerable<IControllable> controllables,
             IWaitAnimation waitAnimation, EnemyWaveSpawner waveSpawner, GameLevel level)
@@ -39,7 +38,6 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine
 
             //states
             PlayerTurn playerTurn = new PlayerTurn(waitAnimation,
-                _dayView,
                 _nextTurnButton,
                 _winLoseMonitor,
                 resetables,

@@ -8,11 +8,12 @@ public class WalkableUnit : Unit, IResetable
     private bool _canAttack = true;
 
     public WalkableUnit(UnitMover mover, int attackPower, UnitType type,
-        Side side, Resource health, int counterAttackPower) : base(side, health, counterAttackPower)
+        Side side, Resource health, int counterAttackPower, bool canAttackStatus = true) : base(side, health, counterAttackPower)
     {
         _mover = mover != null ? mover : throw new ArgumentNullException(nameof(mover));
         _attackPower = attackPower > 0 ? attackPower : throw new ArgumentOutOfRangeException(nameof(attackPower));
         _type = type;
+        _canAttack = canAttackStatus;
     }
 
     public event Action Moved;
