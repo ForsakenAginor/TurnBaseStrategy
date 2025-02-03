@@ -105,27 +105,6 @@ public class UnitView : MonoBehaviour, IUIElement
         DoOnDestroyAction();
     }
 
-#if UNITY_EDITOR
-    [Button]
-    private void TestPopupDisplay()
-    {
-        OnTookDamage(1);
-        OnHealed(1);
-    }
-#endif
-
-#if UNITY_EDITOR
-    [Button]
-    private void TestSmoke()
-    {
-        if (_cityDestroyEffect != null)
-        {
-            var effect = Instantiate(_cityDestroyEffect, transform.position, Quaternion.identity);
-            effect.transform.SetParent(null);
-        }
-    }
-#endif
-
     private void OnTookDamage(int value)
     {
         _damagingDisplay.Kill();
