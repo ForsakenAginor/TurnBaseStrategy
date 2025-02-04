@@ -16,10 +16,10 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
     };
 
     [SerializeField] private Button _upgradeButton;
-    [SerializeField] private Button _hireInfantry;
-    [SerializeField] private Button _hireSpearman;
-    [SerializeField] private Button _hireArcher;
-    [SerializeField] private Button _hireKnight;
+    [SerializeField] private HireButton _hireInfantry;
+    [SerializeField] private HireButton _hireSpearman;
+    [SerializeField] private HireButton _hireArcher;
+    [SerializeField] private HireButton _hireKnight;
     [SerializeField] private SwitchableElement _buttonCanvas;
     [SerializeField] private TMP_Text _upgradeCostLabel;
     [SerializeField] private SwitchableElement _upgradePanel;
@@ -77,7 +77,7 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
         facade.Menu.Init(TryHireUnit, TryUpgradeCity,
             _upgradeButton, _hireInfantry, _hireSpearman, _hireArcher, _hireKnight, _buttonCanvas,
             _upgradeCostLabel, _configuration.GetUpgradeCost(size), _upgradePanel,
-            _upgradeIcon, _citiesUpgradesSymbols[size]);
+            _upgradeIcon, _citiesUpgradesSymbols[size], size);
         facade.CityName.Init(_citiesNames[position]);
         _unitsManager.AddCity(unit, facade);
 

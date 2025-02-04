@@ -3079,10 +3079,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _upgradeButton: {fileID: 649234912}
-  _hireInfantry: {fileID: 3580529835988730232}
-  _hireSpearman: {fileID: 305641681083397826}
-  _hireArcher: {fileID: 7533170700536612872}
-  _hireKnight: {fileID: 3773951742390711646}
+  _hireInfantry: {fileID: 9120349262581927492}
+  _hireSpearman: {fileID: 9054183269144739047}
+  _hireArcher: {fileID: 7533170700536612873}
+  _hireKnight: {fileID: 8718576460661413620}
   _buttonCanvas: {fileID: 5892807424833632586}
   _upgradeCostLabel: {fileID: 1926925587}
   _upgradePanel: {fileID: 10893856}
@@ -8392,6 +8392,7 @@ GameObject:
   - component: {fileID: 6090474199164035180}
   - component: {fileID: 4019461109332580449}
   - component: {fileID: 7533170700536612872}
+  - component: {fileID: 7533170700536612873}
   m_Layer: 5
   m_Name: ArcherButton
   m_TagString: Untagged
@@ -10839,6 +10840,7 @@ GameObject:
   - component: {fileID: 2298969804316391420}
   - component: {fileID: 6956227508622489951}
   - component: {fileID: 3773951742390711646}
+  - component: {fileID: 8718576460661413620}
   m_Layer: 5
   m_Name: KnightButton
   m_TagString: Untagged
@@ -11601,6 +11603,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &7533170700536612873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 915844799765246405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e03956a2699dc945987542ba21ff4d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _coinImage: {fileID: 7177833007513416693}
+  _unitIcon: {fileID: 7654226138539546977}
 --- !u!224 &7540202632871624820
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11772,6 +11788,7 @@ GameObject:
   - component: {fileID: 4196814228518614187}
   - component: {fileID: 5017483996010241182}
   - component: {fileID: 3580529835988730232}
+  - component: {fileID: 9120349262581927492}
   m_Layer: 5
   m_Name: InfantryButton
   m_TagString: Untagged
@@ -12176,6 +12193,7 @@ GameObject:
   - component: {fileID: 972288161884205729}
   - component: {fileID: 9054183269144739046}
   - component: {fileID: 305641681083397826}
+  - component: {fileID: 9054183269144739047}
   m_Layer: 5
   m_Name: SpearmanButton
   m_TagString: Untagged
@@ -12204,6 +12222,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &8718576460661413620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6065931570321050539}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e03956a2699dc945987542ba21ff4d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _coinImage: {fileID: 8246561680459386000}
+  _unitIcon: {fileID: 5164995185865939769}
 --- !u!224 &8721574418895208314
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12340,6 +12372,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &9054183269144739047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8656595757470934669}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e03956a2699dc945987542ba21ff4d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _coinImage: {fileID: 6356825218996960962}
+  _unitIcon: {fileID: 1539389170873917432}
 --- !u!114 &9090015657587295741
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12452,6 +12498,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &9120349262581927492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7812419598151770217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e03956a2699dc945987542ba21ff4d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _coinImage: {fileID: 6205899905152010006}
+  _unitIcon: {fileID: 618156782483845395}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
