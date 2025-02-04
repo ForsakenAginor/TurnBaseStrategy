@@ -9,7 +9,7 @@ public class IncomeCompositionView : MonoBehaviour, IPointerEnterHandler, IPoint
 {
     [SerializeField] private TMP_Text _leftTextField;
     [SerializeField] private TMP_Text _rightTextField;
-    [SerializeField] private UIElement _tooltip;
+    [SerializeField] private SwitchableElement _tooltip;
     private IIncome _income;
 
     private void OnDestroy()

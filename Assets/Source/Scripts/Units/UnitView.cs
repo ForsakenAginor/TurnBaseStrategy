@@ -5,17 +5,17 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UnitView : MonoBehaviour, IUIElement
+public class UnitView : MonoBehaviour, ISwitchableElement
 {
     [SerializeField] private TMP_Text _health;
     [SerializeField] private Slider _hpBar;
-    [SerializeField] private UIElement _viewCanvas;
+    [SerializeField] private SwitchableElement _viewCanvas;
     [SerializeField] private UnitSoundsHandler _soundHandler;
     [SerializeField] private TMP_Text _healingMessage;
     [SerializeField] private TMP_Text _damagingMessage;
     [SerializeField] private float _animationDuration = 3f;
     [SerializeField] private float _animationDistance = 1f;
-    [SerializeField] private UIElement _title;
+    [SerializeField] private SwitchableElement _title;
     [SerializeField] private ParticleSystem _cityDestroyEffect;
 
     private Vector3 _healingPosition;

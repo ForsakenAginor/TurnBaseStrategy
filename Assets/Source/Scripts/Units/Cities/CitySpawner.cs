@@ -20,9 +20,9 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
     [SerializeField] private Button _hireSpearman;
     [SerializeField] private Button _hireArcher;
     [SerializeField] private Button _hireKnight;
-    [SerializeField] private UIElement _buttonCanvas;
+    [SerializeField] private SwitchableElement _buttonCanvas;
     [SerializeField] private TMP_Text _upgradeCostLabel;
-    [SerializeField] private UIElement _upgradePanel;
+    [SerializeField] private SwitchableElement _upgradePanel;
     [SerializeField] private TMP_Text _upgradeIcon;
 
     private CitiesConfiguration _configuration;

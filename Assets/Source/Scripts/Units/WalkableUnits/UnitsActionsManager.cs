@@ -12,7 +12,7 @@ public class UnitsActionsManager : IEnemyUnitOversight, ISavedUnits
     private readonly EnemyBrain _enemyBrain;
     private readonly HexGridXZ<ICloud> _fogOfWar;
 
-    private IUIElement _selectedUnit;
+    private ISwitchableElement _selectedUnit;
 
     public UnitsActionsManager(NewInputSorter inputSorter, HexGridXZ<Unit> grid, EnemyBrain enemyBrain, HexGridXZ<ICloud> cloudGrid)
     {

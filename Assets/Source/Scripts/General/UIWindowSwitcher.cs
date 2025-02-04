@@ -6,8 +6,8 @@ namespace Assets.Scripts.UI
     [RequireComponent(typeof(Button))]
     public class UIWindowSwitcher : MonoBehaviour
     {
-        [SerializeField] private UIElement _targetWindow;
-        [SerializeField] private UIElement _currentWindow;
+        [SerializeField] private SwitchableElement _targetWindow;
+        [SerializeField] private SwitchableElement _currentWindow;
 
         private Button _button;
 

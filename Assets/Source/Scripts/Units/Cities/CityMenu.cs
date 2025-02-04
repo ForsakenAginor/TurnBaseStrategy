@@ -3,15 +3,15 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CityMenu : MonoBehaviour, IUIElement
+public class CityMenu : MonoBehaviour, ISwitchableElement
 {
-    private IUIElement _upgradePanel;
+    private ISwitchableElement _upgradePanel;
     private Button _upgradeButton;
     private Button _hireInfantry;
     private Button _hireSpearman;
     private Button _hireArcher;
     private Button _hireKnight;
-    private IUIElement _buttonCanvas;
+    private ISwitchableElement _buttonCanvas;
     private TMP_Text _upgradeCostTextField;
     private int _upgradeCost;
     private string _symbol;
@@ -64,8 +64,8 @@ public class CityMenu : MonoBehaviour, IUIElement
 
     public void Init(Func<UnitType, Vector3, bool> tryHireCallback, Func<Vector3, bool> tryUpgradeCityCallback,
         Button upgradeButton, Button hireInfantry, Button hireSpearman,
-        Button hireArcher, Button hireKnight, IUIElement buttonCanvas,
-        TMP_Text upgradeCostTextLabel, int upgradeCost, IUIElement upgradePanel,
+        Button hireArcher, Button hireKnight, ISwitchableElement buttonCanvas,
+        TMP_Text upgradeCostTextLabel, int upgradeCost, ISwitchableElement upgradePanel,
         TMP_Text symbolField, string symbol)
     {
         TryHireCallback = tryHireCallback != null ? tryHireCallback : throw new ArgumentNullException(nameof(tryHireCallback));

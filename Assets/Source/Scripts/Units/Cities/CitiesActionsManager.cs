@@ -11,8 +11,8 @@ public class CitiesActionsManager : ICitiesGetter, ISavedCities
     private readonly HexGridXZ<Unit> _grid;
 
     private EnemyScaner _enemyScaner;
-    private IUIElement _selectedUnit;
-    private IUIElement _selectedUnitMenu;
+    private ISwitchableElement _selectedUnit;
+    private ISwitchableElement _selectedUnitMenu;
 
     public CitiesActionsManager(NewInputSorter inputSorter, HexGridXZ<Unit> grid)
     {
