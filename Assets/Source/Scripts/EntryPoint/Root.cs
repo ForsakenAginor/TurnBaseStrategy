@@ -41,6 +41,7 @@ public class Root : MonoBehaviour
     [SerializeField] private Transform _camera;
     [SerializeField] private LeanFingerSwipe _leanSwipe;
     [SerializeField] private PinchDetector _pinchDetector;
+    [SerializeField] private IDKWhatImDoing _swipeInputReceiver;
 
     [Header("Dialogue")]
     [SerializeField] private DialogueView _dialogueView;
@@ -50,6 +51,7 @@ public class Root : MonoBehaviour
     [SerializeField] private Quests _quests;
     [SerializeField] private DayView _dayView;
     [SerializeField] private SaveSystemView _saveSystemView;
+    [SerializeField] private TutorialSingleton _tutorial;
 
     private void Start()
     {
@@ -91,6 +93,9 @@ public class Root : MonoBehaviour
         NewInputSorter inputSorter = new NewInputSorter(unitsGrid, _cellSelector, _gridCreator.BlockedCells, _gridCreator.PathFinder);
         CellHighlighter _cellHighlighter = new(inputSorter, _gridCreator.HexGrid, _gridColorConfiguration);
         _ = new HexContentSwitcher(unitsGrid, _gridCreator.BlockedCells);
+
+        //******** Tutorial ***********
+        _tutorial.Init(_citySpawner, inputSorter, _unitSpawner);
 
         //******** Wallet ***********
         Resource wallet = isLoaded ? new Resource(loadedGame.Wallet, int.MaxValue) : new Resource(_startGold, int.MaxValue);
@@ -139,7 +144,7 @@ public class Root : MonoBehaviour
         //********* Camera control *********
         SwipeHandler swipeHandler = new SwipeHandler(_leanSwipe);
         CameraMover cameraMover = new CameraMover(_camera, swipeHandler, _pinchDetector, currentLevel, _levelConfiguration,
-            _gridCreator.HexGrid, scaner, unitManager);
+            _gridCreator.HexGrid, scaner, unitManager, _swipeInputReceiver);
 
         //********* Dialogue *********
         Dialogue dialogue = new Dialogue(_levelConfiguration.GetCitiesBossInfo(currentLevel), scaner);
