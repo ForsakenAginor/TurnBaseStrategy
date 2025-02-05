@@ -69,6 +69,8 @@ public class UnitsActionsManager : IEnemyUnitOversight, ISavedUnits
         _grid.SetGridObject(facade.Position, unit);
 
         unit.Destroyed += OnUnitDied;
+
+        _inputSorter.Deselect();
     }
 
     public Vector2Int GetUnitPosition(Unit unit) => _grid.GetXZ(_units[unit].Position);
