@@ -21,12 +21,14 @@ public class CameraMover
     private readonly EnemyScaner _enemyScaner;
     private readonly IEnemyUnitOversight _enemyOversight;
 
+    private readonly ITouchInputReceiver _inputReceiver;
+
     private Tween _tween;
     private Vector2Int _currentFocus;
 
     public CameraMover(Transform camera, SwipeHandler swipeHandler, PinchDetector pinchDetector,
         GameLevel level, ICameraConfigurationGetter configuration, HexGridXZ<CellSprite> grid, EnemyScaner enemyScaner,
-        IEnemyUnitOversight enemyOversight)
+        IEnemyUnitOversight enemyOversight, ITouchInputReceiver inputReceiver)
     {
         _camera = camera != null ? camera : throw new ArgumentNullException(nameof(camera));
         _swipeHandler = swipeHandler != null ? swipeHandler : throw new ArgumentNullException(nameof(swipeHandler));
@@ -34,6 +36,7 @@ public class CameraMover
         _grid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
         _enemyScaner = enemyScaner != null ? enemyScaner : throw new ArgumentNullException(nameof(enemyScaner));
         _enemyOversight = enemyOversight != null ? enemyOversight : throw new ArgumentNullException(nameof(enemyOversight));
+        _inputReceiver = inputReceiver != null ? inputReceiver : throw new ArgumentNullException(nameof(inputReceiver));
 
         if(configuration == null)
             throw new ArgumentNullException(nameof(configuration));
@@ -44,6 +47,7 @@ public class CameraMover
         var startedCell = configuration.GetCameraStartPosition(level);
         FocusCameraOnCell(startedCell);
 
+        _inputReceiver.TouchInputReceived += OnTouchInputReceived;
         _pinchDetector.GotPinchInput += OnPinch;
         _swipeHandler.SwipeInputReceived += OnSwipeInputReceived;
         _enemyScaner.DefendersSpawned += FocusCameraOnCell;
@@ -52,10 +56,21 @@ public class CameraMover
 
     ~CameraMover()
     {
+        _inputReceiver.TouchInputReceived -= OnTouchInputReceived;
         _pinchDetector.GotPinchInput -= OnPinch;
         _swipeHandler.SwipeInputReceived -= OnSwipeInputReceived;
         _enemyScaner.DefendersSpawned -= FocusCameraOnCell;
         _enemyOversight.EnemyMoved -= FocusCameraOnCell;
+    }
+
+    private void OnTouchInputReceived(Vector2 input)
+    {
+        float cameraSensitivity = 0.25f;
+        Vector3 delta = new Vector3(input.x, 0, input.y).normalized * cameraSensitivity;
+        Vector3 target = _camera.position - delta;
+        target.x = Mathf.Clamp(target.x, _cameraMin.x, _cameraMax.x);
+        target.z = Mathf.Clamp(target.z, _cameraMin.z, _cameraMax.z);
+        _camera.position = target;
     }
 
     private void FocusCameraOnCell(Vector2Int cell)
@@ -82,11 +97,11 @@ public class CameraMover
     }
 
     private void OnSwipeInputReceived(Vector3 vector)
-    {
+    {/*
         Vector3 target = _camera.position - vector;
         target.x = Mathf.Clamp(target.x, _cameraMin.x, _cameraMax.x);
         target.z = Mathf.Clamp(target.z, _cameraMin.z, _cameraMax.z);
         _tween.Kill();
-        _tween = _camera.DOMove(target, _speed);
+        _tween = _camera.DOMove(target, _speed);*/
     }
 }

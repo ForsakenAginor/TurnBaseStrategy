@@ -41,6 +41,7 @@ public class Root : MonoBehaviour
     [SerializeField] private Transform _camera;
     [SerializeField] private LeanFingerSwipe _leanSwipe;
     [SerializeField] private PinchDetector _pinchDetector;
+    [SerializeField] private IDKWhatImDoing _swipeInputReceiver;
 
     [Header("Dialogue")]
     [SerializeField] private DialogueView _dialogueView;
@@ -143,7 +144,7 @@ public class Root : MonoBehaviour
         //********* Camera control *********
         SwipeHandler swipeHandler = new SwipeHandler(_leanSwipe);
         CameraMover cameraMover = new CameraMover(_camera, swipeHandler, _pinchDetector, currentLevel, _levelConfiguration,
-            _gridCreator.HexGrid, scaner, unitManager);
+            _gridCreator.HexGrid, scaner, unitManager, _swipeInputReceiver);
 
         //********* Dialogue *********
         Dialogue dialogue = new Dialogue(_levelConfiguration.GetCitiesBossInfo(currentLevel), scaner);

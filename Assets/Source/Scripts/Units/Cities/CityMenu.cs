@@ -75,16 +75,15 @@ public class CityMenu : MonoBehaviour, ISwitchableElement
         _upgradeCostTextField.text = string.Empty;
         _upgradeButton.gameObject.SetActive(false);
         _upgradePanel.Disable();
-
     }
 
     public void Disable()
     {
         _upgradeButton.onClick.RemoveListener(OnUpgradeButtonClick);
-        _hireInfantry.HireUnitButton.onClick.RemoveListener(OnHireInfantryClick);
-        _hireArcher.HireUnitButton.onClick.RemoveListener(OnHireArcherClick);
-        _hireSpearman.HireUnitButton.onClick.RemoveListener(OnHireSpearmanClick);
-        _hireKnight.HireUnitButton.onClick.RemoveListener(OnHireKnightClick);
+        _hireInfantry.HireUnitButton?.onClick.RemoveListener(OnHireInfantryClick);
+        _hireArcher.HireUnitButton?.onClick.RemoveListener(OnHireArcherClick);
+        _hireSpearman.HireUnitButton?.onClick.RemoveListener(OnHireSpearmanClick);
+        _hireKnight.HireUnitButton?.onClick.RemoveListener(OnHireKnightClick);
 
         _buttonCanvas.Disable();
     }
