@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CitySpawner : MonoBehaviour, IUnitSpawner
+public class CitySpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
 {
     private readonly Dictionary<CitySize, string> _citiesUpgradesSymbols = new Dictionary<CitySize, string>()
     {
@@ -31,9 +31,11 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
     private HexGridXZ<Unit> _grid;
     private UnitSpawner _unitSpawner;
     private Resource _wallet;
-    private Dictionary<Vector2Int, string> _citiesNames = new ();
+    private Dictionary<Vector2Int, string> _citiesNames = new();
 
     public event Action<Unit> UnitSpawned;
+    public event Action<UnitView> UnitViewSpawned;
+
     public Action<AudioSource> AudioSourceCallback;
 
     private void OnDestroy()
@@ -82,6 +84,9 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
         _unitsManager.AddCity(unit, facade);
 
         UnitSpawned?.Invoke(unit);
+
+        if (side == Side.Player)
+            UnitViewSpawned?.Invoke(facade.UnitView);
     }
 
     private void OnCityCaptured(Vector2Int cell, Side side)

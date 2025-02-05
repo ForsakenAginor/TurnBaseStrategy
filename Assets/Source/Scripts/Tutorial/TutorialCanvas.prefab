@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2191737608744036105}
   - component: {fileID: 5967851221953061396}
   - component: {fileID: 8550452622884948904}
+  - component: {fileID: 3373748149698127249}
   m_Layer: 6
   m_Name: TutorialCanvas
   m_TagString: Untagged
@@ -83,7 +84,19 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
+--- !u!114 &3373748149698127249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7296883138382598590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9edd80a5f129e95409eec6371a551931, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8450334941088605797
 GameObject:
   m_ObjectHideFlags: 0
@@ -95,7 +108,6 @@ GameObject:
   - component: {fileID: 5820672980511538823}
   - component: {fileID: 6120491648427529484}
   - component: {fileID: 1302661344451203540}
-  - component: {fileID: 2077900692850554312}
   m_Layer: 6
   m_Name: Image
   m_TagString: Untagged
@@ -143,7 +155,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.8584906, g: 0.77345145, b: 0.77345145, a: 1}
+  m_Color: {r: 0.85882354, g: 0.83457905, b: 0.77254903, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -160,15 +172,3 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 150
---- !u!114 &2077900692850554312
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8450334941088605797}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 917a056742e2d7b4498b1753bdb3f750, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

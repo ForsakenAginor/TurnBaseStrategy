@@ -50,6 +50,7 @@ public class Root : MonoBehaviour
     [SerializeField] private Quests _quests;
     [SerializeField] private DayView _dayView;
     [SerializeField] private SaveSystemView _saveSystemView;
+    [SerializeField] private TutorialSingleton _tutorial;
 
     private void Start()
     {
@@ -91,6 +92,9 @@ public class Root : MonoBehaviour
         NewInputSorter inputSorter = new NewInputSorter(unitsGrid, _cellSelector, _gridCreator.BlockedCells, _gridCreator.PathFinder);
         CellHighlighter _cellHighlighter = new(inputSorter, _gridCreator.HexGrid, _gridColorConfiguration);
         _ = new HexContentSwitcher(unitsGrid, _gridCreator.BlockedCells);
+
+        //******** Tutorial ***********
+        _tutorial.Init(_citySpawner, inputSorter, _unitSpawner);
 
         //******** Wallet ***********
         Resource wallet = isLoaded ? new Resource(loadedGame.Wallet, int.MaxValue) : new Resource(_startGold, int.MaxValue);

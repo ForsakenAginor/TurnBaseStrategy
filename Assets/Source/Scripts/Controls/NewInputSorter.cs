@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class NewInputSorter : IControllable, IWaitAnimation
 {
@@ -60,6 +61,14 @@ public class NewInputSorter : IControllable, IWaitAnimation
         BecomeInactive?.Invoke();
         _cellSelector.CellClicked -= OnCellClicked;
         _isActive = false;
+    }
+
+    public void Deselect()
+    {
+        _selectedCell = _fakeCell;
+        _possibleWays = null;
+        _possibleAttacks = null;
+        BecomeInactive?.Invoke();
     }
 
     private void OnGridObjectChanged(Vector2Int position)
