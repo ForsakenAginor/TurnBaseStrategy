@@ -6,8 +6,11 @@ using UnityEngine;
 public class TouchInput : MonoBehaviour, ITouchInputReceiver
 {
     [SerializeField] private LeanFingerFilter Use = new LeanFingerFilter(true);
-    [SerializeField] private float _sensitivity = 0.25f;
+    [SerializeField] private float _sensitivityMobile = 0.1f;
+    [SerializeField] private float _sensitivityPC = 0.2f;
     [SerializeField] private float _clampValue = 50f;
+
+    private float _sensitivity;
 
     public event Action<Vector3> TouchInputReceived;
 
@@ -17,7 +20,14 @@ public class TouchInput : MonoBehaviour, ITouchInputReceiver
             (Application.platform == RuntimePlatform.WebGLPlayer || Application.platform == RuntimePlatform.Android);
 
         if (isMobile == false)
+        {
+            _sensitivity = _sensitivityMobile;
             _clampValue = 3f;
+        }
+        else
+        {
+            _sensitivity = _sensitivityPC;
+        }
     }
 
     private void FixedUpdate()
