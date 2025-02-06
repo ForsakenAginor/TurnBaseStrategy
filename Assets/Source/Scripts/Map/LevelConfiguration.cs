@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -16,6 +17,9 @@ public class LevelConfiguration : UpdatableConfiguration<GameLevel, MapConfigura
 
     public SerializedPair<Vector2Int, string>[] GetCitiesNames(GameLevel level) =>
         Content.First(o => o.Key == level).Value.CitiesNames;
+
+    public Dictionary<Vector2Int, SerializedPair<Sprite, string>> GetCitiesBossInfo(GameLevel level) =>
+        Content.First(o => o.Key == level).Value.SpawnMessages.ToDictionary(key => key.Key, value => value.Value);
 
     public Tilemap GetMapPrefab(GameLevel level) => Content.First(o => o.Key == level).Value.Prefab;
 
@@ -42,6 +46,5 @@ public class LevelConfiguration : UpdatableConfiguration<GameLevel, MapConfigura
     public Vector2 GetMinimumCameraPosition(GameLevel level)
     {
         return Content.First(o => o.Key == level).Value.CameraMin;
-    }
-
+    }    
 }

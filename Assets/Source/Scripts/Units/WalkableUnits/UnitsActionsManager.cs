@@ -2,10 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TMPro;
 using UnityEngine;
 
-public class UnitsActionsManager
+public class UnitsActionsManager : IEnemyUnitOversight, ISavedUnits
 {
     private readonly Dictionary<Unit, IUnitFacade> _units = new Dictionary<Unit, IUnitFacade>();
     private readonly NewInputSorter _inputSorter;
@@ -13,7 +12,7 @@ public class UnitsActionsManager
     private readonly EnemyBrain _enemyBrain;
     private readonly HexGridXZ<ICloud> _fogOfWar;
 
-    private IUIElement _selectedUnit;
+    private ISwitchableElement _selectedUnit;
 
     public UnitsActionsManager(NewInputSorter inputSorter, HexGridXZ<Unit> grid, EnemyBrain enemyBrain, HexGridXZ<ICloud> cloudGrid)
     {
@@ -46,7 +45,14 @@ public class UnitsActionsManager
         _enemyBrain.UnitAttacking -= OnUnitAttacking;
     }
 
+    public event Action<Vector2Int> EnemyMoved;
+
     public IEnumerable<IResetable> Units => _units.Keys.Where(o => o is WalkableUnit).Select(o => o as IResetable);
+
+    public Dictionary<Vector2Int, WalkableUnit> GetInfo()
+    {
+        return _units.ToDictionary(key => _grid.GetXZ(key.Value.Position), value => value.Key as WalkableUnit);
+    }
 
     public void AddUnit(Unit unit, IUnitFacade facade)
     {
@@ -63,6 +69,8 @@ public class UnitsActionsManager
         _grid.SetGridObject(facade.Position, unit);
 
         unit.Destroyed += OnUnitDied;
+
+        _inputSorter.Deselect();
     }
 
     public Vector2Int GetUnitPosition(Unit unit) => _grid.GetXZ(_units[unit].Position);
@@ -74,7 +82,7 @@ public class UnitsActionsManager
     private void OnEnemySelected(Vector2Int position) => OnUnitSelected(position, null, null, null, null);
 
     private void OnUnitSelected(Vector2Int unitPosition,
-        IEnumerable<Vector2Int> _, IEnumerable<Vector2Int> _1,
+        IEnumerable<IEnumerable<Vector2Int>> _, IEnumerable<Vector2Int> _1,
         IEnumerable<Vector2Int> _2, IEnumerable<Vector2Int> _3)
     {
         _selectedUnit?.Disable();
@@ -92,6 +100,10 @@ public class UnitsActionsManager
         unit.Destroyed -= OnUnitDied;
         Vector3 position = _units[unit].Position;
         _grid.SetGridObject(position, null);
+
+        if (_selectedUnit == _units[unit].UnitView)
+            _selectedUnit = null;
+
         _units.Remove(unit);
     }
 
@@ -113,20 +125,34 @@ public class UnitsActionsManager
         }
     }
 
-    private void OnUnitMoving(WalkableUnit unit, Vector2Int target, Action callback)
+    private void OnUnitMoving(WalkableUnit unit, IEnumerable<Vector2Int> target, Action callback)
     {
-        int step = 1;
+        int steps = 0;
 
-        if (unit.TryMoving(step))
+        if (target != null)
+            steps = target.Count();
+        else
+            callback.Invoke();
+
+        if (unit.TryMoving(steps))
         {
             if (_units[unit] is IWalkableUnitFacade facade)
             {
-                var cloud = _fogOfWar.GetGridObject(target);
+                var cloud = _fogOfWar.GetGridObject(target.Last());
+                List<Vector3> way = new();
+
+                foreach (var step in target)
+                    way.Add(_grid.GetCellWorldPosition(step));
 
                 if (cloud == null || cloud.IsDissappeared == true)
-                    facade.Mover.Move(_grid.GetCellWorldPosition(target), callback);
+                {
+                    facade.Mover.Move(way, callback);
+                    EnemyMoved?.Invoke(target.Last());
+                }
                 else
-                    facade.Mover.MoveFast(_grid.GetCellWorldPosition(target), callback);
+                {
+                    facade.Mover.MoveFast(way, callback);
+                }
             }
             else
             {
@@ -136,11 +162,21 @@ public class UnitsActionsManager
 
             Vector3 position = _units[unit].Position;
             _grid.SetGridObject(position, null);
-            _grid.SetGridObject(target.x, target.y, unit);
+            _grid.SetGridObject(target.Last().x, target.Last().y, unit);
         }
         else
         {
             callback.Invoke();
         }
     }
+}
+
+public interface IEnemyUnitOversight
+{
+    public event Action<Vector2Int> EnemyMoved;
+}
+
+public interface ISavedUnits
+{
+    public Dictionary<Vector2Int, WalkableUnit> GetInfo();
 }

@@ -1,34 +1,38 @@
 ﻿using Assets.Scripts.HexGrid;
 using DG.Tweening;
 using System;
+using System.Linq;
 using UnityEngine;
 
 public class CameraMover
 {
-    private const float MaxZoomValue = 12f;
+    private const float MaxZoomValue = 10f;
     private const float MinZoomValue = 5f;
-    private const float CameraYDefault = 6;
 
     private readonly Vector3 _cameraMin;
     private readonly Vector3 _cameraMax;
     private readonly Transform _camera;
-    private readonly SwipeHandler _swipeHandler;
-    private readonly PinchDetector _pinchDetector;
-    private readonly float _zoomMultiplier = 2f;
+    private readonly IZoomInputReceiver _pinchDetector;
     private readonly float _speed = 1f;
     private readonly HexGridXZ<CellSprite> _grid;
     private readonly EnemyScaner _enemyScaner;
+    private readonly IEnemyUnitOversight _enemyOversight;
+    private readonly ITouchInputReceiver _inputReceiver;
 
+    private float _cameraYDefault = 5;
     private Tween _tween;
+    private Vector2Int _currentFocus;
 
-    public CameraMover(Transform camera, SwipeHandler swipeHandler, PinchDetector pinchDetector,
-        GameLevel level, ICameraConfigurationGetter configuration, HexGridXZ<CellSprite> grid, EnemyScaner enemyScaner)
+    public CameraMover(Transform camera, IZoomInputReceiver pinchDetector,
+        GameLevel level, ICameraConfigurationGetter configuration, HexGridXZ<CellSprite> grid, EnemyScaner enemyScaner,
+        IEnemyUnitOversight enemyOversight, ITouchInputReceiver inputReceiver)
     {
         _camera = camera != null ? camera : throw new ArgumentNullException(nameof(camera));
-        _swipeHandler = swipeHandler != null ? swipeHandler : throw new ArgumentNullException(nameof(swipeHandler));
         _pinchDetector = pinchDetector != null ? pinchDetector : throw new ArgumentNullException(nameof(pinchDetector));
         _grid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
         _enemyScaner = enemyScaner != null ? enemyScaner : throw new ArgumentNullException(nameof(enemyScaner));
+        _enemyOversight = enemyOversight != null ? enemyOversight : throw new ArgumentNullException(nameof(enemyOversight));
+        _inputReceiver = inputReceiver != null ? inputReceiver : throw new ArgumentNullException(nameof(inputReceiver));
 
         if(configuration == null)
             throw new ArgumentNullException(nameof(configuration));
@@ -38,43 +42,66 @@ public class CameraMover
 
         var startedCell = configuration.GetCameraStartPosition(level);
         FocusCameraOnCell(startedCell);
-
-        _pinchDetector.GotPinchInput += OnPinch;
-        _swipeHandler.SwipeInputReceived += OnSwipeInputReceived;
-        _enemyScaner.DefendersSpawned += FocusCameraOnCell;
+        Subscribe();
     }
 
     ~CameraMover()
     {
+        Unsubscribe();
+    }
+
+    private void Unsubscribe()
+    {
+        _inputReceiver.TouchInputReceived -= OnTouchInputReceived;
         _pinchDetector.GotPinchInput -= OnPinch;
-        _swipeHandler.SwipeInputReceived -= OnSwipeInputReceived;
         _enemyScaner.DefendersSpawned -= FocusCameraOnCell;
+        _enemyOversight.EnemyMoved -= FocusCameraOnCell;
+    }
+
+    private void Subscribe()
+    {
+        _inputReceiver.TouchInputReceived += OnTouchInputReceived;
+        _pinchDetector.GotPinchInput += OnPinch;
+        _enemyScaner.DefendersSpawned += FocusCameraOnCell;
+        _enemyOversight.EnemyMoved += FocusCameraOnCell;
+    }
+
+    private void OnTouchInputReceived(Vector3 input)
+    {
+        Vector3 target = _camera.position - input;
+        target.x = Mathf.Clamp(target.x, _cameraMin.x, _cameraMax.x);
+        target.z = Mathf.Clamp(target.z, _cameraMin.z, _cameraMax.z);
+        _camera.position = target;
     }
 
     private void FocusCameraOnCell(Vector2Int cell)
     {
+        if (_grid.CashedFarNeighbours[_currentFocus].Contains(cell))
+            return;
+
+        _currentFocus = cell;
+
         if(_tween != null)
             _tween.Kill();
 
         var cellPosition = _grid.GetCellWorldPosition(cell);
-        var cameraPosition = new Vector3(cellPosition.x, CameraYDefault, cellPosition.z) + _cameraMin;
+        var cameraPosition = new Vector3(cellPosition.x, _cameraYDefault, cellPosition.z) + _cameraMin;
         _tween = _camera.DOMove(cameraPosition, _speed);
     }
 
     private void OnPinch(float value)
     {
-        _tween.Kill();
-        Vector3 newPosition = _camera.position + new Vector3(0, value * _zoomMultiplier, 0);
-        newPosition.y = Mathf.Clamp(newPosition.y, MinZoomValue, MaxZoomValue);
-        _camera.position = newPosition;
-    }
+        Unsubscribe();
 
-    private void OnSwipeInputReceived(Vector3 vector)
-    {
-        Vector3 target = _camera.position - vector;
-        target.x = Mathf.Clamp(target.x, _cameraMin.x, _cameraMax.x);
-        target.z = Mathf.Clamp(target.z, _cameraMin.z, _cameraMax.z);
-        _tween.Kill();
-        _tween = _camera.DOMove(target, _speed);
+        if (_tween != null)
+            _tween.Kill();
+
+        if (value < 0)
+            _cameraYDefault = MaxZoomValue;
+        else
+            _cameraYDefault = MinZoomValue;
+
+        Vector3 newPosition = new Vector3(_camera.position.x, _cameraYDefault, _camera.position.z);
+        _tween = _camera.DOMove(newPosition, _speed).OnComplete(Subscribe);
     }
 }

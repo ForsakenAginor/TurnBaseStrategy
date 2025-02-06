@@ -4,4 +4,7 @@
     Spearman,
     Archer,
     Knight,
+    Noble,
+    Wizard,
+    King,
 }

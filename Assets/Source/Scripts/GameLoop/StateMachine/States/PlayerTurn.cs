@@ -8,21 +8,22 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
 {
     public class PlayerTurn : State
     {
-        private readonly IDayView _view;
+        private readonly IWaitAnimation _inputSorter;
         private readonly Button _nextTurnButton;
         private readonly IEnumerable<IResetable> _resetables;
         private readonly IEnumerable<IControllable> _controllables;
         private readonly IWinLoseEventThrower _winLoseMonitor;
 
-        private int _currentDay = 0;
+        private bool _isFirstCycle = true;
 
-        public PlayerTurn(IDayView dayView, Button nextTurnButton, IWinLoseEventThrower winLoseMonitor, IEnumerable<IResetable> resetables,
+        public PlayerTurn(IWaitAnimation inputSorter,
+            Button nextTurnButton, IWinLoseEventThrower winLoseMonitor, IEnumerable<IResetable> resetables,
             IEnumerable<IControllable> controllables, Transition[] transitions)
             : base(transitions)
         {
-            _view = dayView != null ?
-                dayView :
-                throw new ArgumentNullException(nameof(dayView));
+            _inputSorter = inputSorter != null ?
+                inputSorter :
+                throw new ArgumentNullException(nameof(inputSorter));
 
             _nextTurnButton = nextTurnButton != null ?
                 nextTurnButton :
@@ -58,11 +59,14 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
             foreach (var controllable in _controllables)
                 controllable.EnableControl();
 
+            if (_isFirstCycle)
+            {
+                _isFirstCycle = false;
+                return;
+            }
+
             foreach (var resetable in _resetables)
                 resetable.Reset();
-
-            _currentDay++;
-            _view.ShowCurrentDay(_currentDay);
         }
 
         private void OnPlayerWon()
@@ -85,6 +89,20 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
             foreach (var controllable in _controllables)
                 controllable.DisableControl();
 
+            if (_inputSorter.IsAnimationPlayed == true)
+                ChangeState();
+            else
+                _inputSorter.AnimationComplete += OnAnimationComplete;
+        }
+
+        private void OnAnimationComplete()
+        {
+            _inputSorter.AnimationComplete -= OnAnimationComplete;
+            ChangeState();
+        }
+
+        private void ChangeState()
+        {
             Transitions.First(o => o is ToEnemyTurnTransition).SetIsReady(true);
             CallBecomeReadyToTransitEvent();
         }
@@ -94,12 +112,10 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
     {
         private readonly EnemyBrain _enemyBrain;
         private readonly IWinLoseEventThrower _winLoseMonitor;
-        private readonly EnemyWaveSpawner _enemyWaveSpawner;
 
-        public EnemyTurn(EnemyBrain enemyBrain, EnemyWaveSpawner waveSpawner, IWinLoseEventThrower winLoseMonitor, Transition[] transitions) : base(transitions)
+        public EnemyTurn(EnemyBrain enemyBrain, IWinLoseEventThrower winLoseMonitor, Transition[] transitions) : base(transitions)
         {
             _enemyBrain = enemyBrain != null ? enemyBrain : throw new ArgumentNullException(nameof(enemyBrain));
-            _enemyWaveSpawner = waveSpawner != null ? waveSpawner : throw new ArgumentNullException(nameof(waveSpawner));
             _winLoseMonitor = winLoseMonitor != null ?
                 winLoseMonitor :
                 throw new ArgumentNullException(nameof(winLoseMonitor));
@@ -119,7 +135,6 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
         public override void DoThing()
         {
             _enemyBrain.EnableControl();
-            _enemyWaveSpawner.SpawnWave();
         }
 
         private void OnPlayerWon()
@@ -144,17 +159,17 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
 
     public class PlayerWon : State
     {
-        private readonly IUIElement _winScreen;
+        private readonly ISwitchableElement _winScreen;
 
-        public PlayerWon(IUIElement winScreen, IUIElement finishScreen, GameLevel level) : base(Array.Empty<Transition>())
+        public PlayerWon(ISwitchableElement winScreen, ISwitchableElement finishScreen, GameLevel level) : base(Array.Empty<Transition>())
         {
-            if(winScreen == null)
+            if (winScreen == null)
                 throw new ArgumentNullException(nameof(winScreen));
 
-            if(finishScreen == null)
+            if (finishScreen == null)
                 throw new ArgumentNullException(nameof(finishScreen));
 
-            _winScreen = (int) level == Enum.GetNames(typeof(GameLevel)).Length - 1 ? finishScreen : winScreen;
+            _winScreen = (int)level == Enum.GetNames(typeof(GameLevel)).Length - 1 ? finishScreen : winScreen;
         }
 
         public override void DoThing()
@@ -165,9 +180,9 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
 
     public class PlayerLose : State
     {
-        private readonly IUIElement _screen;
+        private readonly ISwitchableElement _screen;
 
-        public PlayerLose(IUIElement loseScreen) : base(Array.Empty<Transition>())
+        public PlayerLose(ISwitchableElement loseScreen) : base(Array.Empty<Transition>())
         {
             _screen = loseScreen != null ? loseScreen : throw new ArgumentNullException(nameof(loseScreen));
         }

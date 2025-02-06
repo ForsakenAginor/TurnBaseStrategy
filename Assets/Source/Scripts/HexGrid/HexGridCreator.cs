@@ -9,8 +9,8 @@ public class HexGridCreator : MonoBehaviour
     [Header("Grid")]
     [SerializeField] private float _gridCellSize = 1;
     [SerializeField] private float _height = 0.25f;
-    private int _gridWidth = 10;
-    private int _gridHeight = 10;
+    private int _gridWidth;
+    private int _gridHeight;
 
     [Header("Clouds")]
     [SerializeField] private float _cloudHeight = 1;
@@ -26,6 +26,7 @@ public class HexGridCreator : MonoBehaviour
     private HexGridXZ<CellSprite> _hexGrid;
     private HexGridXZ<Unit> _unitsGrid;
     private HexGridXZ<ICloud> _clouds;
+    private HexPathFinder _pathFinderAI;
     private HexPathFinder _pathFinder;
     private HexOnScene[] _views;
 
@@ -34,6 +35,8 @@ public class HexGridCreator : MonoBehaviour
     public HexGridXZ<CellSprite> HexGrid => _hexGrid;
 
     public HexGridXZ<Unit> UnitsGrid => _unitsGrid;
+
+    public HexPathFinder PathFinderAI => _pathFinderAI;
 
     public HexPathFinder PathFinder => _pathFinder;
 
@@ -54,6 +57,7 @@ public class HexGridCreator : MonoBehaviour
         _unitsGrid = new(_gridWidth, _gridHeight, _gridCellSize, position);
         _blockedCells = new HexGridXZ<IHexOnScene>(_gridWidth, _gridHeight, _gridCellSize, position);
         _clouds = new HexGridXZ<ICloud>(_gridWidth, _gridHeight, _gridCellSize, cloudPosition);
+        _pathFinderAI = new HexPathFinder(_gridWidth, _gridHeight, _gridCellSize);
         _pathFinder = new HexPathFinder(_gridWidth, _gridHeight, _gridCellSize);
 
         Instantiate(_tilemapPrefab, _tilemapGrid.transform);
@@ -67,9 +71,15 @@ public class HexGridCreator : MonoBehaviour
             for (int j = 0; j < _gridHeight; j++)
             {
                 if (_blockedCells.GetGridObject(i, j).IsBlocked)
+                {
+                    _pathFinderAI.MakeNodUnwalkable(new Vector2Int(i, j));
                     _pathFinder.MakeNodUnwalkable(new Vector2Int(i, j));
+                }
                 else
+                {
+                    _pathFinderAI.MakeNodWalkable(new Vector2Int(i, j));
                     _pathFinder.MakeNodWalkable(new Vector2Int(i, j));
+                }
 
                 var cloud = Instantiate(_cloudPrefab, _clouds.GetCellWorldPosition(i, j), Quaternion.identity);
                 cloud.transform.SetParent(_cloudsHolder);

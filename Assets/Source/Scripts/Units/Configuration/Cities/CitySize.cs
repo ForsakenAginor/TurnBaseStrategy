@@ -1,7 +1,7 @@
 ﻿public enum CitySize
 {
     Village,
-    SmallSettlement,
-    LargeSettlement,
+    Town,
     City,
+    Castle,
 }

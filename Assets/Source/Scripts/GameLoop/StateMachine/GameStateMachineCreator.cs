@@ -10,22 +10,22 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine
     {
         [SerializeField] private EnemyBrain _enemyBrain;
         [SerializeField] private Button _nextTurnButton;
-        [SerializeField] private UIElement _winScreen;
-        [SerializeField] private UIElement _loseScreen;
-        [SerializeField] private UIElement _finishScreen;
+        [SerializeField] private SwitchableElement _winScreen;
+        [SerializeField] private SwitchableElement _loseScreen;
+        [SerializeField] private SwitchableElement _finishScreen;
         [SerializeField] private WinLoseMonitor _winLoseMonitor;
-        [SerializeField] private DayView _dayView;
 
-        public GameStateMachine Create(IEnumerable<IResetable> resetables, IEnumerable<IControllable> controllables, EnemyWaveSpawner waveSpawner, GameLevel level)
+        public GameStateMachine Create(IEnumerable<IResetable> resetables, IEnumerable<IControllable> controllables,
+            IWaitAnimation waitAnimation, GameLevel level)
         {
+            if(waitAnimation == null)
+                throw new System.ArgumentNullException(nameof(waitAnimation));
+
             if (resetables == null)
                 throw new System.ArgumentNullException(nameof(resetables));
 
             if (controllables == null)
                 throw new System.ArgumentNullException(nameof(controllables));
-
-            if (waveSpawner == null)
-                throw new System.ArgumentNullException(nameof(waveSpawner));
 
             //transitions
             ToEnemyTurnTransition toEnemyTurnTransition = new ToEnemyTurnTransition();
@@ -34,8 +34,7 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine
             ToPlayerTurnTransition toPlayerTurnTransition = new ToPlayerTurnTransition();
 
             //states
-            PlayerTurn playerTurn = new PlayerTurn(
-                _dayView,
+            PlayerTurn playerTurn = new PlayerTurn(waitAnimation,
                 _nextTurnButton,
                 _winLoseMonitor,
                 resetables,
@@ -47,7 +46,6 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine
 
             EnemyTurn enemyTurn = new EnemyTurn(
                 _enemyBrain,
-                waveSpawner,
                 _winLoseMonitor,
                 new Transition[]
                 {

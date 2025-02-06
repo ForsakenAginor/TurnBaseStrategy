@@ -5,16 +5,25 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CitySpawner : MonoBehaviour, IUnitSpawner
+public class CitySpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
 {
+    private readonly Dictionary<CitySize, string> _citiesUpgradesSymbols = new Dictionary<CitySize, string>()
+    {
+        {CitySize.Village, "II" },
+        {CitySize.Town, "III" },
+        {CitySize.City, "IV" },
+        {CitySize.Castle, "V" },
+    };
+
     [SerializeField] private Button _upgradeButton;
-    [SerializeField] private Button _hireInfantry;
-    [SerializeField] private Button _hireSpearman;
-    [SerializeField] private Button _hireArcher;
-    [SerializeField] private Button _hireKnight;
-    [SerializeField] private UIElement _buttonCanvas;
+    [SerializeField] private HireButton _hireInfantry;
+    [SerializeField] private HireButton _hireSpearman;
+    [SerializeField] private HireButton _hireArcher;
+    [SerializeField] private HireButton _hireKnight;
+    [SerializeField] private SwitchableElement _buttonCanvas;
     [SerializeField] private TMP_Text _upgradeCostLabel;
-    [SerializeField] private UIElement _upgradePanel;
+    [SerializeField] private SwitchableElement _upgradePanel;
+    [SerializeField] private TMP_Text _upgradeIcon;
 
     private CitiesConfiguration _configuration;
     private CitiesFactory _factory;
@@ -22,9 +31,11 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
     private HexGridXZ<Unit> _grid;
     private UnitSpawner _unitSpawner;
     private Resource _wallet;
-    private Dictionary<Vector2Int, string> _citiesNames = new ();
+    private Dictionary<Vector2Int, string> _citiesNames = new();
 
     public event Action<Unit> UnitSpawned;
+    public event Action<UnitView> UnitViewSpawned;
+
     public Action<AudioSource> AudioSourceCallback;
 
     private void OnDestroy()
@@ -56,23 +67,26 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner
         _unitsManager.CityCaptured += OnCityCaptured;
     }
 
-    public void SpawnCity(Vector2Int position, CitySize size, Side side)
+    public void SpawnCity(Vector2Int position, CitySize size, Side side, bool mustCreateWithMaxHealth = true, int health = int.MinValue)
     {
         if (_grid.GetGridObject(position) != null)
             throw new Exception("Can't create city: cell is not empty");
 
-        var unit = _factory.Create(size, side);
+        var unit = _factory.Create(size, side, mustCreateWithMaxHealth, health);
         var facadePrefab = side == Side.Player ? _configuration.GetPlayerPrefab(size) : _configuration.GetEnemyPrefab(size);
         var facade = Instantiate(facadePrefab, _grid.GetCellWorldPosition(position), Quaternion.identity);
         facade.UnitView.Init(unit, AudioSourceCallback);
         facade.Menu.Init(TryHireUnit, TryUpgradeCity,
             _upgradeButton, _hireInfantry, _hireSpearman, _hireArcher, _hireKnight, _buttonCanvas,
-            _upgradeCostLabel, _configuration.GetUpgradeCost(size), _upgradePanel);
+            _upgradeCostLabel, _configuration.GetUpgradeCost(size), _upgradePanel,
+            _upgradeIcon, _citiesUpgradesSymbols[size], size);
         facade.CityName.Init(_citiesNames[position]);
         _unitsManager.AddCity(unit, facade);
 
-        //todo: subscribe to city died event, for spawn opposite side village on died
         UnitSpawned?.Invoke(unit);
+
+        if (side == Side.Player)
+            UnitViewSpawned?.Invoke(facade.UnitView);
     }
 
     private void OnCityCaptured(Vector2Int cell, Side side)

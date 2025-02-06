@@ -11,6 +11,12 @@ public class UnitMover : IResetable
         _remainingSteps = maxSteps;
     }
 
+    public UnitMover(int currentSteps, int maxSteps)
+    {
+        _maxSteps = maxSteps > 0 ? maxSteps : throw new System.ArgumentOutOfRangeException(nameof(maxSteps));
+        _remainingSteps = currentSteps >= 0 && currentSteps <= _maxSteps ? currentSteps : throw new ArgumentOutOfRangeException(nameof(currentSteps));
+    }
+
     public void Reset()
     {
         _remainingSteps = _maxSteps;
