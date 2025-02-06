@@ -23,12 +23,14 @@ public class UnitView : MonoBehaviour, ISwitchableElement
     private Vector3 _damagingPosition;
     private Vector3 _damagingTargetPosition;
     private Vector3 _startScale = new Vector3(0.4f, 0.4f, 0.4f);
-    private Sequence _healingDisplay = DOTween.Sequence();
-    private Sequence _damagingDisplay = DOTween.Sequence();
+    private Sequence _healingDisplay;
+    private Sequence _damagingDisplay;
     private Unit _unit;
 
     private void Awake()
     {
+        _healingDisplay = DOTween.Sequence();
+        _damagingDisplay = DOTween.Sequence();
         _healingPosition = _healingMessage.transform.localPosition;
         _damagingPosition = _damagingMessage.transform.localPosition;
         _healingTargetPosition = _healingPosition + new Vector3(-_animationDistance / 2, _animationDistance, 0);

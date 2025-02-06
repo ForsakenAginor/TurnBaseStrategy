@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TutorialSingleton : MonoBehaviour
+public class Tutorial : MonoBehaviour
 {
     [SerializeField] private Button _hireButton;
     [SerializeField] private TutorialPointer _hirePointer;
@@ -21,6 +21,7 @@ public class TutorialSingleton : MonoBehaviour
     private GameObject _pointer;
     private Tween _nextTurnPulse;
     private Tween _questIconPulse;
+    private SaveTutorialInfoSystem _save;
 
     public void Init(IPlayerUnitSpawner citySpawner, NewInputSorter inputSorter, IPlayerUnitSpawner unitSpawner)
     {
@@ -28,6 +29,11 @@ public class TutorialSingleton : MonoBehaviour
         _newInputSorter = inputSorter != null ? inputSorter : throw new ArgumentNullException(nameof(inputSorter));
         _unitSpawner = unitSpawner != null ? unitSpawner : throw new ArgumentNullException(nameof(unitSpawner));
 
+        _save = new SaveTutorialInfoSystem();
+
+        if (_save.IsTutorialComplete() == true)
+            return;
+        
         _citySpawner.UnitViewSpawned += OnCitySpawned;
     }
 
@@ -37,6 +43,7 @@ public class TutorialSingleton : MonoBehaviour
 
         _nextTurnPulse.Kill();
         _nextTurnButton.transform.localScale = Vector3.one;
+        _save.Save();
     }
 
     private void OnUnitMoving(WalkableUnit _, IEnumerable<Vector2Int> _1, Action _2)
@@ -45,7 +52,7 @@ public class TutorialSingleton : MonoBehaviour
         _onGridPointer.Disable();
         Destroy(_onGridPointer.gameObject);
 
-        _questIconPulse = _openQuestsButton.transform.DOScale(1.3f, 0.5f).SetLoops(-1, LoopType.Yoyo);
+        _questIconPulse = _openQuestsButton.transform.DOScale(2f, 0.5f).SetLoops(-1, LoopType.Yoyo);
         _openQuestsButton.onClick.AddListener(OnOpenQuestList);
 
     }
