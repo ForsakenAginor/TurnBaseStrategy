@@ -1,4 +1,5 @@
 using Assets.Scripts.HexGrid;
+using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -46,6 +47,20 @@ public class HexOnScene : MonoBehaviour, IHexOnScene
         _hexEvilContent = _hexEvil.gameObject.GetComponentInChildren<EvilContent>();
         _hexEvil.Disable();
     }
+
+#if UNITY_EDITOR
+    [Button]
+    private void BecomeEvil()
+    {
+        SwtichToEvil();
+    }
+
+    [Button]
+    private void BecomeGood()
+    {
+        SwtichToGood();
+    }
+#endif
 }
 
 public interface IHexOnScene
