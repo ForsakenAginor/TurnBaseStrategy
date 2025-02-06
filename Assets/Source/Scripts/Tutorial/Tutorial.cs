@@ -32,7 +32,10 @@ public class Tutorial : MonoBehaviour
         _save = new SaveTutorialInfoSystem();
 
         if (_save.IsTutorialComplete() == true)
+        {
+            HideHirePointer();
             return;
+        }
         
         _citySpawner.UnitViewSpawned += OnCitySpawned;
     }

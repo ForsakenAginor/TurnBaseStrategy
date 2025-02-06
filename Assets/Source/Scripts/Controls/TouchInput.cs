@@ -17,7 +17,7 @@ public class TouchInput : MonoBehaviour, ITouchInputReceiver
             (Application.platform == RuntimePlatform.WebGLPlayer || Application.platform == RuntimePlatform.Android);
 
         if (isMobile == false)
-            _clampValue = 1f;
+            _clampValue = 3f;
     }
 
     private void FixedUpdate()
