@@ -12,7 +12,7 @@ public class UnitsActionsManager : IEnemyUnitOversight, ISavedUnits
     private readonly EnemyBrain _enemyBrain;
     private readonly HexGridXZ<ICloud> _fogOfWar;
 
-    private IUIElement _selectedUnit;
+    private ISwitchableElement _selectedUnit;
 
     public UnitsActionsManager(NewInputSorter inputSorter, HexGridXZ<Unit> grid, EnemyBrain enemyBrain, HexGridXZ<ICloud> cloudGrid)
     {
@@ -69,6 +69,8 @@ public class UnitsActionsManager : IEnemyUnitOversight, ISavedUnits
         _grid.SetGridObject(facade.Position, unit);
 
         unit.Destroyed += OnUnitDied;
+
+        _inputSorter.Deselect();
     }
 
     public Vector2Int GetUnitPosition(Unit unit) => _grid.GetXZ(_units[unit].Position);

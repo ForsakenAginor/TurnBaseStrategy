@@ -1,11 +1,11 @@
 ﻿using DG.Tweening;
 using UnityEngine;
 
-public class PlayerUnitOnDeathEffect : MonoBehaviour, IUIElement
+public class PlayerUnitOnDeathEffect : MonoBehaviour, ISwitchableElement
 {
     private const string MaterialAlpha = "_AlphaCliping";
 
-    [SerializeField] private UIElement _fire;
+    [SerializeField] private SwitchableElement _fire;
     [SerializeField] private float _duration;
     [SerializeField] private float _durationDissolve;
     [SerializeField] private SkinnedMeshRenderer _renderer;

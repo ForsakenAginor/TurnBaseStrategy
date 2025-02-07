@@ -7,8 +7,8 @@ using UnityEngine;
 public class WalkableUnitView : UnitView
 {
     [SerializeField] private TMP_Text _attack;
-    [SerializeField] private UIElement _oneStep;
-    [SerializeField] private UIElement _twoStep;
+    [SerializeField] private SwitchableElement _oneStep;
+    [SerializeField] private SwitchableElement _twoStep;
     [SerializeField] private UnitAnimationController _unitController;
     [SerializeField] private float _timeToDie;
     [SerializeField] private PlayerUnitOnDeathEffect _onDeathEffect;

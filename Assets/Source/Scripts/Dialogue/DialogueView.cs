@@ -9,7 +9,7 @@ public class DialogueView : MonoBehaviour
     [SerializeField] private TMP_Text _text;
     [SerializeField] private float _duration;
     [SerializeField] private Image _portrait;
-    [SerializeField] private UIElement _holder;
+    [SerializeField] private SwitchableElement _holder;
     [SerializeField] private Button _closeButton;
 
     private Dialogue _dialogue;

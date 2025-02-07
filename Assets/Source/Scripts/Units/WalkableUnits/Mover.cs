@@ -11,6 +11,11 @@ public class Mover : MonoBehaviour
     [SerializeField] private UnitAnimationController _controller;
     [SerializeField] private UnitSoundsHandler _soundHandler;
 
+    private void Awake()
+    {
+        _model.LookAt(transform.position - Vector3.forward);
+    }
+
     public void Move(IEnumerable<Vector3> target, Action onComleteCallback)
     {
         if (target.Count() == 1)

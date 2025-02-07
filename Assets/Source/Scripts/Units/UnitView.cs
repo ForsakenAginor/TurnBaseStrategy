@@ -5,17 +5,17 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UnitView : MonoBehaviour, IUIElement
+public class UnitView : MonoBehaviour, ISwitchableElement
 {
     [SerializeField] private TMP_Text _health;
     [SerializeField] private Slider _hpBar;
-    [SerializeField] private UIElement _viewCanvas;
+    [SerializeField] private SwitchableElement _viewCanvas;
     [SerializeField] private UnitSoundsHandler _soundHandler;
     [SerializeField] private TMP_Text _healingMessage;
     [SerializeField] private TMP_Text _damagingMessage;
     [SerializeField] private float _animationDuration = 3f;
     [SerializeField] private float _animationDistance = 1f;
-    [SerializeField] private UIElement _title;
+    [SerializeField] private SwitchableElement _title;
     [SerializeField] private ParticleSystem _cityDestroyEffect;
 
     private Vector3 _healingPosition;
@@ -23,12 +23,14 @@ public class UnitView : MonoBehaviour, IUIElement
     private Vector3 _damagingPosition;
     private Vector3 _damagingTargetPosition;
     private Vector3 _startScale = new Vector3(0.4f, 0.4f, 0.4f);
-    private Sequence _healingDisplay = DOTween.Sequence();
-    private Sequence _damagingDisplay = DOTween.Sequence();
+    private Sequence _healingDisplay;
+    private Sequence _damagingDisplay;
     private Unit _unit;
 
     private void Awake()
     {
+        _healingDisplay = DOTween.Sequence();
+        _damagingDisplay = DOTween.Sequence();
         _healingPosition = _healingMessage.transform.localPosition;
         _damagingPosition = _damagingMessage.transform.localPosition;
         _healingTargetPosition = _healingPosition + new Vector3(-_animationDistance / 2, _animationDistance, 0);

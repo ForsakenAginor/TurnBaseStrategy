@@ -159,9 +159,9 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
 
     public class PlayerWon : State
     {
-        private readonly IUIElement _winScreen;
+        private readonly ISwitchableElement _winScreen;
 
-        public PlayerWon(IUIElement winScreen, IUIElement finishScreen, GameLevel level) : base(Array.Empty<Transition>())
+        public PlayerWon(ISwitchableElement winScreen, ISwitchableElement finishScreen, GameLevel level) : base(Array.Empty<Transition>())
         {
             if (winScreen == null)
                 throw new ArgumentNullException(nameof(winScreen));
@@ -180,9 +180,9 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
 
     public class PlayerLose : State
     {
-        private readonly IUIElement _screen;
+        private readonly ISwitchableElement _screen;
 
-        public PlayerLose(IUIElement loseScreen) : base(Array.Empty<Transition>())
+        public PlayerLose(ISwitchableElement loseScreen) : base(Array.Empty<Transition>())
         {
             _screen = loseScreen != null ? loseScreen : throw new ArgumentNullException(nameof(loseScreen));
         }

@@ -3,19 +3,20 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CityMenu : MonoBehaviour, IUIElement
+public class CityMenu : MonoBehaviour, ISwitchableElement
 {
-    private IUIElement _upgradePanel;
+    private ISwitchableElement _upgradePanel;
     private Button _upgradeButton;
-    private Button _hireInfantry;
-    private Button _hireSpearman;
-    private Button _hireArcher;
-    private Button _hireKnight;
-    private IUIElement _buttonCanvas;
+    private HireButton _hireInfantry;
+    private HireButton _hireSpearman;
+    private HireButton _hireArcher;
+    private HireButton _hireKnight;
+    private ISwitchableElement _buttonCanvas;
     private TMP_Text _upgradeCostTextField;
     private int _upgradeCost;
     private string _symbol;
     private TMP_Text _symbolField;
+    private CitySize _size;
 
     private Func<UnitType, Vector3, bool> TryHireCallback;
     private Func<Vector3, bool> TryUpgradeCityCallback;
@@ -29,10 +30,40 @@ public class CityMenu : MonoBehaviour, IUIElement
             _upgradeButton.gameObject.SetActive(true);
 
         _upgradeButton.onClick.AddListener(OnUpgradeButtonClick);
-        _hireInfantry.onClick.AddListener(OnHireInfantryClick);
-        _hireArcher.onClick.AddListener(OnHireArcherClick);
-        _hireSpearman.onClick.AddListener(OnHireSpearmanClick);
-        _hireKnight.onClick.AddListener(OnHireKnightClick);
+        _hireInfantry.HireUnitButton.onClick.AddListener(OnHireInfantryClick);
+        _hireArcher.HireUnitButton.onClick.AddListener(OnHireArcherClick);
+        _hireSpearman.HireUnitButton.onClick.AddListener(OnHireSpearmanClick);
+        _hireKnight.HireUnitButton.onClick.AddListener(OnHireKnightClick);
+
+        switch(_size)
+        {
+            case CitySize.Village:
+                _hireInfantry.Activate();
+                _hireSpearman.DeActivate();
+                _hireArcher.DeActivate();
+                _hireKnight.DeActivate();
+                break;
+            case CitySize.Town:
+                _hireInfantry.Activate();
+                _hireSpearman.Activate();
+                _hireArcher.DeActivate();
+                _hireKnight.DeActivate();
+                break;
+            case CitySize.City:
+                _hireInfantry.Activate();
+                _hireSpearman.Activate();
+                _hireArcher.Activate();
+                _hireKnight.DeActivate();
+                break;
+            case CitySize.Castle:
+                _hireInfantry.Activate();
+                _hireSpearman.Activate();
+                _hireArcher.Activate();
+                _hireKnight.Activate();
+                break;
+            default:
+                break;
+        }
 
         if (_upgradeCost > 0)
         {
@@ -49,10 +80,10 @@ public class CityMenu : MonoBehaviour, IUIElement
     public void Disable()
     {
         _upgradeButton.onClick.RemoveListener(OnUpgradeButtonClick);
-        _hireInfantry.onClick.RemoveListener(OnHireInfantryClick);
-        _hireArcher.onClick.RemoveListener(OnHireArcherClick);
-        _hireSpearman.onClick.RemoveListener(OnHireSpearmanClick);
-        _hireKnight.onClick.RemoveListener(OnHireKnightClick);
+        _hireInfantry.HireUnitButton?.onClick.RemoveListener(OnHireInfantryClick);
+        _hireArcher.HireUnitButton?.onClick.RemoveListener(OnHireArcherClick);
+        _hireSpearman.HireUnitButton?.onClick.RemoveListener(OnHireSpearmanClick);
+        _hireKnight.HireUnitButton?.onClick.RemoveListener(OnHireKnightClick);
 
         _buttonCanvas.Disable();
     }
@@ -63,10 +94,10 @@ public class CityMenu : MonoBehaviour, IUIElement
     }
 
     public void Init(Func<UnitType, Vector3, bool> tryHireCallback, Func<Vector3, bool> tryUpgradeCityCallback,
-        Button upgradeButton, Button hireInfantry, Button hireSpearman,
-        Button hireArcher, Button hireKnight, IUIElement buttonCanvas,
-        TMP_Text upgradeCostTextLabel, int upgradeCost, IUIElement upgradePanel,
-        TMP_Text symbolField, string symbol)
+        Button upgradeButton, HireButton hireInfantry, HireButton hireSpearman,
+        HireButton hireArcher, HireButton hireKnight, ISwitchableElement buttonCanvas,
+        TMP_Text upgradeCostTextLabel, int upgradeCost, ISwitchableElement upgradePanel,
+        TMP_Text symbolField, string symbol, CitySize size)
     {
         TryHireCallback = tryHireCallback != null ? tryHireCallback : throw new ArgumentNullException(nameof(tryHireCallback));
         TryUpgradeCityCallback = tryUpgradeCityCallback != null ? tryUpgradeCityCallback : throw new ArgumentNullException(nameof(tryUpgradeCityCallback));
@@ -82,6 +113,7 @@ public class CityMenu : MonoBehaviour, IUIElement
 
         _upgradeCostTextField = upgradeCostTextLabel != null ? upgradeCostTextLabel : throw new ArgumentNullException(nameof(upgradeCostTextLabel));
         _upgradeCost = upgradeCost > 0 ? upgradeCost : 0;
+        _size = size;
     }
 
     private void OnHireKnightClick()

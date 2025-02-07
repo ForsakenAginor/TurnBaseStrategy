@@ -1,11 +1,10 @@
 ﻿using Assets.Scripts.HexGrid;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using static SavedData;
 
-public class UnitSpawner : MonoBehaviour, IUnitSpawner
+public class UnitSpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
 {
     private UnitsConfiguration _configuration;
     private UnitFactory _factory;
@@ -15,6 +14,8 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawner
     private Resource _wallet;
 
     public event Action<Unit> UnitSpawned;
+    public event Action<UnitView> UnitViewSpawned;
+
     public Action<AudioSource> AudioSourceCallback;
 
     public void Init(UnitsActionsManager manager, Resource wallet,
@@ -64,5 +65,8 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawner
         facade.UnitView.Init(unit, AudioSourceCallback);
         _unitsManager.AddUnit(unit, facade);
         UnitSpawned?.Invoke(unit);
+
+        if (side == Side.Player)
+            UnitViewSpawned?.Invoke(facade.UnitView);
     }
 }

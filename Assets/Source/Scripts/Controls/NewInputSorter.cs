@@ -62,6 +62,14 @@ public class NewInputSorter : IControllable, IWaitAnimation
         _isActive = false;
     }
 
+    public void Deselect()
+    {
+        _selectedCell = _fakeCell;
+        _possibleWays = null;
+        _possibleAttacks = null;
+        BecomeInactive?.Invoke();
+    }
+
     private void OnGridObjectChanged(Vector2Int position)
     {
         var unit = _hexGrid.GetGridObject(position);

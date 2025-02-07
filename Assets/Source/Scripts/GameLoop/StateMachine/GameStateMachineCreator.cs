@@ -10,9 +10,9 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine
     {
         [SerializeField] private EnemyBrain _enemyBrain;
         [SerializeField] private Button _nextTurnButton;
-        [SerializeField] private UIElement _winScreen;
-        [SerializeField] private UIElement _loseScreen;
-        [SerializeField] private UIElement _finishScreen;
+        [SerializeField] private SwitchableElement _winScreen;
+        [SerializeField] private SwitchableElement _loseScreen;
+        [SerializeField] private SwitchableElement _finishScreen;
         [SerializeField] private WinLoseMonitor _winLoseMonitor;
 
         public GameStateMachine Create(IEnumerable<IResetable> resetables, IEnumerable<IControllable> controllables,
