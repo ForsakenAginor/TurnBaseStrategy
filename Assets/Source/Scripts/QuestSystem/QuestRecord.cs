@@ -1,9 +1,10 @@
-﻿using TMPro;
+﻿using Lean.Localization;
+using TMPro;
 using UnityEngine;
 
 public class QuestRecord : MonoBehaviour
 {
-    private const string Content = "Capture ";
+    private const string Capture = "CAPTURE";
 
     [SerializeField] private SwitchableElement _completeImage;
     [SerializeField] private SwitchableElement _nonCompleteImage;
@@ -16,6 +17,9 @@ public class QuestRecord : MonoBehaviour
         else
             _nonCompleteImage.Enable();
 
-        _text.text = $"{Content}{name}";
+
+        string capture = LeanLocalization.GetTranslationText(Capture);
+        string cityName = LeanLocalization.GetTranslationText(name);
+        _text.text = $"{capture} {cityName}";
     }
 }
