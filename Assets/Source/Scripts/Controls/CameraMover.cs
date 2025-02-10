@@ -55,7 +55,10 @@ public class CameraMover : IControllable
 
     public void EnableControl()
     {
-        FocusCameraOnCell(_savedPosition);
+        Vector2Int currentPosition = _grid.GetXZ(_raycaster.GetCameraFocus());
+
+        if (currentPosition != _savedPosition)
+            FocusCameraOnCell(_savedPosition);
     }
 
     public void DisableControl()
@@ -101,7 +104,7 @@ public class CameraMover : IControllable
 
         _currentFocus = cell;
 
-        if(_tween != null)
+        if (_tween != null)
             _tween.Kill();
 
         var cellPosition = _grid.GetCellWorldPosition(cell);
