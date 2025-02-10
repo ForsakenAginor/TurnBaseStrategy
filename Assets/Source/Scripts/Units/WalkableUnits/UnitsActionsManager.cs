@@ -45,7 +45,7 @@ public class UnitsActionsManager : IEnemyUnitOversight, ISavedUnits
         _enemyBrain.UnitAttacking -= OnUnitAttacking;
     }
 
-    public event Action<Vector2Int> EnemyMoved;
+    public event Action<Vector2Int> EnemyDoSomething;
 
     public IEnumerable<IResetable> Units => _units.Keys.Where(o => o is WalkableUnit).Select(o => o as IResetable);
 
@@ -114,9 +114,16 @@ public class UnitsActionsManager : IEnemyUnitOversight, ISavedUnits
         if (unit1.CanAttack)
         {
             if (unitFacade is IWalkableUnitFacade facade)
+            {
                 facade.Attacker.Attack(targetPosition, callback, () => unit1.TryAttack(unit2));
+
+                if (unit1.Side == Side.Enemy)
+                    EnemyDoSomething?.Invoke(_grid.GetXZ(targetPosition));
+            }
             else
+            {
                 throw new Exception();
+            }
         }
         else
         {
@@ -147,7 +154,7 @@ public class UnitsActionsManager : IEnemyUnitOversight, ISavedUnits
                 if (cloud == null || cloud.IsDissappeared == true)
                 {
                     facade.Mover.Move(way, callback);
-                    EnemyMoved?.Invoke(target.Last());
+                    EnemyDoSomething?.Invoke(target.Last());
                 }
                 else
                 {
@@ -173,7 +180,7 @@ public class UnitsActionsManager : IEnemyUnitOversight, ISavedUnits
 
 public interface IEnemyUnitOversight
 {
-    public event Action<Vector2Int> EnemyMoved;
+    public event Action<Vector2Int> EnemyDoSomething;
 }
 
 public interface ISavedUnits

@@ -11,8 +11,10 @@ public class TouchInput : MonoBehaviour, ITouchInputReceiver
     [SerializeField] private float _clampValue = 50f;
 
     private float _sensitivity;
+    private bool _isSwiping;
 
     public event Action<Vector3> TouchInputReceived;
+    public event Action TouchInputStopped;
 
     private void Start()
     {
@@ -39,8 +41,16 @@ public class TouchInput : MonoBehaviour, ITouchInputReceiver
         // Get the fingers we want to use
         var fingers = Use.UpdateAndGetFingers(true);
 
-        if (fingers.Count == 0)
+        if (fingers.Count == 0 && _isSwiping)
+        {
+            _isSwiping = false;
+            TouchInputStopped?.Invoke();
             return;
+        }
+        else if (fingers.Count == 0)
+        {
+            return;
+        }
 
         var finger = fingers.First();
         Vector2 delta = finger.ScreenPosition - finger.LastScreenPosition;
@@ -50,10 +60,13 @@ public class TouchInput : MonoBehaviour, ITouchInputReceiver
 
         Vector3 input = new Vector3(delta.x, 0, delta.y).normalized * _sensitivity;
         TouchInputReceived?.Invoke(input);
+        _isSwiping = true;
     }
 }
 
 public interface ITouchInputReceiver
 {
     public event Action<Vector3> TouchInputReceived;
+
+    public event Action TouchInputStopped;
 }
