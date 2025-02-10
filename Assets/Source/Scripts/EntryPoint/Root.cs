@@ -119,7 +119,7 @@ public class Root : MonoBehaviour
         _enemyBrain.Init(unitsGrid, _gridCreator.PathFinderAI, _unitSpawner, unitManager);
 
         if (isLoaded)
-            cityInitializer.SpawnCitiesFromLoadedData(loadedGame.Cities);
+            cityInitializer.SpawnCitiesFromLoadedData(loadedGame.Cities,loadedGame.CitiesWithAvailableSpawns);
         else
             cityInitializer.SpawnEnemyCities();
 

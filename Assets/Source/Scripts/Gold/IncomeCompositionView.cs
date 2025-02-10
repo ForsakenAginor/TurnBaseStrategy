@@ -32,7 +32,6 @@ public class IncomeCompositionView : MonoBehaviour, IPointerEnterHandler, IPoint
 
         foreach(var part in list)
         {
-
             string unitType = LeanLocalization.GetTranslationText(part.Key);
 
             if (part.Value > 0)

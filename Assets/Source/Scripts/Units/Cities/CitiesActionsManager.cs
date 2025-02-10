@@ -65,7 +65,7 @@ public class CitiesActionsManager : ICitiesGetter, ISavedCities
         _enemyScaner.DefendersSpawned += OnDefendersSpawned;
     }
 
-    public void AddCity(CityUnit unit, ICityFacade facade)
+    public void AddCity(CityUnit unit, ICityFacade facade, bool isVisible = false)
     {
         if (unit == null)
             throw new ArgumentNullException(nameof(unit));
@@ -85,6 +85,9 @@ public class CitiesActionsManager : ICitiesGetter, ISavedCities
 
         unit.Captured += OnCityCaptured;
         unit.Destroyed += OnUnitDied;
+
+        if (isVisible)
+            facade.UnitView.ShowTitle();
     }
 
     public void RemoveCity(CityUnit unit)

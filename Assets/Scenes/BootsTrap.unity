@@ -390,6 +390,118 @@ MonoBehaviour:
   - Language: Turkish
     Text: "Iurii: Unity geli\u015Ftiricisi\naginor@ymail.com\n\nKirill:  Oyun Tasar\u0131mc\u0131s\u0131\nmrmounti551@gmail.com "
     Object: {fileID: 0}
+--- !u!1 &172831734
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 172831735}
+  - component: {fileID: 172831736}
+  m_Layer: 0
+  m_Name: MagePhrase1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &172831735
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 172831734}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 591151798}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &172831736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 172831734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: I will purge the darkness within you
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u042F \u0438\u0441\u043A\u043E\u0440\u0435\u043D\u044E \u0442\u044C\u043C\u0443
+      \u0432\u043D\u0443\u0442\u0440\u0438 \u0442\u0435\u0431\u044F"
+    Object: {fileID: 0}
+  - Language: Turkish
+    Text: "\u0130\xE7indeki karanl\u0131\u011F\u0131 temizleyece\u011Fim"
+    Object: {fileID: 0}
+--- !u!1 &205225179
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 205225180}
+  - component: {fileID: 205225181}
+  m_Layer: 0
+  m_Name: LordPhrase1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &205225180
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 205225179}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 591151798}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &205225181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 205225179}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: I will purge these lands of you, traitor
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u042F \u043E\u0447\u0438\u0449\u0443 \u044D\u0442\u0438 \u0437\u0435\u043C\u043B\u0438
+      \u043E\u0442 \u0442\u0435\u0431\u044F, \u043F\u0440\u0435\u0434\u0430\u0442\u0435\u043B\u044C"
+    Object: {fileID: 0}
+  - Language: Turkish
+    Text: "Bu topraklar\u0131 senden temizleyece\u011Fim hain"
+    Object: {fileID: 0}
 --- !u!1 &210671712
 GameObject:
   m_ObjectHideFlags: 0
@@ -638,7 +750,13 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 172831735}
+  - {fileID: 1098493911}
+  - {fileID: 2097517892}
+  - {fileID: 205225180}
+  - {fileID: 1235246069}
+  - {fileID: 1265563073}
   m_Father: {fileID: 3563822886856514070}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &668428480
@@ -1369,6 +1487,62 @@ Transform:
   - {fileID: 138504875}
   m_Father: {fileID: 3563822886856514070}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1098493910
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1098493911}
+  - component: {fileID: 1098493912}
+  m_Layer: 0
+  m_Name: MagePhrase2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1098493911
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1098493910}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 591151798}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1098493912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1098493910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Magic itself rebels against you
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0421\u0430\u043C\u0430 \u043C\u0430\u0433\u0438\u044F \u0432\u043E\u0441\u0441\u0442\u0430\u0435\u0442
+      \u043F\u0440\u043E\u0442\u0438\u0432 \u0442\u0435\u0431\u044F"
+    Object: {fileID: 0}
+  - Language: Turkish
+    Text: "Magic'in kendisi sana kar\u015F\u0131 isyan ediyor"
+    Object: {fileID: 0}
 --- !u!1 &1178316424
 GameObject:
   m_ObjectHideFlags: 0
@@ -1517,6 +1691,117 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Turkish
     Text: Geri
+    Object: {fileID: 0}
+--- !u!1 &1235246068
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1235246069}
+  - component: {fileID: 1235246070}
+  m_Layer: 0
+  m_Name: LordPhrase2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1235246069
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1235246068}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 591151798}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1235246070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1235246068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Your days are numbered
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0422\u0432\u043E\u0438 \u0434\u043D\u0438 \u0441\u043E\u0447\u0442\u0435\u043D\u044B"
+    Object: {fileID: 0}
+  - Language: Turkish
+    Text: "G\xFCnlerin say\u0131l\u0131"
+    Object: {fileID: 0}
+--- !u!1 &1265563072
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1265563073}
+  - component: {fileID: 1265563074}
+  m_Layer: 0
+  m_Name: KingPhrase
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1265563073
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1265563072}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 591151798}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1265563074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1265563072}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Your conquest ends here, Heretic
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0422\u0432\u043E\u0439 \u043F\u043E\u0445\u043E\u0434 \u0437\u0430\u043A\u043E\u043D\u0447\u0438\u0442\u0441\u044F
+      \u0437\u0434\u0435\u0441\u044C, \u0415\u0440\u0435\u0442\u0438\u043A"
+    Object: {fileID: 0}
+  - Language: Turkish
+    Text: Fethin burada sona eriyor, Kafir.
     Object: {fileID: 0}
 --- !u!1 &1287576387
 GameObject:
@@ -2389,6 +2674,62 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Turkish
     Text: "K\xF6y"
+    Object: {fileID: 0}
+--- !u!1 &2097517891
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2097517892}
+  - component: {fileID: 2097517893}
+  m_Layer: 0
+  m_Name: MagePhrase3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2097517892
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2097517891}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 591151798}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2097517893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2097517891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: You will be punished for your actions
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0422\u044B \u0431\u0443\u0434\u0435\u0448\u044C \u043D\u0430\u043A\u0430\u0437\u0430\u043D,
+      \u0437\u0430 \u0441\u0432\u043E\u0438 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F"
+    Object: {fileID: 0}
+  - Language: Turkish
+    Text: "Eylemleriniz i\xE7in cezaland\u0131r\u0131lacaks\u0131n"
     Object: {fileID: 0}
 --- !u!1 &2121005423
 GameObject:
