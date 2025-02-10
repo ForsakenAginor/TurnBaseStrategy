@@ -138,7 +138,8 @@ public class Root : MonoBehaviour
         _winLoseMonitor.Init(cityManager, saveLevelSystem, currentLevel);
         var resettables = unitManager.Units.Append(taxSystem);
         resettables = resettables.Append(daySystem);
-        var stateMachine = _gameStateMachineCreator.Create(resettables, new List<IControllable>() { inputSorter, _saveSystemView },
+        List<IControllable> controllables = new List<IControllable>() { inputSorter, _saveSystemView };
+        var stateMachine = _gameStateMachineCreator.Create(resettables, controllables,
             inputSorter, currentLevel);
 
         //********* Camera control *********
@@ -147,7 +148,8 @@ public class Root : MonoBehaviour
         IZoomInput zoomInput = isMobile ? new MobileInput() : new PCInput();
         _pinchDetector.Init(zoomInput);
         CameraMover cameraMover = new CameraMover(_camera, _pinchDetector, currentLevel, _levelConfiguration,
-            _gridCreator.HexGrid, scaner, unitManager, _swipeInputReceiver);
+            _gridCreator.HexGrid, scaner, unitManager, _swipeInputReceiver, _gridRaycaster);
+        controllables.Add(cameraMover);
 
         //********* Dialogue *********
         Dialogue dialogue = new Dialogue(_levelConfiguration.GetCitiesBossInfo(currentLevel), scaner);
@@ -175,7 +177,7 @@ public class Root : MonoBehaviour
 
         _soundInitializer.AddEffectSource(audioSource);
     }
-
+    /*
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
@@ -195,4 +197,5 @@ public class Root : MonoBehaviour
         }
     }
 #endif
+    */
 }

@@ -20,7 +20,10 @@ public class DaySystem : IResetable, ISavedDaySystem
     }
 }
 
+
 public interface ISavedDaySystem
 {
+    public event Action<int> DayChanged;
+
     public int CurrentDay { get; }
 }

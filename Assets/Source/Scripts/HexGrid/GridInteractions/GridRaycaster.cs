@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class GridRaycaster : MonoBehaviour
+public class GridRaycaster : MonoBehaviour, ICameraFocusGetter
 {
     [SerializeField] private Camera _camera;
     [SerializeField] private float _planeHeight;
@@ -29,4 +29,20 @@ public class GridRaycaster : MonoBehaviour
             return false;
         }
     }
+
+    public Vector3 GetCameraFocus()
+    {
+        Ray ray = new Ray(_camera.transform.position, _camera.transform.forward);
+        Vector3 worldPosition = Vector3.zero;
+
+        if (_plane.Raycast(ray, out float enter))
+            worldPosition = ray.GetPoint(enter);
+
+        return worldPosition;
+    }
+}
+
+public interface ICameraFocusGetter
+{
+    public Vector3 GetCameraFocus();
 }

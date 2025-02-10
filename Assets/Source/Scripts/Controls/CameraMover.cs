@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using UnityEngine;
 
-public class CameraMover
+public class CameraMover : IControllable
 {
     private const float MaxZoomValue = 10f;
     private const float MinZoomValue = 5f;
@@ -18,14 +18,16 @@ public class CameraMover
     private readonly EnemyScaner _enemyScaner;
     private readonly IEnemyUnitOversight _enemyOversight;
     private readonly ITouchInputReceiver _inputReceiver;
+    private readonly ICameraFocusGetter _raycaster;
 
     private float _cameraYDefault = 5;
     private Tween _tween;
     private Vector2Int _currentFocus;
+    private Vector2Int _savedPosition;
 
     public CameraMover(Transform camera, IZoomInputReceiver pinchDetector,
         GameLevel level, ICameraConfigurationGetter configuration, HexGridXZ<CellSprite> grid, EnemyScaner enemyScaner,
-        IEnemyUnitOversight enemyOversight, ITouchInputReceiver inputReceiver)
+        IEnemyUnitOversight enemyOversight, ITouchInputReceiver inputReceiver, ICameraFocusGetter raycaster)
     {
         _camera = camera != null ? camera : throw new ArgumentNullException(nameof(camera));
         _pinchDetector = pinchDetector != null ? pinchDetector : throw new ArgumentNullException(nameof(pinchDetector));
@@ -33,8 +35,9 @@ public class CameraMover
         _enemyScaner = enemyScaner != null ? enemyScaner : throw new ArgumentNullException(nameof(enemyScaner));
         _enemyOversight = enemyOversight != null ? enemyOversight : throw new ArgumentNullException(nameof(enemyOversight));
         _inputReceiver = inputReceiver != null ? inputReceiver : throw new ArgumentNullException(nameof(inputReceiver));
+        _raycaster = raycaster != null ? raycaster : throw new ArgumentNullException(nameof(raycaster));
 
-        if(configuration == null)
+        if (configuration == null)
             throw new ArgumentNullException(nameof(configuration));
 
         _cameraMin = new Vector3(configuration.GetMinimumCameraPosition(level).x, 0, configuration.GetMinimumCameraPosition(level).y);
@@ -50,20 +53,40 @@ public class CameraMover
         Unsubscribe();
     }
 
+    public void EnableControl()
+    {
+        Vector2Int currentPosition = _grid.GetXZ(_raycaster.GetCameraFocus());
+
+        if (currentPosition != _savedPosition)
+            FocusCameraOnCell(_savedPosition);
+    }
+
+    public void DisableControl()
+    {
+        _savedPosition = _grid.GetXZ(_raycaster.GetCameraFocus());
+    }
+
     private void Unsubscribe()
     {
         _inputReceiver.TouchInputReceived -= OnTouchInputReceived;
+        _inputReceiver.TouchInputStopped -= OnTouchInputStopped;
         _pinchDetector.GotPinchInput -= OnPinch;
         _enemyScaner.DefendersSpawned -= FocusCameraOnCell;
-        _enemyOversight.EnemyMoved -= FocusCameraOnCell;
+        _enemyOversight.EnemyDoSomething -= FocusCameraOnCell;
     }
 
     private void Subscribe()
     {
+        _inputReceiver.TouchInputStopped += OnTouchInputStopped;
         _inputReceiver.TouchInputReceived += OnTouchInputReceived;
         _pinchDetector.GotPinchInput += OnPinch;
         _enemyScaner.DefendersSpawned += FocusCameraOnCell;
-        _enemyOversight.EnemyMoved += FocusCameraOnCell;
+        _enemyOversight.EnemyDoSomething += FocusCameraOnCell;
+    }
+
+    private void OnTouchInputStopped()
+    {
+        _currentFocus = _grid.GetXZ(_raycaster.GetCameraFocus());
     }
 
     private void OnTouchInputReceived(Vector3 input)
@@ -81,7 +104,7 @@ public class CameraMover
 
         _currentFocus = cell;
 
-        if(_tween != null)
+        if (_tween != null)
             _tween.Kill();
 
         var cellPosition = _grid.GetCellWorldPosition(cell);
