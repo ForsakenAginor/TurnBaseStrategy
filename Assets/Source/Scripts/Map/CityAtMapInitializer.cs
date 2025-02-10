@@ -41,6 +41,6 @@ public class CityAtMapInitializer
         var cities = _configuration.GetEnemyCities(_level);
 
         foreach (var city in cities)
-            _citySpawner.SpawnCity(city.Key, city.Value, Side.Enemy, true);
+            _citySpawner.SpawnCity(city.Key, city.Value, Side.Enemy, false);
     }
 }

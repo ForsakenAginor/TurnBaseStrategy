@@ -22,4 +22,6 @@ public class LoadGameSingleton : MonoBehaviour
     }
 
     public void ContinueGame() => _isContinueGame = true;
+
+    public void Init() => _isContinueGame = false;
 }

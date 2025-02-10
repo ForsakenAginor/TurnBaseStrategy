@@ -24,6 +24,7 @@ public class MainMenuRoot : MonoBehaviour
         if(saveSystem.CanLoad)
             _continueButton.interactable = true;
 
+        LoadGameSingleton.Instance.Init();
         _continueButton.onClick.AddListener(OnContinueButtonClick);
     }
 
