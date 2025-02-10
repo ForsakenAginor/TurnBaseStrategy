@@ -3,6 +3,7 @@
 public class SaveSystem
 {
     private const string LevelData = nameof(LevelData);
+    private const int SaveFrequency = 10;
 
     private readonly DataStorage<SavedData> _storage;
 
@@ -18,6 +19,12 @@ public class SaveSystem
     public SaveSystem()
     {
         _storage = new(LevelData);
+    }
+
+    ~SaveSystem()
+    {
+        if (_isInited)
+            _daySystem.DayChanged -= OnDayChanged;
     }
 
     public bool CanLoad => _storage.CanLoad;
@@ -36,8 +43,11 @@ public class SaveSystem
         _scaner = scaner != null ? scaner : throw new ArgumentNullException(nameof(scaner));
         _level = level;
 
+        _daySystem.DayChanged += OnDayChanged;
+
         _isInited = true;
     }
+
 
     public void Save()
     {
@@ -52,5 +62,11 @@ public class SaveSystem
     public SavedData Load()
     {
         return _storage.LoadData();
+    }
+
+    private void OnDayChanged(int currentDay)
+    {
+        if (currentDay % SaveFrequency == 0)
+            Save();
     }
 }
