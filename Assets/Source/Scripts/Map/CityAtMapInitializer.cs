@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static SavedData;
 
@@ -16,10 +17,15 @@ public class CityAtMapInitializer
         _level = level;
     }
 
-    public void SpawnCitiesFromLoadedData(SerializedPair<Vector2Int, CityData>[] cities)
+    public void SpawnCitiesFromLoadedData(SerializedPair<Vector2Int, CityData>[] cities, IEnumerable<Vector2Int> unknownCities)
     {
         foreach (var city in cities)
-            _citySpawner.SpawnCity(city.Key, city.Value.Size, city.Value.Side, false, city.Value.Health);
+        {
+            if (unknownCities.Contains(city.Key))
+                _citySpawner.SpawnCity(city.Key, city.Value.Size, city.Value.Side, false, false, city.Value.Health);
+            else
+                _citySpawner.SpawnCity(city.Key, city.Value.Size, city.Value.Side, true, false, city.Value.Health);
+        }
     }
 
     public void SpawnPlayerCities()
@@ -27,7 +33,7 @@ public class CityAtMapInitializer
         var cities = _configuration.GetPlayerCities(_level);
 
         foreach (var city in cities)
-            _citySpawner.SpawnCity(city.Key, city.Value, Side.Player);
+            _citySpawner.SpawnCity(city.Key, city.Value, Side.Player, true);
     }
 
     public void SpawnEnemyCities()
@@ -35,6 +41,6 @@ public class CityAtMapInitializer
         var cities = _configuration.GetEnemyCities(_level);
 
         foreach (var city in cities)
-            _citySpawner.SpawnCity(city.Key, city.Value, Side.Enemy);
+            _citySpawner.SpawnCity(city.Key, city.Value, Side.Enemy, true);
     }
 }

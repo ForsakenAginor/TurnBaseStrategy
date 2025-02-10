@@ -67,7 +67,7 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
         _unitsManager.CityCaptured += OnCityCaptured;
     }
 
-    public void SpawnCity(Vector2Int position, CitySize size, Side side, bool mustCreateWithMaxHealth = true, int health = int.MinValue)
+    public void SpawnCity(Vector2Int position, CitySize size, Side side, bool isVisible, bool mustCreateWithMaxHealth = true, int health = int.MinValue)
     {
         if (_grid.GetGridObject(position) != null)
             throw new Exception("Can't create city: cell is not empty");
@@ -81,7 +81,7 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
             _upgradeCostLabel, _configuration.GetUpgradeCost(size), _upgradePanel,
             _upgradeIcon, _citiesUpgradesSymbols[size], size);
         facade.CityName.Init(_citiesNames[position]);
-        _unitsManager.AddCity(unit, facade);
+        _unitsManager.AddCity(unit, facade, isVisible);
 
         UnitSpawned?.Invoke(unit);
 
@@ -91,7 +91,7 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
 
     private void OnCityCaptured(Vector2Int cell, Side side)
     {
-        SpawnCity(cell, CitySize.Village, side);
+        SpawnCity(cell, CitySize.Village, side, true);
     }
 
     private bool TryUpgradeCity(Vector3 position)
@@ -112,7 +112,7 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
 
         _unitsManager.RemoveCity(city);
         size++;
-        SpawnCity(cell, size, side);
+        SpawnCity(cell, size, side, true);
         _buttonCanvas.Disable();
         return true;
     }

@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using Lean.Localization;
+using TMPro;
 using UnityEngine;
 
 public class CityName : MonoBehaviour
@@ -7,6 +8,7 @@ public class CityName : MonoBehaviour
 
     public void Init(string name)
     {
-        _nameField.text = name;
+        string cityName = LeanLocalization.GetTranslationText(name);
+        _nameField.text = cityName;
     }
 }

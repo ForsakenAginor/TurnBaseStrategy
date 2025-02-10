@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lean.Localization;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using TMPro;
@@ -31,10 +32,12 @@ public class IncomeCompositionView : MonoBehaviour, IPointerEnterHandler, IPoint
 
         foreach(var part in list)
         {
+            string unitType = LeanLocalization.GetTranslationText(part.Key);
+
             if (part.Value > 0)
-                leftBuilder.AppendLine($"<color=#00FF00> +{part.Value} {part.Key}</color>");
+                leftBuilder.AppendLine($"<color=#00FF00> +{part.Value} {unitType}</color>");
             else
-                rightBuilder.AppendLine($"<color=#FF0000> {part.Value} {part.Key}</color>");
+                rightBuilder.AppendLine($"<color=#FF0000> {part.Value} {unitType}</color>");
         }
 
         _leftTextField.text = leftBuilder.ToString();

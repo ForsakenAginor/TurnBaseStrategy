@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lean.Localization;
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -22,6 +23,8 @@ public class DayView : MonoBehaviour
 
     private void OnDayChanged(int value)
     {
-        _dayTextField.text = $"Day {value}";
+        string translation = "Day";
+        string day = LeanLocalization.GetTranslationText(translation);
+        _dayTextField.text = $"{day} {value}";
     }
 }

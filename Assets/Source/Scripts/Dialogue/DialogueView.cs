@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Lean.Localization;
 using System;
 using TMPro;
 using UnityEngine;
@@ -37,6 +38,7 @@ public class DialogueView : MonoBehaviour
         _holder.Enable();
         _portrait.sprite = sprite;
         _text.text = string.Empty;
-        _text.DOText(text, _duration, false);
+        string bossPhrase = LeanLocalization.GetTranslationText(text);
+        _text.DOText(bossPhrase, _duration, false);
     }
 }
