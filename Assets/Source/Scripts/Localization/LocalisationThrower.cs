@@ -10,7 +10,16 @@ namespace Localization
             DontDestroyOnLoad(gameObject);
         }
 
-#if UNITY_EDITOR
+        private void Update()
+        {
+            if (Input.GetKeyUp(KeyCode.O))
+                ToEnglish();
+            else if (Input.GetKeyUp(KeyCode.I))
+                ToRussian();
+            else if (Input.GetKeyUp(KeyCode.U))
+                ToTurkish();
+        }
+
         [Button]
         private void ToEnglish()
         {
@@ -34,6 +43,5 @@ namespace Localization
             LocalizationInitializer localizationInitializer = new();
             localizationInitializer.ApplyLocalization(language);
         }
-#endif
     }
 }
