@@ -2644,6 +2644,7 @@ GameObject:
   - component: {fileID: 717580001}
   - component: {fileID: 717580002}
   - component: {fileID: 717580003}
+  - component: {fileID: 717580004}
   m_Layer: 0
   m_Name: Logic
   m_TagString: Untagged
@@ -2690,6 +2691,7 @@ MonoBehaviour:
   _dayView: {fileID: 1254421033}
   _saveSystemView: {fileID: 977130284}
   _tutorial: {fileID: 1970488235}
+  _silencer: {fileID: 717580004}
 --- !u!4 &717580000
 Transform:
   m_ObjectHideFlags: 0
@@ -2761,6 +2763,18 @@ MonoBehaviour:
   _contentHolder: {fileID: 1183011616}
   _openButton: {fileID: 876738281}
   _closeButton: {fileID: 2123829208}
+--- !u!114 &717580004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 717579998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e42663bc41b289458aeaa7396e39f84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &733177070
 GameObject:
   m_ObjectHideFlags: 0
@@ -11932,7 +11946,6 @@ GameObject:
   - component: {fileID: 3021385688919315460}
   - component: {fileID: 4134751465824712059}
   - component: {fileID: 5892807424833632586}
-  - component: {fileID: 7031862136787853545}
   m_Layer: 5
   m_Name: CityCanvas
   m_TagString: Untagged
@@ -11940,19 +11953,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!114 &7031862136787853545
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7031862136787853544}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8cd044f76fce4bf43b8db5d6f96d6489, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _buttons: {fileID: 733177072}
 --- !u!222 &7076740057280856651
 CanvasRenderer:
   m_ObjectHideFlags: 0
