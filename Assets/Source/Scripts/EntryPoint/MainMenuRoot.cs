@@ -1,7 +1,7 @@
+using Agava.YandexGames;
 using Assets.Scripts.General;
 using Assets.Scripts.Sound.AudioMixer;
 using Lean.Localization;
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -53,6 +53,11 @@ public class MainMenuRoot : MonoBehaviour
         _toEnglish.onClick.AddListener(ChangeLanguageToEnglish);
         _toRussian.onClick.AddListener(ChangeLanguageToRussian);
         _toTurkish.onClick.AddListener(ChangeLanguageToTurkish);
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+        YandexGamesSdk.GameReady();
+        StickyAd.Show();
+#endif
     }
 
     private void OnDestroy()

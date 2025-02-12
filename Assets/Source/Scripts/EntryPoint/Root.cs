@@ -1,3 +1,4 @@
+using Agava.YandexGames;
 using Assets.Scripts.General;
 using Assets.Scripts.HexGrid;
 using Assets.Scripts.Sound.AudioMixer;
@@ -52,6 +53,9 @@ public class Root : MonoBehaviour
     [SerializeField] private DayView _dayView;
     [SerializeField] private SaveSystemView _saveSystemView;
     [SerializeField] private Tutorial _tutorial;
+
+    [Header("Yandex")]
+    [SerializeField] private Silencer _silencer;
 
     private void Start()
     {
@@ -168,6 +172,11 @@ public class Root : MonoBehaviour
         _saveSystemView.Init(saveSystem);
 
         SceneChangerSingleton.Instance.FadeOut();
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+        StickyAd.Show();
+        _ = new InterstitialAdvertiseAdapter(_silencer, daySystem);
+#endif
     }
 
     private void AddAudioSourceToMixer(AudioSource audioSource)
