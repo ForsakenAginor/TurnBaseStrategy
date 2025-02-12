@@ -9,19 +9,27 @@ public class PlayerUnitOnDeathEffect : MonoBehaviour, ISwitchableElement
     [SerializeField] private float _duration;
     [SerializeField] private float _durationDissolve;
     [SerializeField] private SkinnedMeshRenderer _renderer;
+    [SerializeField] private Material _standardMaterial;
 
     private Material _material;
+    private bool _isMobile;
 
     private void Awake()
     {
-        _material = new Material(_renderer.material);
+        _isMobile = Application.isMobilePlatform &&
+            (Application.platform == RuntimePlatform.WebGLPlayer || Application.platform == RuntimePlatform.Android);
+
+        _material = _isMobile == false ? new Material(_renderer.material) : new Material(_standardMaterial);
         _renderer.material = _material;
-        _material.SetFloat(MaterialAlpha, 1f);
+
+        if (_isMobile == false)
+            _material.SetFloat(MaterialAlpha, 1f);
     }
 
     private void Start()
     {
-        _material.DOFloat(0f, MaterialAlpha, 1).SetEase(Ease.Linear);        
+        if (_isMobile == false)
+            _material.DOFloat(0f, MaterialAlpha, 1).SetEase(Ease.Linear);
     }
 
     public void Disable()
@@ -33,6 +41,8 @@ public class PlayerUnitOnDeathEffect : MonoBehaviour, ISwitchableElement
     {
         _fire.Enable();
         _fire.transform.DOScale(Vector3.one, _duration).SetLoops(2, LoopType.Yoyo);
-        _material.DOFloat(1f, MaterialAlpha, _durationDissolve).SetEase(Ease.Linear);
+
+        if (_isMobile == false)
+            _material.DOFloat(1f, MaterialAlpha, _durationDissolve).SetEase(Ease.Linear);
     }
 }
