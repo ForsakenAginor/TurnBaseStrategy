@@ -1,4 +1,4 @@
-using Assets.Scripts.General;
+﻿using Assets.Scripts.General;
 using Assets.Scripts.HexGrid;
 using Assets.Scripts.Sound.AudioMixer;
 using Assets.Source.Scripts.GameLoop.StateMachine;
@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Root : MonoBehaviour
+public class HotSitRoot : MonoBehaviour
 {
     [Header("Configurations")]
     [SerializeField] private LevelConfiguration _levelConfiguration;
@@ -71,8 +71,11 @@ public class Root : MonoBehaviour
         }
         else
         {
-            currentLevel = saveLevelSystem.LoadLevel();
-            daySystem = new ();
+            //**********************
+            //until we have 1 lvl for hotsit
+            currentLevel = GameLevel.First;
+            //**********************
+            daySystem = new();
         }
 
         _dayView.Init(daySystem);
@@ -90,37 +93,39 @@ public class Root : MonoBehaviour
         _meshUpdater.Init(_gridCreator.HexGrid);
         _cellSelector.Init(_gridCreator.HexGrid, _gridRaycaster);
         var unitsGrid = _gridCreator.UnitsGrid;
-        NewInputSorter inputSorter = new NewInputSorter(unitsGrid, _cellSelector, _gridCreator.BlockedCells, _gridCreator.PathFinder, Side.Player, Side.Enemy);
-        CellHighlighter _cellHighlighter = new(inputSorter, _gridCreator.HexGrid, _gridColorConfiguration);
+        NewInputSorter player1InputSorter = new NewInputSorter(unitsGrid, _cellSelector, _gridCreator.BlockedCells, _gridCreator.PathFinder, Side.Player, Side.Enemy);
+        NewInputSorter player2InputSorter = new NewInputSorter(unitsGrid, _cellSelector, _gridCreator.BlockedCells, _gridCreator.PathFinder, Side.Enemy, Side.Player);
+        CellHighlighter _cellHighlighterFirst = new(player1InputSorter, _gridCreator.HexGrid, _gridColorConfiguration);
+        CellHighlighter _cellHighlighterSecond = new(player2InputSorter, _gridCreator.HexGrid, _gridColorConfiguration);
         _ = new HexContentSwitcher(unitsGrid, _gridCreator.BlockedCells);
 
         //******** Tutorial ***********
-        _tutorial.Init(_citySpawner, inputSorter, _unitSpawner);
+        //_tutorial.Init(_citySpawner, player1InputSorter, _unitSpawner);
 
         //******** Wallet ***********
-        Resource wallet = isLoaded ? new Resource(loadedGame.Wallet, int.MaxValue) : new Resource(_startGold, int.MaxValue);
-        TaxSystem taxSystem = new TaxSystem(wallet, _citySpawner, _unitSpawner,
+        Resource wallet1 = isLoaded ? new Resource(loadedGame.Wallet, int.MaxValue) : new Resource(_startGold, int.MaxValue);
+        Resource wallet2 = isLoaded ? new Resource(loadedGame.Wallet, int.MaxValue) : new Resource(_startGold, int.MaxValue);
+        TaxSystem taxSystem = new TaxSystem(wallet1, _citySpawner, _unitSpawner,
             _levelConfiguration.GetCityConfiguration(currentLevel), _levelConfiguration.GetUnitConfiguration(currentLevel), Side.Player);
-        AITaxSystem aITaxSystem = new AITaxSystem(_citySpawner, _unitSpawner, Side.Enemy);
-        _walletView.Init(wallet);
+        _walletView.Init(wallet1);
         _cityShop.Init(_levelConfiguration.GetUnitConfiguration(currentLevel));
         _incomeView.Init(taxSystem);
         _incomeCompositionView.Init(taxSystem);
         _bakruptView.Init(taxSystem);
 
         //********  Unit creation  ***********
-        UnitsActionsManager unitManager = new UnitsActionsManager(inputSorter, unitsGrid, _enemyBrain, _gridCreator.Clouds);
-        _unitSpawner.Init(unitManager, wallet, _levelConfiguration.GetUnitConfiguration(currentLevel), unitsGrid, _gridCreator.BlockedCells, AddAudioSourceToMixer);
-        CitiesActionsManager cityManager = new CitiesActionsManager(inputSorter, unitsGrid);
+        UnitsActionsManager unitManager = new UnitsActionsManager(player1InputSorter, unitsGrid, _enemyBrain, _gridCreator.Clouds);
+        _unitSpawner.Init(unitManager, wallet1, _levelConfiguration.GetUnitConfiguration(currentLevel), unitsGrid, _gridCreator.BlockedCells, AddAudioSourceToMixer);
+        CitiesActionsManager cityManager = new CitiesActionsManager(player1InputSorter, unitsGrid);
         _citySpawner.Init(_levelConfiguration.GetCitiesNames(currentLevel),
-            cityManager, _unitSpawner, wallet, _levelConfiguration.GetCityConfiguration(currentLevel), unitsGrid, AddAudioSourceToMixer);
+            cityManager, _unitSpawner, wallet1, _levelConfiguration.GetCityConfiguration(currentLevel), unitsGrid, AddAudioSourceToMixer);
         CityAtMapInitializer cityInitializer = new CityAtMapInitializer(currentLevel, _levelConfiguration, _citySpawner);
 
         //********* EnemyLogic ***************
         _enemyBrain.Init(unitsGrid, _gridCreator.PathFinderAI, _unitSpawner, unitManager);
 
         if (isLoaded)
-            cityInitializer.SpawnCitiesFromLoadedData(loadedGame.Cities,loadedGame.CitiesWithAvailableSpawns);
+            cityInitializer.SpawnCitiesFromLoadedData(loadedGame.Cities, loadedGame.CitiesWithAvailableSpawns);
         else
             cityInitializer.SpawnEnemyCities();
 
@@ -137,11 +142,11 @@ public class Root : MonoBehaviour
 
         //********* Game state machine *******
         _winLoseMonitor.Init(cityManager, saveLevelSystem, currentLevel);
-        var resettables = unitManager.Units.Append(taxSystem).Append(aITaxSystem);
+        var resettables = unitManager.Units.Append(taxSystem);
         resettables = resettables.Append(daySystem);
-        List<IControllable> controllables = new List<IControllable>() { inputSorter, _saveSystemView };
+        List<IControllable> controllables = new List<IControllable>() { player1InputSorter, _saveSystemView };
         var stateMachine = _gameStateMachineCreator.Create(resettables, controllables,
-            inputSorter, currentLevel);
+            player1InputSorter, currentLevel);
 
         //********* Camera control *********
         bool isMobile = Application.isMobilePlatform &&
@@ -165,7 +170,7 @@ public class Root : MonoBehaviour
             _unitSpawner.SpawnLoadedUnits(loadedGame.Units);
 
         _quests.Init(cityManager, _levelConfiguration.GetCitiesNames(currentLevel));
-        saveSystem.Init(fogOfWar, unitManager, cityManager, wallet, daySystem, currentLevel, scaner);
+        saveSystem.Init(fogOfWar, unitManager, cityManager, wallet1, daySystem, currentLevel, scaner);
         _saveSystemView.Init(saveSystem);
 
         SceneChangerSingleton.Instance.FadeOut();
@@ -178,25 +183,4 @@ public class Root : MonoBehaviour
 
         _soundInitializer.AddEffectSource(audioSource);
     }
-    /*
-#if UNITY_EDITOR
-    private void OnDrawGizmos()
-    {
-        if (_gridCreator.HexGrid == null)
-            return;
-
-        GUIStyle style = new GUIStyle();
-        style.fontSize = 60;
-
-        for (int x = 0; x < _gridCreator.HexGrid.Width; x++)
-        {
-            for (int z = 0; z < _gridCreator.HexGrid.Height; z++)
-            {
-                Vector3 cellPosition = _gridCreator.HexGrid.GetCellWorldPosition(x, z);
-                UnityEditor.Handles.Label(cellPosition + Vector3.up * 0.5f, $"{x},{z}", style);
-            }
-        }
-    }
-#endif
-    */
 }
