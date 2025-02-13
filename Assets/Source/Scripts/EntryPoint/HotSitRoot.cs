@@ -124,8 +124,8 @@ public class HotSitRoot : MonoBehaviour
             new Dictionary<Side, HexGridXZ<ICloud>>() { { Side.Player, _gridCreator.Clouds }, { Side.Enemy, _gridCreator.OtherPlayerClouds } });
         _unitSpawner.Init(unitManager, wallet1, _levelConfiguration.GetUnitConfiguration(currentLevel), unitsGrid, _gridCreator.BlockedCells, AddAudioSourceToMixer);
         CitiesActionsManager cityManager = new CitiesActionsManager(player1InputSorter, unitsGrid);
-        _citySpawner.Init(_levelConfiguration.GetCitiesNames(currentLevel),
-            cityManager, _unitSpawner, wallet1, _levelConfiguration.GetCityConfiguration(currentLevel), unitsGrid, AddAudioSourceToMixer);
+        _citySpawner.InitHotSit(_levelConfiguration.GetCitiesNames(currentLevel),
+            cityManager, _unitSpawner, wallet1, wallet2, _levelConfiguration.GetCityConfiguration(currentLevel), unitsGrid, AddAudioSourceToMixer);
         CityAtMapInitializer cityInitializer = new CityAtMapInitializer(currentLevel, _levelConfiguration, _citySpawner);
 
         //********* EnemyLogic ***************

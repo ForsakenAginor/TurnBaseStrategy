@@ -30,8 +30,10 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
     private CitiesActionsManager _unitsManager;
     private HexGridXZ<Unit> _grid;
     private UnitSpawner _unitSpawner;
-    private Resource _wallet;
+    private Resource _firstWallet;
+    private Resource _secondWallet;
     private Dictionary<Vector2Int, string> _citiesNames = new();
+    private bool _isHotsit;
 
     public event Action<Unit> UnitSpawned;
     public event Action<UnitView> UnitViewSpawned;
@@ -48,7 +50,7 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
     {
         _unitsManager = manager != null ? manager : throw new ArgumentNullException(nameof(manager));
         _unitSpawner = unitSpawner != null ? unitSpawner : throw new ArgumentNullException(nameof(unitSpawner));
-        _wallet = wallet != null ? wallet : throw new ArgumentNullException(nameof(wallet));
+        _firstWallet = wallet != null ? wallet : throw new ArgumentNullException(nameof(wallet));
         _configuration = configuration != null ? configuration : throw new ArgumentNullException(nameof(configuration));
         _grid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
         AudioSourceCallback = callback != null ? callback : throw new ArgumentNullException(nameof(callback));
@@ -65,6 +67,33 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
         }
 
         _unitsManager.CityCaptured += OnCityCaptured;
+    }
+
+    public void InitHotSit(SerializedPair<Vector2Int, string>[] citiesNames, CitiesActionsManager manager, UnitSpawner unitSpawner,
+        Resource firstWallet, Resource secondWallet,
+        CitiesConfiguration configuration, HexGridXZ<Unit> grid, Action<AudioSource> callback)
+    {
+        _unitsManager = manager != null ? manager : throw new ArgumentNullException(nameof(manager));
+        _unitSpawner = unitSpawner != null ? unitSpawner : throw new ArgumentNullException(nameof(unitSpawner));
+        _firstWallet = firstWallet != null ? firstWallet : throw new ArgumentNullException(nameof(firstWallet));
+        _secondWallet = secondWallet != null ? secondWallet : throw new ArgumentNullException(nameof(secondWallet));
+        _configuration = configuration != null ? configuration : throw new ArgumentNullException(nameof(configuration));
+        _grid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
+        AudioSourceCallback = callback != null ? callback : throw new ArgumentNullException(nameof(callback));
+        _factory = new CitiesFactory(configuration);
+
+        if (citiesNames != null)
+        {
+            foreach (var item in citiesNames)
+                _citiesNames.Add(item.Key, item.Value);
+        }
+        else
+        {
+            throw new ArgumentNullException(nameof(citiesNames));
+        }
+
+        _unitsManager.CityCaptured += OnCityCaptured;
+        _isHotsit = true;
     }
 
     public void SpawnCity(Vector2Int position, CitySize size, Side side, bool isVisible, bool mustCreateWithMaxHealth = true, int health = int.MinValue)
@@ -106,9 +135,25 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
 
         int cost = _configuration.GetUpgradeCost(size);
 
-        if (side == Side.Player)
-            if (_wallet.TrySpent(cost) == false)
-                return false;
+        if (_isHotsit)
+        {
+            if (side == Side.Player)
+            {
+                if (_firstWallet.TrySpent(cost) == false)
+                    return false;
+            }
+            else if (side == Side.Enemy)
+            {
+                if (_secondWallet.TrySpent(cost) == false)
+                    return false;
+            }
+        }
+        else
+        {
+            if (side == Side.Player)
+                if (_firstWallet.TrySpent(cost) == false)
+                    return false;
+        }
 
         _unitsManager.RemoveCity(city);
         size++;
