@@ -49,6 +49,12 @@ public class NewInputSorter : IControllable, IWaitAnimation
 
     public bool IsAnimationPlayed { get; private set; } = true;
 
+    public bool IsActive => _isActive;
+
+    public Side Enemy => _enemySide;
+
+    public Side ActiveSide => _playerSide;
+
     public void EnableControl()
     {
         _selectedCell = _fakeCell;

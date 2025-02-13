@@ -109,7 +109,8 @@ public class Root : MonoBehaviour
         _bakruptView.Init(taxSystem);
 
         //********  Unit creation  ***********
-        UnitsActionsManager unitManager = new UnitsActionsManager(inputSorter, unitsGrid, _enemyBrain, _gridCreator.Clouds);
+        UnitsActionsManager unitManager = new UnitsActionsManager(inputSorter, unitsGrid, _enemyBrain,
+            new Dictionary<Side, HexGridXZ<ICloud>>() { { Side.Player, _gridCreator.Clouds } });
         _unitSpawner.Init(unitManager, wallet, _levelConfiguration.GetUnitConfiguration(currentLevel), unitsGrid, _gridCreator.BlockedCells, AddAudioSourceToMixer);
         CitiesActionsManager cityManager = new CitiesActionsManager(inputSorter, unitsGrid);
         _citySpawner.Init(_levelConfiguration.GetCitiesNames(currentLevel),

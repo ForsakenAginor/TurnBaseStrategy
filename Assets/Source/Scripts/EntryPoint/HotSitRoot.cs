@@ -71,10 +71,10 @@ public class HotSitRoot : MonoBehaviour
         }
         else
         {
-            //**********************
+            //---------------------
             //until we have 1 lvl for hotsit
             currentLevel = GameLevel.First;
-            //**********************
+            //---------------------
             daySystem = new();
         }
 
@@ -89,7 +89,7 @@ public class HotSitRoot : MonoBehaviour
             _soundInitializer.AddMusicSourceWithoutVolumeChanging(MusicSingleton.Instance.Music);
 
         //******** Init grid ***********
-        _gridCreator.Init(currentLevel, _levelConfiguration);
+        _gridCreator.InitHotSit(currentLevel, _levelConfiguration);
         _meshUpdater.Init(_gridCreator.HexGrid);
         _cellSelector.Init(_gridCreator.HexGrid, _gridRaycaster);
         var unitsGrid = _gridCreator.UnitsGrid;
@@ -100,21 +100,28 @@ public class HotSitRoot : MonoBehaviour
         _ = new HexContentSwitcher(unitsGrid, _gridCreator.BlockedCells);
 
         //******** Tutorial ***********
-        //_tutorial.Init(_citySpawner, player1InputSorter, _unitSpawner);
+        _tutorial.Init(_citySpawner, player1InputSorter, _unitSpawner);
 
         //******** Wallet ***********
         Resource wallet1 = isLoaded ? new Resource(loadedGame.Wallet, int.MaxValue) : new Resource(_startGold, int.MaxValue);
         Resource wallet2 = isLoaded ? new Resource(loadedGame.Wallet, int.MaxValue) : new Resource(_startGold, int.MaxValue);
-        TaxSystem taxSystem = new TaxSystem(wallet1, _citySpawner, _unitSpawner,
+        TaxSystem taxSystem1 = new TaxSystem(wallet1, _citySpawner, _unitSpawner,
             _levelConfiguration.GetCityConfiguration(currentLevel), _levelConfiguration.GetUnitConfiguration(currentLevel), Side.Player);
+        TaxSystem taxSystem2 = new TaxSystem(wallet1, _citySpawner, _unitSpawner,
+            _levelConfiguration.GetCityConfiguration(currentLevel), _levelConfiguration.GetUnitConfiguration(currentLevel), Side.Enemy);
+        //-----------------
+        //only 1 player have view
         _walletView.Init(wallet1);
         _cityShop.Init(_levelConfiguration.GetUnitConfiguration(currentLevel));
-        _incomeView.Init(taxSystem);
-        _incomeCompositionView.Init(taxSystem);
-        _bakruptView.Init(taxSystem);
+        _incomeView.Init(taxSystem1);
+        _incomeCompositionView.Init(taxSystem1);
+        _bakruptView.Init(taxSystem1);
+        //-----------------
 
         //********  Unit creation  ***********
-        UnitsActionsManager unitManager = new UnitsActionsManager(player1InputSorter, unitsGrid, _enemyBrain, _gridCreator.Clouds);
+        UnitsActionsManager unitManager = new UnitsActionsManager(new List<NewInputSorter>() {player1InputSorter, player2InputSorter },
+            unitsGrid, 
+            new Dictionary<Side, HexGridXZ<ICloud>>() { { Side.Player, _gridCreator.Clouds }, { Side.Enemy, _gridCreator.OtherPlayerClouds } });
         _unitSpawner.Init(unitManager, wallet1, _levelConfiguration.GetUnitConfiguration(currentLevel), unitsGrid, _gridCreator.BlockedCells, AddAudioSourceToMixer);
         CitiesActionsManager cityManager = new CitiesActionsManager(player1InputSorter, unitsGrid);
         _citySpawner.Init(_levelConfiguration.GetCitiesNames(currentLevel),
@@ -142,7 +149,7 @@ public class HotSitRoot : MonoBehaviour
 
         //********* Game state machine *******
         _winLoseMonitor.Init(cityManager, saveLevelSystem, currentLevel);
-        var resettables = unitManager.Units.Append(taxSystem);
+        var resettables = unitManager.Units.Append(taxSystem1);
         resettables = resettables.Append(daySystem);
         List<IControllable> controllables = new List<IControllable>() { player1InputSorter, _saveSystemView };
         var stateMachine = _gameStateMachineCreator.Create(resettables, controllables,

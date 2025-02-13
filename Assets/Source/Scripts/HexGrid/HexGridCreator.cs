@@ -16,6 +16,7 @@ public class HexGridCreator : MonoBehaviour
     [SerializeField] private float _cloudHeight = 1;
     [SerializeField] private Cloud _cloudPrefab;
     [SerializeField] private Transform _cloudsHolder;
+    [SerializeField] private Transform _otherPlayerCloudsHolder;
 
     [Header("Tilemap")]
     [SerializeField] private Grid _tilemapGrid;
@@ -26,6 +27,7 @@ public class HexGridCreator : MonoBehaviour
     private HexGridXZ<CellSprite> _hexGrid;
     private HexGridXZ<Unit> _unitsGrid;
     private HexGridXZ<ICloud> _clouds;
+    private HexGridXZ<ICloud> _otherPlayerClouds;
     private HexPathFinder _pathFinderAI;
     private HexPathFinder _pathFinder;
     private HexOnScene[] _views;
@@ -41,6 +43,25 @@ public class HexGridCreator : MonoBehaviour
     public HexPathFinder PathFinder => _pathFinder;
 
     public HexGridXZ<ICloud> Clouds => _clouds;
+
+    public HexGridXZ<ICloud> OtherPlayerClouds => _otherPlayerClouds;
+
+    public void InitHotSit(GameLevel level, IMapInfoGetter configuration)
+    {
+        Init(level, configuration);
+        Vector3 cloudPosition = new Vector3(0, _cloudHeight, 0);
+        _otherPlayerClouds = new HexGridXZ<ICloud>(_gridWidth, _gridHeight, _gridCellSize, cloudPosition);
+
+        for (int i = 0; i < _gridWidth; i++)
+        {
+            for (int j = 0; j < _gridHeight; j++)
+            {
+                var cloud = Instantiate(_cloudPrefab, _otherPlayerClouds.GetCellWorldPosition(i, j), Quaternion.identity);
+                cloud.transform.SetParent(_otherPlayerCloudsHolder);
+                _otherPlayerClouds.SetGridObject(i, j, cloud);
+            }
+        }
+    }
 
     public void Init(GameLevel level, IMapInfoGetter configuration)
     {
