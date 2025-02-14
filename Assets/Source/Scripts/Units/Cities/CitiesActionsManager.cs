@@ -64,7 +64,7 @@ public class CitiesActionsManager : ICitiesGetter, ISavedCities
             input.BecomeInactive -= OnDeselect;
         }
 
-        _enemyScaner.DefendersSpawned -= OnDefendersSpawned;
+        _enemyScaner.CityFound -= OnDefendersSpawned;
     }
 
     public event Action<Vector2Int, Side> CityCaptured;
@@ -75,6 +75,11 @@ public class CitiesActionsManager : ICitiesGetter, ISavedCities
     public IEnumerable<Vector2Int> GetEnemyCities()
     {
         return _cities.Where(city => city.Key.Side == Side.Enemy).Select(city => _grid.GetXZ(city.Value.Position)).ToList();
+    }
+
+    public IEnumerable<Vector2Int> GetPlayerCities()
+    {
+        return _cities.Where(city => city.Key.Side == Side.Player).Select(city => _grid.GetXZ(city.Value.Position)).ToList();
     }
 
     public IEnumerable<(Vector2Int position, CitySize size, CityUnit unit)> GetEnemyCitiesUnits()
@@ -95,7 +100,7 @@ public class CitiesActionsManager : ICitiesGetter, ISavedCities
     public void SetScaner(EnemyScaner scaner)
     {
         _enemyScaner = scaner != null ? scaner : throw new ArgumentNullException(nameof(scaner));
-        _enemyScaner.DefendersSpawned += OnDefendersSpawned;
+        _enemyScaner.CityFound += OnDefendersSpawned;
     }
 
     public void AddCity(CityUnit unit, ICityFacade facade, bool isVisible = false)

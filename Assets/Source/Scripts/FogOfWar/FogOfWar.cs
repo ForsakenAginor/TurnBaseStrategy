@@ -4,29 +4,46 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class FogOfWar : ISavedFogOfWar
+public class FogOfWar : ISavedFogOfWar, IControllable
 {
     private readonly HexGridXZ<ICloud> _fogGrid;
     private readonly HexGridXZ<Unit> _unitGrid;
     private readonly IReadOnlyDictionary<Vector2Int, IEnumerable<Vector2Int>> _neighbours;
-    private readonly EnemyScaner _enemyScaner;
+    private readonly ICitySearcher _enemyScaner;
     private readonly List<Vector2Int> _discoveredCells = new List<Vector2Int>();
+    private readonly SwitchableElement _fogHolder;
+    private readonly IEnumerable<Side> _enemies;
 
-    public FogOfWar(HexGridXZ<ICloud> fogGrid, HexGridXZ<Unit> unitGrid, EnemyScaner enemyScaner)
+    public FogOfWar(HexGridXZ<ICloud> fogGrid, HexGridXZ<Unit> unitGrid, ICitySearcher enemyScaner, IEnumerable<Side> enemies)
     {
         _fogGrid = fogGrid != null ? fogGrid : throw new ArgumentNullException(nameof(fogGrid));
         _unitGrid = unitGrid != null ? unitGrid : throw new ArgumentNullException(nameof(unitGrid));
         _enemyScaner = enemyScaner != null ? enemyScaner : throw new ArgumentNullException(nameof(enemyScaner));
+        _enemies = enemies != null ? enemies : throw new ArgumentNullException(nameof(enemies));
         _neighbours = _fogGrid.CashedFarNeighbours;
 
+        var cloud = fogGrid.GetGridObject(0, 0);
+        _fogHolder = cloud.Holder;
+
+
         _unitGrid.GridObjectChanged += OnGridChanged;
-        _enemyScaner.DefendersSpawned += OnDefendersSpawned;
+        _enemyScaner.CityFound += OnDefendersSpawned;
     }
 
     ~FogOfWar()
     {
         _unitGrid.GridObjectChanged -= OnGridChanged;
-        _enemyScaner.DefendersSpawned -= OnDefendersSpawned;
+        _enemyScaner.CityFound -= OnDefendersSpawned;
+    }
+
+    public void EnableControl()
+    {
+        _fogHolder.Enable();
+    }
+
+    public void DisableControl()
+    {
+        _fogHolder.Disable();
     }
 
     public IEnumerable<Vector2Int> DiscoveredCells => _discoveredCells.ToList();
@@ -34,6 +51,12 @@ public class FogOfWar : ISavedFogOfWar
     public void ApplyLoadedData(IEnumerable<Vector2Int> discoveredCells)
     {
         DestroyFogAtCells(discoveredCells.ToList());
+    }
+
+    public void ApplyDiscoveredCells(IEnumerable<Vector2Int> discoveredCells)
+    {
+        foreach (var cell in discoveredCells)
+            DisappearFogOfWar(cell);
     }
 
     private void OnDefendersSpawned(Vector2Int cell)
@@ -45,7 +68,7 @@ public class FogOfWar : ISavedFogOfWar
     {
         var unit = _unitGrid.GetGridObject(cell);
 
-        if (unit == null || unit.Side == Side.Enemy)
+        if (unit == null || _enemies.Contains(unit.Side))
             return;
 
         DisappearFogOfWar(cell);
@@ -70,6 +93,7 @@ public class FogOfWar : ISavedFogOfWar
             _fogGrid.SetGridObject(item.x, item.y, null);
         }
     }
+
 }
 
 public interface ISavedFogOfWar

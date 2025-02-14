@@ -119,66 +119,63 @@ public class HotSitRoot : MonoBehaviour
         //-----------------
 
         //********  Unit creation  ***********
-        UnitsActionsManager unitManager = new UnitsActionsManager(new List<NewInputSorter>() {player1InputSorter, player2InputSorter },
-            unitsGrid, 
+        UnitsActionsManager unitManager = new UnitsActionsManager(new List<NewInputSorter>() { player1InputSorter, player2InputSorter },
+            unitsGrid,
             new Dictionary<Side, HexGridXZ<ICloud>>() { { Side.Player, _gridCreator.Clouds }, { Side.Enemy, _gridCreator.OtherPlayerClouds } });
         _unitSpawner.Init(unitManager, wallet1, _levelConfiguration.GetUnitConfiguration(currentLevel), unitsGrid, _gridCreator.BlockedCells, AddAudioSourceToMixer);
-        CitiesActionsManager cityManager = new CitiesActionsManager(player1InputSorter, unitsGrid);
+        CitiesActionsManager cityManager = new CitiesActionsManager(new List<NewInputSorter>() { player1InputSorter, player2InputSorter }, unitsGrid);
         _citySpawner.InitHotSit(_levelConfiguration.GetCitiesNames(currentLevel),
             cityManager, _unitSpawner, wallet1, wallet2, _levelConfiguration.GetCityConfiguration(currentLevel), unitsGrid, AddAudioSourceToMixer);
         CityAtMapInitializer cityInitializer = new CityAtMapInitializer(currentLevel, _levelConfiguration, _citySpawner);
 
-        //********* EnemyLogic ***************
-        _enemyBrain.Init(unitsGrid, _gridCreator.PathFinderAI, _unitSpawner, unitManager);
-
         if (isLoaded)
+        {
             cityInitializer.SpawnCitiesFromLoadedData(loadedGame.Cities, loadedGame.CitiesWithAvailableSpawns);
+            _unitSpawner.SpawnLoadedUnits(loadedGame.Units);
+        }
         else
+        {
+            cityInitializer.SpawnPlayerCities();
             cityInitializer.SpawnEnemyCities();
+        }
 
-        EnemyWaveSpawner waveSpawner = new(cityManager.GetEnemyCitiesUnits(), _unitSpawner, _levelConfiguration.GetEnemyWaveConfiguration(currentLevel), daySystem);
-        var citiesWithGuards = isLoaded ? loadedGame.CitiesWithAvailableSpawns : cityManager.GetEnemyCities();
-        EnemyScaner scaner = new(citiesWithGuards, _unitSpawner, unitsGrid, _levelConfiguration.GetEnemySpawnerConfiguration(currentLevel));
-        cityManager.SetScaner(scaner);
+        CitySearcher scanerFirst = new CitySearcher(cityManager.GetEnemyCities(), unitsGrid, Side.Enemy);
+        CitySearcher scanerSecond = new CitySearcher(cityManager.GetPlayerCities(), unitsGrid, Side.Player);
 
         //******** FogOfWar *********
-        FogOfWar fogOfWar = new(_gridCreator.Clouds, unitsGrid, scaner);
+        FogOfWar fogOfWar = new(_gridCreator.Clouds, unitsGrid, scanerFirst, new List<Side>(){Side.Enemy });
+        FogOfWar fogOfWarSecond = new(_gridCreator.OtherPlayerClouds, unitsGrid, scanerSecond, new List<Side>() { Side.Player });
 
-        if (isLoaded)
-            fogOfWar.ApplyLoadedData(loadedGame.DiscoveredCells);
+        fogOfWar.ApplyDiscoveredCells(cityManager.GetPlayerCities());
+        fogOfWarSecond.ApplyDiscoveredCells(cityManager.GetEnemyCities());
 
         //********* Game state machine *******
         _winLoseMonitor.Init(cityManager, saveLevelSystem, currentLevel);
-        var resettables = unitManager.Units.Append(taxSystem1);
-        resettables = resettables.Append(daySystem);
-        List<IControllable> controllables = new List<IControllable>() { player1InputSorter, _saveSystemView };
-        var stateMachine = _gameStateMachineCreator.Create(resettables, controllables,
-            player1InputSorter, currentLevel);
+        var resettables = unitManager.Units.Append(taxSystem1).Append(taxSystem2).Append(daySystem);
+        List<IControllable> controllables1 = new List<IControllable>() { player1InputSorter, _saveSystemView, fogOfWar };
+        List<IControllable> controllables2 = new List<IControllable>() { player2InputSorter, fogOfWarSecond};
+        var stateMachine = _gameStateMachineCreator.CreateHotSit(resettables, controllables1, player1InputSorter,
+            controllables2, player2InputSorter,
+            currentLevel);
 
         //********* Camera control *********
         bool isMobile = Application.isMobilePlatform &&
             (Application.platform == RuntimePlatform.WebGLPlayer || Application.platform == RuntimePlatform.Android);
         IZoomInput zoomInput = isMobile ? new MobileInput() : new PCInput();
         _pinchDetector.Init(zoomInput);
-        CameraMover cameraMover = new CameraMover(_camera, _pinchDetector, currentLevel, _levelConfiguration,
-            _gridCreator.HexGrid, scaner, unitManager, _swipeInputReceiver, _gridRaycaster);
-        controllables.Add(cameraMover);
+        HotSitCameraMover cameraMover1 = new HotSitCameraMover(_camera, _pinchDetector, currentLevel, _levelConfiguration,
+            _gridCreator.HexGrid, scanerFirst, unitManager, _swipeInputReceiver, _gridRaycaster);
+        HotSitCameraMover cameraMover2 = new HotSitCameraMover(_camera, _pinchDetector, currentLevel, _levelConfiguration,
+            _gridCreator.HexGrid, scanerSecond, unitManager, _swipeInputReceiver, _gridRaycaster, true);
 
-        //********* Dialogue *********
-        Dialogue dialogue = new Dialogue(_levelConfiguration.GetCitiesBossInfo(currentLevel), scaner);
-        _dialogueView.Init(dialogue);
+        controllables1.Add(cameraMover1);
+        controllables2.Add(cameraMover2);
 
         //********* Other ************************
         TextureAtlasReader atlas = _meshUpdater.GetComponent<TextureAtlasReader>();
-
-        if (isLoaded == false)
-            cityInitializer.SpawnPlayerCities();
-        else
-            _unitSpawner.SpawnLoadedUnits(loadedGame.Units);
-
         _quests.Init(cityManager, _levelConfiguration.GetCitiesNames(currentLevel));
-        saveSystem.Init(fogOfWar, unitManager, cityManager, wallet1, daySystem, currentLevel, scaner);
-        _saveSystemView.Init(saveSystem);
+        //saveSystem.Init(fogOfWar, unitManager, cityManager, wallet1, daySystem, currentLevel, scaner);
+        //_saveSystemView.Init(saveSystem);
 
         SceneChangerSingleton.Instance.FadeOut();
     }

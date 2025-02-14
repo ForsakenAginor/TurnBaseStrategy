@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using DG.Tweening;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -51,5 +52,13 @@ namespace Assets.Scripts.General
             while (asyncLoad.isDone == false)
                 yield return null;
         }
+
+#if UNITY_EDITOR
+        [Button]
+        private void LoadHotSitScene()
+        {
+            LoadScene(Scenes.HotSitScene.ToString());
+        }
+#endif
     }
 }

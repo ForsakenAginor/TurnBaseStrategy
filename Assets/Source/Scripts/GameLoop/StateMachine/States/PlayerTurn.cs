@@ -103,7 +103,7 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
 
         private void ChangeState()
         {
-            Transitions.First(o => o is ToEnemyTurnTransition).SetIsReady(true);
+            Transitions.First(o => o is ToEnemyTurnTransition || o is ToPlayerTurnTransition).SetIsReady(true);
             CallBecomeReadyToTransitEvent();
         }
     }

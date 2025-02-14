@@ -131,7 +131,7 @@ public class Root : MonoBehaviour
         cityManager.SetScaner(scaner);
 
         //******** FogOfWar *********
-        FogOfWar fogOfWar = new(_gridCreator.Clouds, unitsGrid, scaner);
+        FogOfWar fogOfWar = new(_gridCreator.Clouds, unitsGrid, scaner, new List<Side>() { Side.Enemy });
 
         if (isLoaded)
             fogOfWar.ApplyLoadedData(loadedGame.DiscoveredCells);

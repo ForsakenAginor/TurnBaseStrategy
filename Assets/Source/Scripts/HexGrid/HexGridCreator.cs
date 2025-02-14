@@ -58,6 +58,7 @@ public class HexGridCreator : MonoBehaviour
             {
                 var cloud = Instantiate(_cloudPrefab, _otherPlayerClouds.GetCellWorldPosition(i, j), Quaternion.identity);
                 cloud.transform.SetParent(_otherPlayerCloudsHolder);
+                cloud.Init();
                 _otherPlayerClouds.SetGridObject(i, j, cloud);
             }
         }
@@ -104,6 +105,7 @@ public class HexGridCreator : MonoBehaviour
 
                 var cloud = Instantiate(_cloudPrefab, _clouds.GetCellWorldPosition(i, j), Quaternion.identity);
                 cloud.transform.SetParent(_cloudsHolder);
+                cloud.Init();
                 _clouds.SetGridObject(i, j, cloud);
             }
         }
