@@ -81,7 +81,6 @@ MonoBehaviour:
   _animationDistance: 0.3
   _title: {fileID: 0}
   _cityDestroyEffect: {fileID: 0}
-  _attack: {fileID: 3164637465623316392}
   _oneStep: {fileID: 6540570963906047065}
   _twoStep: {fileID: 2320619883958834092}
   _unitController: {fileID: 5571622725980403012}
@@ -590,7 +589,7 @@ GameObject:
   - component: {fileID: 8457696824883462954}
   - component: {fileID: 2797181963668463404}
   - component: {fileID: 7739700892681493057}
-  m_Layer: 6
+  m_Layer: 5
   m_Name: STEPS
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -950,17 +949,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0d81b0e82a2928249a9edefc969915bb, type: 3}
---- !u!114 &3164637465623316392 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6946130030890251559, guid: 0d81b0e82a2928249a9edefc969915bb, type: 3}
-  m_PrefabInstance: {fileID: 5444448943913841295}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &3352401760795998032 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7280225839686321631, guid: 0d81b0e82a2928249a9edefc969915bb, type: 3}
@@ -1143,6 +1131,10 @@ PrefabInstance:
     - target: {fileID: 7943382842420978454, guid: 4150e8356bc80d143b85642d5aeaeaf0, type: 3}
       propertyPath: m_Name
       value: LabelCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 7943382842420978454, guid: 4150e8356bc80d143b85642d5aeaeaf0, type: 3}
+      propertyPath: m_Layer
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
