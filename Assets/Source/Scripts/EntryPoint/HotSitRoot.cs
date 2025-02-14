@@ -32,7 +32,7 @@ public class HotSitRoot : MonoBehaviour
     [SerializeField] private CityShopView _cityShop;
     [SerializeField] private IncomeView _incomeView;
     [SerializeField] private IncomeCompositionView _incomeCompositionView;
-    [SerializeField] private BunkruptView _bakruptView;
+    [SerializeField] private BunkruptView _bankruptView;
 
     [Header("Enemy")]
     [SerializeField] private EnemyBrain _enemyBrain;
@@ -109,14 +109,9 @@ public class HotSitRoot : MonoBehaviour
             _levelConfiguration.GetCityConfiguration(currentLevel), _levelConfiguration.GetUnitConfiguration(currentLevel), Side.Player);
         TaxSystem taxSystem2 = new TaxSystem(wallet1, _citySpawner, _unitSpawner,
             _levelConfiguration.GetCityConfiguration(currentLevel), _levelConfiguration.GetUnitConfiguration(currentLevel), Side.Enemy);
-        //-----------------
-        //only 1 player have view
-        _walletView.Init(wallet1);
         _cityShop.Init(_levelConfiguration.GetUnitConfiguration(currentLevel));
-        _incomeView.Init(taxSystem1);
-        _incomeCompositionView.Init(taxSystem1);
-        _bakruptView.Init(taxSystem1);
-        //-----------------
+        EconomyFacade economyFacadeFirst = new EconomyFacade(_walletView, _incomeView, _incomeCompositionView, _bankruptView, wallet1, taxSystem1);
+        EconomyFacade economyFacadeSecond = new EconomyFacade(_walletView, _incomeView, _incomeCompositionView, _bankruptView, wallet2, taxSystem2);
 
         //********  Unit creation  ***********
         UnitsActionsManager unitManager = new UnitsActionsManager(new List<NewInputSorter>() { player1InputSorter, player2InputSorter },
@@ -152,8 +147,8 @@ public class HotSitRoot : MonoBehaviour
         //********* Game state machine *******
         _winLoseMonitor.Init(cityManager, saveLevelSystem, currentLevel);
         var resettables = unitManager.Units.Append(taxSystem1).Append(taxSystem2).Append(daySystem);
-        List<IControllable> controllables1 = new List<IControllable>() { player1InputSorter, _saveSystemView, fogOfWar };
-        List<IControllable> controllables2 = new List<IControllable>() { player2InputSorter, fogOfWarSecond};
+        List<IControllable> controllables1 = new List<IControllable>() { player1InputSorter, _saveSystemView, fogOfWar, economyFacadeFirst };
+        List<IControllable> controllables2 = new List<IControllable>() { player2InputSorter, fogOfWarSecond, economyFacadeSecond};
         var stateMachine = _gameStateMachineCreator.CreateHotSit(resettables, controllables1, player1InputSorter,
             controllables2, player2InputSorter,
             currentLevel);

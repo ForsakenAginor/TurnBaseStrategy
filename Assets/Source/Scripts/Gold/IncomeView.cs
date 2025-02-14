@@ -14,6 +14,9 @@ public class IncomeView : MonoBehaviour
 
     public void Init(IIncome income)
     {
+        if(_income != null)
+            _income.IncomeChanged -= OnIncomeChanged;
+
         _income = income != null ? income : throw new ArgumentNullException(nameof(income));
         _income.IncomeChanged += OnIncomeChanged;
     }

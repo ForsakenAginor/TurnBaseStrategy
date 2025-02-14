@@ -102,11 +102,9 @@ public class Root : MonoBehaviour
         TaxSystem taxSystem = new TaxSystem(wallet, _citySpawner, _unitSpawner,
             _levelConfiguration.GetCityConfiguration(currentLevel), _levelConfiguration.GetUnitConfiguration(currentLevel), Side.Player);
         AITaxSystem aITaxSystem = new AITaxSystem(_citySpawner, _unitSpawner, Side.Enemy);
-        _walletView.Init(wallet);
         _cityShop.Init(_levelConfiguration.GetUnitConfiguration(currentLevel));
-        _incomeView.Init(taxSystem);
-        _incomeCompositionView.Init(taxSystem);
-        _bakruptView.Init(taxSystem);
+        EconomyFacade economyFacade = new EconomyFacade(_walletView, _incomeView, _incomeCompositionView, _bakruptView, wallet, taxSystem);
+        economyFacade.EnableControl();
 
         //********  Unit creation  ***********
         UnitsActionsManager unitManager = new UnitsActionsManager(inputSorter, unitsGrid, _enemyBrain,

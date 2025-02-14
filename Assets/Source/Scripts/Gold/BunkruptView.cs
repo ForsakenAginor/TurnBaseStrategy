@@ -21,6 +21,12 @@ public class BunkruptView : MonoBehaviour
 
     public void Init(TaxSystem taxSystem)
     {
+        if(_taxSystem != null)
+        {
+            _taxSystem.CloseToBankrupt -= OnCloseToBunkrupt;
+            _taxSystem.FarToBankrupt -= OnFarToBankrupt;
+        }
+
         _taxSystem = taxSystem != null ? taxSystem : throw new ArgumentNullException(nameof(taxSystem));
         _taxSystem.CloseToBankrupt += OnCloseToBunkrupt;
         _taxSystem.FarToBankrupt += OnFarToBankrupt;

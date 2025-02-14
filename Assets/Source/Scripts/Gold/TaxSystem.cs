@@ -66,6 +66,11 @@ public class TaxSystem : IResetable, IIncome
         }
     }
 
+    public void RefreshIncomeData()
+    {
+        CalcIncome();
+    }
+
     private void OnUnitSpawned(Unit unit)
     {
         if (unit.Side != _side)
