@@ -126,7 +126,6 @@ public class Root : MonoBehaviour
         EnemyWaveSpawner waveSpawner = new(cityManager.GetEnemyCitiesUnits(), _unitSpawner, _levelConfiguration.GetEnemyWaveConfiguration(currentLevel), daySystem);
         var citiesWithGuards = isLoaded ? loadedGame.CitiesWithAvailableSpawns : cityManager.GetEnemyCities();
         EnemyScaner scaner = new(citiesWithGuards, _unitSpawner, unitsGrid, _levelConfiguration.GetEnemySpawnerConfiguration(currentLevel));
-        cityManager.SetScaner(scaner);
 
         //******** FogOfWar *********
         FogOfWar fogOfWar = new(_gridCreator.Clouds, unitsGrid, scaner, new List<Side>() { Side.Enemy });

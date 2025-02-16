@@ -11,6 +11,7 @@ public class UnitsActionsManager : IEnemyUnitOversight, ISavedUnits
     private readonly HexGridXZ<Unit> _grid;
     private readonly EnemyBrain _enemyBrain;
     private readonly Dictionary<Side, HexGridXZ<ICloud>> _fogOfWar;
+    private readonly bool _isHotSitMode;
 
     private ISwitchableElement _selectedUnit;
 
@@ -55,6 +56,7 @@ public class UnitsActionsManager : IEnemyUnitOversight, ISavedUnits
         _inputSorters = inputSorters != null ? inputSorters : throw new ArgumentNullException(nameof(inputSorters));
         _grid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
         _fogOfWar = cloudGrid != null ? cloudGrid : throw new ArgumentNullException(nameof(cloudGrid));
+        _isHotSitMode = true;
 
         foreach (var input in _inputSorters)
         {
@@ -160,7 +162,7 @@ public class UnitsActionsManager : IEnemyUnitOversight, ISavedUnits
             {
                 facade.Attacker.Attack(targetPosition, callback, () => unit1.TryAttack(unit2));
 
-                if (unit1.Side == enemy)
+                if (unit1.Side == enemy || _isHotSitMode)
                     EnemyDoSomething?.Invoke(_grid.GetXZ(targetPosition));
             }
             else
@@ -198,6 +200,10 @@ public class UnitsActionsManager : IEnemyUnitOversight, ISavedUnits
                 {
                     facade.Mover.Move(way, callback);
                     EnemyDoSomething?.Invoke(target.Last());
+                }
+                else if(_isHotSitMode)
+                {
+                    facade.Mover.Move(way, callback);
                 }
                 else
                 {

@@ -10,7 +10,6 @@ public class CitiesActionsManager : ICitiesGetter, ISavedCities
     private readonly IEnumerable<NewInputSorter> _inputSorters;
     private readonly HexGridXZ<Unit> _grid;
 
-    private EnemyScaner _enemyScaner;
     private ISwitchableElement _selectedUnit;
     private ISwitchableElement _selectedUnitMenu;
 
@@ -63,8 +62,6 @@ public class CitiesActionsManager : ICitiesGetter, ISavedCities
             input.EnemySelected -= OnCitySelected;
             input.BecomeInactive -= OnDeselect;
         }
-
-        _enemyScaner.CityFound -= OnDefendersSpawned;
     }
 
     public event Action<Vector2Int, Side> CityCaptured;
@@ -95,12 +92,6 @@ public class CitiesActionsManager : ICitiesGetter, ISavedCities
     public Dictionary<Vector2Int, CityUnit> GetInfo()
     {
         return _cities.ToDictionary(key => _grid.GetXZ(key.Value.Position), value => value.Key);
-    }
-
-    public void SetScaner(EnemyScaner scaner)
-    {
-        _enemyScaner = scaner != null ? scaner : throw new ArgumentNullException(nameof(scaner));
-        _enemyScaner.CityFound += OnDefendersSpawned;
     }
 
     public void AddCity(CityUnit unit, ICityFacade facade, bool isVisible = false)

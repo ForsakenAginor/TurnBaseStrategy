@@ -111,6 +111,7 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
             _upgradeIcon, _citiesUpgradesSymbols[size], size);
         facade.CityName.Init(_citiesNames[position]);
         _unitsManager.AddCity(unit, facade, isVisible);
+        facade.UnitView.ShowTitle();
 
         UnitSpawned?.Invoke(unit);
 

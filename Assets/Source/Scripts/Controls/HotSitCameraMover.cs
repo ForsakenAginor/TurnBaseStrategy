@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using UnityEngine;
 
-public class CameraMover : IControllable
+public class HotSitCameraMover : IControllable
 {
     private const float MaxZoomValue = 10f;
     private const float MinZoomValue = 5f;
@@ -19,15 +19,17 @@ public class CameraMover : IControllable
     private readonly IEnemyUnitOversight _enemyOversight;
     private readonly ITouchInputReceiver _inputReceiver;
     private readonly ICameraFocusGetter _raycaster;
+    private readonly IEnemyActivityMonitorOrderReceiver _enemyActivity;
 
     private float _cameraYDefault = 5;
     private Tween _tween;
     private Vector2Int _currentFocus;
     private Vector2Int _savedPosition;
 
-    public CameraMover(Transform camera, IZoomInputReceiver pinchDetector,
+    public HotSitCameraMover(Transform camera, IZoomInputReceiver pinchDetector,
         GameLevel level, ICameraConfigurationGetter configuration, HexGridXZ<CellSprite> grid, ICitySearcher enemyScaner,
-        IEnemyUnitOversight enemyOversight, ITouchInputReceiver inputReceiver, ICameraFocusGetter raycaster)
+        IEnemyUnitOversight enemyOversight, ITouchInputReceiver inputReceiver, ICameraFocusGetter raycaster, IEnemyActivityMonitorOrderReceiver enemyActivity,
+        bool secondPlayerCamera = false)
     {
         _camera = camera != null ? camera : throw new ArgumentNullException(nameof(camera));
         _pinchDetector = pinchDetector != null ? pinchDetector : throw new ArgumentNullException(nameof(pinchDetector));
@@ -36,6 +38,7 @@ public class CameraMover : IControllable
         _enemyOversight = enemyOversight != null ? enemyOversight : throw new ArgumentNullException(nameof(enemyOversight));
         _inputReceiver = inputReceiver != null ? inputReceiver : throw new ArgumentNullException(nameof(inputReceiver));
         _raycaster = raycaster != null ? raycaster : throw new ArgumentNullException(nameof(raycaster));
+        _enemyActivity= enemyActivity != null ? enemyActivity : throw new ArgumentNullException(nameof(enemyActivity));
 
         if (configuration == null)
             throw new ArgumentNullException(nameof(configuration));
@@ -43,28 +46,29 @@ public class CameraMover : IControllable
         _cameraMin = new Vector3(configuration.GetMinimumCameraPosition(level).x, 0, configuration.GetMinimumCameraPosition(level).y);
         _cameraMax = new Vector3(configuration.GetMaximumCameraPosition(level).x, 0, configuration.GetMaximumCameraPosition(level).y);
 
-        var startedCell = configuration.GetCameraStartPosition(level);
-        FocusCameraOnCell(startedCell);
+        _savedPosition = secondPlayerCamera == false ? configuration.GetCameraStartPosition(level) : configuration.GetCameraStartPositionSecondPlayer(level);
         Subscribe();
     }
 
-    ~CameraMover()
+    ~HotSitCameraMover()
     {
         Unsubscribe();
     }
 
     public void EnableControl()
     {
+        Subscribe();
         Vector2Int currentPosition = _grid.GetXZ(_raycaster.GetCameraFocus());
+        _currentFocus = currentPosition;
 
         if (currentPosition != _savedPosition)
             FocusCameraOnCell(_savedPosition);
-            
     }
 
     public void DisableControl()
     {
         _savedPosition = _grid.GetXZ(_raycaster.GetCameraFocus());
+        Unsubscribe();
     }
 
     private void Unsubscribe()
@@ -74,6 +78,7 @@ public class CameraMover : IControllable
         _pinchDetector.GotPinchInput -= OnPinch;
         _enemyScaner.CityFound -= FocusCameraOnCell;
         _enemyOversight.EnemyDoSomething -= FocusCameraOnCell;
+        _enemyActivity.ShowEnemyActivityOrderReceived -= FocusCameraOnCell;
     }
 
     private void Subscribe()
@@ -83,6 +88,7 @@ public class CameraMover : IControllable
         _pinchDetector.GotPinchInput += OnPinch;
         _enemyScaner.CityFound += FocusCameraOnCell;
         _enemyOversight.EnemyDoSomething += FocusCameraOnCell;
+        _enemyActivity.ShowEnemyActivityOrderReceived += FocusCameraOnCell;
     }
 
     private void OnTouchInputStopped()

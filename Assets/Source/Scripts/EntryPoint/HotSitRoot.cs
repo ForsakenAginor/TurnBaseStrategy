@@ -52,6 +52,7 @@ public class HotSitRoot : MonoBehaviour
     [SerializeField] private DayView _dayView;
     [SerializeField] private SaveSystemView _saveSystemView;
     [SerializeField] private Tutorial _tutorial;
+    [SerializeField] private EnemyActivityMonitorView _enemyActivityMonitorView;
 
     private void Start()
     {
@@ -107,7 +108,7 @@ public class HotSitRoot : MonoBehaviour
         Resource wallet2 = isLoaded ? new Resource(loadedGame.Wallet, int.MaxValue) : new Resource(_startGold, int.MaxValue);
         TaxSystem taxSystem1 = new TaxSystem(wallet1, _citySpawner, _unitSpawner,
             _levelConfiguration.GetCityConfiguration(currentLevel), _levelConfiguration.GetUnitConfiguration(currentLevel), Side.Player);
-        TaxSystem taxSystem2 = new TaxSystem(wallet1, _citySpawner, _unitSpawner,
+        TaxSystem taxSystem2 = new TaxSystem(wallet2, _citySpawner, _unitSpawner,
             _levelConfiguration.GetCityConfiguration(currentLevel), _levelConfiguration.GetUnitConfiguration(currentLevel), Side.Enemy);
         _cityShop.Init(_levelConfiguration.GetUnitConfiguration(currentLevel));
         EconomyFacade economyFacadeFirst = new EconomyFacade(_walletView, _incomeView, _incomeCompositionView, _bankruptView, wallet1, taxSystem1);
@@ -116,7 +117,7 @@ public class HotSitRoot : MonoBehaviour
         //********  Unit creation  ***********
         UnitsActionsManager unitManager = new UnitsActionsManager(new List<NewInputSorter>() { player1InputSorter, player2InputSorter },
             unitsGrid,
-            new Dictionary<Side, HexGridXZ<ICloud>>() { { Side.Player, _gridCreator.Clouds }, { Side.Enemy, _gridCreator.OtherPlayerClouds } });
+            new Dictionary<Side, HexGridXZ<ICloud>>() { { Side.Player, _gridCreator.OtherPlayerClouds }, { Side.Enemy, _gridCreator.Clouds } });
         _unitSpawner.Init(unitManager, wallet1, _levelConfiguration.GetUnitConfiguration(currentLevel), unitsGrid, _gridCreator.BlockedCells, AddAudioSourceToMixer);
         CitiesActionsManager cityManager = new CitiesActionsManager(new List<NewInputSorter>() { player1InputSorter, player2InputSorter }, unitsGrid);
         _citySpawner.InitHotSit(_levelConfiguration.GetCitiesNames(currentLevel),
@@ -158,13 +159,18 @@ public class HotSitRoot : MonoBehaviour
             (Application.platform == RuntimePlatform.WebGLPlayer || Application.platform == RuntimePlatform.Android);
         IZoomInput zoomInput = isMobile ? new MobileInput() : new PCInput();
         _pinchDetector.Init(zoomInput);
+        EnemyActivityMonitor activityMonitor = new(unitManager);
+        _enemyActivityMonitorView.Init(activityMonitor);
         HotSitCameraMover cameraMover1 = new HotSitCameraMover(_camera, _pinchDetector, currentLevel, _levelConfiguration,
-            _gridCreator.HexGrid, scanerFirst, unitManager, _swipeInputReceiver, _gridRaycaster);
+            _gridCreator.HexGrid, scanerFirst, unitManager, _swipeInputReceiver, _gridRaycaster, _enemyActivityMonitorView);
         HotSitCameraMover cameraMover2 = new HotSitCameraMover(_camera, _pinchDetector, currentLevel, _levelConfiguration,
-            _gridCreator.HexGrid, scanerSecond, unitManager, _swipeInputReceiver, _gridRaycaster, true);
+            _gridCreator.HexGrid, scanerSecond, unitManager, _swipeInputReceiver, _gridRaycaster,
+            _enemyActivityMonitorView, true);
 
         controllables1.Add(cameraMover1);
+        controllables1.Add(activityMonitor);
         controllables2.Add(cameraMover2);
+        controllables2.Add(activityMonitor);
 
         //********* Other ************************
         TextureAtlasReader atlas = _meshUpdater.GetComponent<TextureAtlasReader>();
