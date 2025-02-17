@@ -11,7 +11,8 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
     private UnitsActionsManager _unitsManager;
     private HexGridXZ<Unit> _grid;
     private HexGridXZ<IHexOnScene> _landGrid;
-    private Resource _wallet;
+    private Resource _walletFirstPlayer;
+    private Resource _walletSecondPlayer;
 
     public event Action<Unit> UnitSpawned;
     public event Action<UnitView> UnitViewSpawned;
@@ -22,7 +23,20 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
         UnitsConfiguration configuration, HexGridXZ<Unit> grid, HexGridXZ<IHexOnScene> landGrid, Action<AudioSource> callback)
     {
         _unitsManager = manager != null ? manager : throw new ArgumentNullException(nameof(manager));
-        _wallet = wallet != null ? wallet : throw new ArgumentNullException(nameof(wallet));
+        _walletFirstPlayer = wallet != null ? wallet : throw new ArgumentNullException(nameof(wallet));
+        _configuration = configuration != null ? configuration : throw new ArgumentNullException(nameof(configuration));
+        _grid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
+        _landGrid = landGrid != null ? landGrid : throw new ArgumentNullException(nameof(landGrid));
+        AudioSourceCallback = callback != null ? callback : throw new ArgumentNullException(nameof(callback));
+        _factory = new UnitFactory(configuration);
+    }
+
+    public void InitHotSit(UnitsActionsManager manager, Resource walletFirstPlayer, Resource walletSecondPlayer,
+        UnitsConfiguration configuration, HexGridXZ<Unit> grid, HexGridXZ<IHexOnScene> landGrid, Action<AudioSource> callback)
+    {
+        _unitsManager = manager != null ? manager : throw new ArgumentNullException(nameof(manager));
+        _walletFirstPlayer = walletFirstPlayer != null ? walletFirstPlayer : throw new ArgumentNullException(nameof(walletFirstPlayer));
+        _walletSecondPlayer = walletSecondPlayer != null ? walletSecondPlayer : throw new ArgumentNullException(nameof(walletSecondPlayer));
         _configuration = configuration != null ? configuration : throw new ArgumentNullException(nameof(configuration));
         _grid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
         _landGrid = landGrid != null ? landGrid : throw new ArgumentNullException(nameof(landGrid));
@@ -41,9 +55,27 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
 
         int cost = _configuration.GetUnitCost(type);
 
-        if (side == Side.Player)
-            if (_wallet.TrySpent(cost) == false)
-                return false;
+        //if normal game
+        if (_walletSecondPlayer == null)
+        {
+            if (side == Side.Player)
+                if (_walletFirstPlayer.TrySpent(cost) == false)
+                    return false;
+        }
+        //if hotsit
+        else 
+        {
+            if (side == Side.Player)
+            {
+                if (_walletFirstPlayer.TrySpent(cost) == false)
+                    return false;
+            }
+            else if(side == Side.Enemy)
+            {
+                if (_walletSecondPlayer.TrySpent(cost) == false)
+                    return false;
+            }
+        }
 
         CreateUnit(type, side, neighbours[0]);
 

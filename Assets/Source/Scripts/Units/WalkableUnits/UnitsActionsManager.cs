@@ -7,42 +7,85 @@ using UnityEngine;
 public class UnitsActionsManager : IEnemyUnitOversight, ISavedUnits
 {
     private readonly Dictionary<Unit, IUnitFacade> _units = new Dictionary<Unit, IUnitFacade>();
-    private readonly NewInputSorter _inputSorter;
+    private readonly IEnumerable<NewInputSorter> _inputSorters;
     private readonly HexGridXZ<Unit> _grid;
     private readonly EnemyBrain _enemyBrain;
-    private readonly HexGridXZ<ICloud> _fogOfWar;
+    private readonly Dictionary<Side, HexGridXZ<ICloud>> _fogOfWar;
+    private readonly bool _isHotSitMode;
 
     private ISwitchableElement _selectedUnit;
 
-    public UnitsActionsManager(NewInputSorter inputSorter, HexGridXZ<Unit> grid, EnemyBrain enemyBrain, HexGridXZ<ICloud> cloudGrid)
+    /// <summary>
+    /// Constructor fo PvE mode
+    /// </summary>
+    /// <param name="inputSorter"></param>
+    /// <param name="grid"></param>
+    /// <param name="enemyBrain"></param>
+    /// <param name="cloudGrid"></param>
+    /// <exception cref="ArgumentNullException"></exception>
+    public UnitsActionsManager(NewInputSorter inputSorter, HexGridXZ<Unit> grid, EnemyBrain enemyBrain, Dictionary<Side, HexGridXZ<ICloud>> cloudGrid)
     {
-        _inputSorter = inputSorter != null ? inputSorter : throw new ArgumentNullException(nameof(inputSorter));
+        _inputSorters = inputSorter != null ? new List<NewInputSorter>() { inputSorter } : throw new ArgumentNullException(nameof(inputSorter));
         _grid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
         _enemyBrain = enemyBrain != null ? enemyBrain : throw new ArgumentNullException(nameof(enemyBrain));
         _fogOfWar = cloudGrid != null ? cloudGrid : throw new ArgumentNullException(nameof(cloudGrid));
 
-        _inputSorter.MovableUnitSelected += OnUnitSelected;
-        _inputSorter.FriendlyCitySelected += OnCitySelected;
-        _inputSorter.UnitIsMoving += OnUnitMoving;
-        _inputSorter.UnitIsAttacking += OnUnitAttacking;
-        _inputSorter.EnemySelected += OnEnemySelected;
-        _inputSorter.BecomeInactive += OnDeselect;
+        foreach(var input in _inputSorters)
+        {
+            input.MovableUnitSelected += OnUnitSelected;
+            input.FriendlyCitySelected += OnCitySelected;
+            input.UnitIsMoving += OnUnitMoving;
+            input.UnitIsAttacking += OnUnitAttacking;
+            input.EnemySelected += OnEnemySelected;
+            input.BecomeInactive += OnDeselect;
+        }
 
         _enemyBrain.UnitMoving += OnUnitMoving;
         _enemyBrain.UnitAttacking += OnUnitAttacking;
     }
 
+    /// <summary>
+    /// Constructor for hotsit PvE mod
+    /// </summary>
+    /// <param name="inputSorters"></param>
+    /// <param name="grid"></param>
+    /// <param name="cloudGrid"></param>
+    /// <exception cref="ArgumentNullException"></exception>
+    public UnitsActionsManager(IEnumerable<NewInputSorter> inputSorters, HexGridXZ<Unit> grid, Dictionary<Side, HexGridXZ<ICloud>> cloudGrid)
+    {
+        _inputSorters = inputSorters != null ? inputSorters : throw new ArgumentNullException(nameof(inputSorters));
+        _grid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
+        _fogOfWar = cloudGrid != null ? cloudGrid : throw new ArgumentNullException(nameof(cloudGrid));
+        _isHotSitMode = true;
+
+        foreach (var input in _inputSorters)
+        {
+            input.MovableUnitSelected += OnUnitSelected;
+            input.FriendlyCitySelected += OnCitySelected;
+            input.UnitIsMoving += OnUnitMoving;
+            input.UnitIsAttacking += OnUnitAttacking;
+            input.EnemySelected += OnEnemySelected;
+            input.BecomeInactive += OnDeselect;
+        }
+    }
+
     ~UnitsActionsManager()
     {
-        _inputSorter.MovableUnitSelected -= OnUnitSelected;
-        _inputSorter.FriendlyCitySelected -= OnCitySelected;
-        _inputSorter.UnitIsMoving -= OnUnitMoving;
-        _inputSorter.UnitIsAttacking -= OnUnitAttacking;
-        _inputSorter.EnemySelected -= OnEnemySelected;
-        _inputSorter.BecomeInactive -= OnDeselect;
+        foreach (var input in _inputSorters)
+        {
+            input.MovableUnitSelected -= OnUnitSelected;
+            input.FriendlyCitySelected -= OnCitySelected;
+            input.UnitIsMoving -= OnUnitMoving;
+            input.UnitIsAttacking -= OnUnitAttacking;
+            input.EnemySelected -= OnEnemySelected;
+            input.BecomeInactive -= OnDeselect;
+        }
 
-        _enemyBrain.UnitMoving -= OnUnitMoving;
-        _enemyBrain.UnitAttacking -= OnUnitAttacking;
+        if (_enemyBrain != null)
+        {
+            _enemyBrain.UnitMoving -= OnUnitMoving;
+            _enemyBrain.UnitAttacking -= OnUnitAttacking;
+        }
     }
 
     public event Action<Vector2Int> EnemyDoSomething;
@@ -70,7 +113,8 @@ public class UnitsActionsManager : IEnemyUnitOversight, ISavedUnits
 
         unit.Destroyed += OnUnitDied;
 
-        _inputSorter.Deselect();
+        foreach (var input in _inputSorters)
+            input.Deselect();
     }
 
     public Vector2Int GetUnitPosition(Unit unit) => _grid.GetXZ(_units[unit].Position);
@@ -109,6 +153,7 @@ public class UnitsActionsManager : IEnemyUnitOversight, ISavedUnits
 
     private void OnUnitAttacking(WalkableUnit unit1, Vector3 targetPosition, Unit unit2, Action callback)
     {
+        Side enemy = GetCurrentEnemySide();
         IUnitFacade unitFacade = _units[unit1];
 
         if (unit1.CanAttack)
@@ -117,7 +162,7 @@ public class UnitsActionsManager : IEnemyUnitOversight, ISavedUnits
             {
                 facade.Attacker.Attack(targetPosition, callback, () => unit1.TryAttack(unit2));
 
-                if (unit1.Side == Side.Enemy)
+                if (unit1.Side == enemy || _isHotSitMode)
                     EnemyDoSomething?.Invoke(_grid.GetXZ(targetPosition));
             }
             else
@@ -145,7 +190,7 @@ public class UnitsActionsManager : IEnemyUnitOversight, ISavedUnits
         {
             if (_units[unit] is IWalkableUnitFacade facade)
             {
-                var cloud = _fogOfWar.GetGridObject(target.Last());
+                var cloud = _fogOfWar[GetCurrentPlayerSide()].GetGridObject(target.Last());
                 List<Vector3> way = new();
 
                 foreach (var step in target)
@@ -156,6 +201,10 @@ public class UnitsActionsManager : IEnemyUnitOversight, ISavedUnits
                     facade.Mover.Move(way, callback);
                     EnemyDoSomething?.Invoke(target.Last());
                 }
+                else if(_isHotSitMode)
+                {
+                    facade.Mover.Move(way, callback);
+                }
                 else
                 {
                     facade.Mover.MoveFast(way, callback);
@@ -163,7 +212,6 @@ public class UnitsActionsManager : IEnemyUnitOversight, ISavedUnits
             }
             else
             {
-
                 throw new Exception("You are moving unmovable object");
             }
 
@@ -175,6 +223,22 @@ public class UnitsActionsManager : IEnemyUnitOversight, ISavedUnits
         {
             callback.Invoke();
         }
+    }
+
+    private Side GetCurrentEnemySide()
+    {
+        if (_inputSorters.Count() == 1)
+            return Side.Enemy;
+
+        return _inputSorters.First(o => o.IsActive).Enemy;
+    }
+
+    private Side GetCurrentPlayerSide()
+    {
+        if (_inputSorters.Count() == 1)
+            return Side.Player;
+
+        return _inputSorters.First(o => o.IsActive).ActiveSide;
     }
 }
 

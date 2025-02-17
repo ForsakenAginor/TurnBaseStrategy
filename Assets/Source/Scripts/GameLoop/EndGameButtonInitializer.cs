@@ -7,6 +7,9 @@ public class EndGameButtonInitializer : MonoBehaviour
     [SerializeField] private Button _loseButton;
     [SerializeField] private Button _finishButton;
     [SerializeField] private Button _winButton;
+    [SerializeField] private Scenes _winScene;
+    [SerializeField] private Scenes _finishScene;
+    [SerializeField] private Scenes _loseScene;
 
     private void Awake()
     {
@@ -24,16 +27,16 @@ public class EndGameButtonInitializer : MonoBehaviour
 
     private void OnWinButtonClick()
     {
-        SceneChangerSingleton.Instance.LoadScene(Scenes.GameScene.ToString());
+        SceneChangerSingleton.Instance.LoadScene(_winScene.ToString());
     }
 
     private void OnFinishButtonClick()
     {
-        SceneChangerSingleton.Instance.LoadScene(Scenes.MenuScene.ToString());
+        SceneChangerSingleton.Instance.LoadScene(_finishScene.ToString());
     }
 
     private void OnLoseButtonClick()
     {
-        SceneChangerSingleton.Instance.LoadScene(Scenes.GameScene.ToString());
+        SceneChangerSingleton.Instance.LoadScene(_loseScene.ToString());
     }
 }

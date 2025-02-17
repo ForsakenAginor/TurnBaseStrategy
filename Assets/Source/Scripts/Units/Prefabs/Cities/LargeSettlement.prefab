@@ -280,7 +280,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 10
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -315,7 +315,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -370,7 +370,7 @@ MonoBehaviour:
   _walking: {fileID: 0}
   _attacking: {fileID: 0}
   _diying: {fileID: 0}
-  _hiring: {fileID: 8300000, guid: 8a52869b9f7416d4f8a5a006c937a129, type: 3}
+  _hiring: {fileID: 8300000, guid: e163d902f137e1d499720aef5d888a1a, type: 3}
   _audioSource: {fileID: 6254868868941685319}
 --- !u!114 &4397066036480356167
 MonoBehaviour:

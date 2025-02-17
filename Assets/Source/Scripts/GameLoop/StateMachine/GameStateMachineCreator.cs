@@ -64,5 +64,69 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine
             //create State machine
             return new GameStateMachine(playerTurn);
         }
+
+        public GameStateMachine CreateHotSit(IEnumerable<IResetable> resetables,
+            IEnumerable<IControllable> controllables1, IWaitAnimation waitAnimation1,
+            IEnumerable<IControllable> controllables2, IWaitAnimation waitAnimation2,
+            GameLevel level)
+        {
+            if (waitAnimation1 == null)
+                throw new System.ArgumentNullException(nameof(waitAnimation1));
+
+            if (waitAnimation2 == null)
+                throw new System.ArgumentNullException(nameof(waitAnimation2));
+
+            if (resetables == null)
+                throw new System.ArgumentNullException(nameof(resetables));
+
+            if (controllables1 == null)
+                throw new System.ArgumentNullException(nameof(controllables1));
+
+            if (controllables2 == null)
+                throw new System.ArgumentNullException(nameof(controllables2));
+
+            //transitions
+            ToPlayerTurnTransition toEnemyTurnTransition = new ToPlayerTurnTransition();
+            ToLoseTransition toLoseTransition = new ToLoseTransition();
+            ToWinTransition toWinTransition = new ToWinTransition();
+            ToPlayerTurnTransition toPlayerTurnTransition = new ToPlayerTurnTransition();
+
+            //states
+            PlayerTurn playerTurn = new PlayerTurn(waitAnimation1,
+                _nextTurnButton,
+                _winLoseMonitor,
+                resetables,
+                controllables1,
+                new Transition[]
+                {
+                toEnemyTurnTransition, toLoseTransition, toWinTransition
+                });
+
+            PlayerTurn enemyTurn = new PlayerTurn(waitAnimation2,
+                _nextTurnButton,
+                _winLoseMonitor,
+                new List<IResetable>(),
+                controllables2,
+                new Transition[]
+                {
+                            toPlayerTurnTransition, toLoseTransition, toWinTransition
+                });
+
+            PlayerWon playerWon = new PlayerWon(_winScreen, _finishScreen, level);
+            PlayerLose playerLose = new PlayerLose(_loseScreen);
+
+            //transitions initialize
+            toPlayerTurnTransition.SetTargetState(playerTurn);
+            toEnemyTurnTransition.SetTargetState(enemyTurn);
+            toLoseTransition.SetTargetState(playerLose);
+            toWinTransition.SetTargetState(playerWon);
+
+            //disable controllables
+            foreach (var controllable in controllables2)
+                controllable.DisableControl();
+
+            //create State machine
+            return new GameStateMachine(playerTurn);
+        }
     }
 }

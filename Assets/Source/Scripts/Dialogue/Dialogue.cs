@@ -5,19 +5,19 @@ using UnityEngine;
 public class Dialogue
 {
     private readonly Dictionary<Vector2Int, SerializedPair<Sprite, string>> _bosses;
-    private readonly EnemyScaner _enemyScaner;
+    private readonly ICitySearcher _enemyScaner;
 
-    public Dialogue(Dictionary<Vector2Int, SerializedPair<Sprite, string>> bosses, EnemyScaner enemyScaner)
+    public Dialogue(Dictionary<Vector2Int, SerializedPair<Sprite, string>> bosses, ICitySearcher enemyScaner)
     {
         _bosses = bosses != null ? bosses : throw new ArgumentNullException(nameof(bosses));
         _enemyScaner = enemyScaner != null ? enemyScaner : throw new ArgumentNullException(nameof(enemyScaner));
 
-        _enemyScaner.DefendersSpawned += OnSpawn;
+        _enemyScaner.CityFound += OnSpawn;
     }
 
     ~Dialogue()
     {
-        _enemyScaner.DefendersSpawned -= OnSpawn;
+        _enemyScaner.CityFound -= OnSpawn;
     }
 
     public event Action<Sprite, string> BossSpawned;

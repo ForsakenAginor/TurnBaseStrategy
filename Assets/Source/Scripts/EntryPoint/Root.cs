@@ -94,7 +94,7 @@ public class Root : MonoBehaviour
         _meshUpdater.Init(_gridCreator.HexGrid);
         _cellSelector.Init(_gridCreator.HexGrid, _gridRaycaster);
         var unitsGrid = _gridCreator.UnitsGrid;
-        NewInputSorter inputSorter = new NewInputSorter(unitsGrid, _cellSelector, _gridCreator.BlockedCells, _gridCreator.PathFinder);
+        NewInputSorter inputSorter = new NewInputSorter(unitsGrid, _cellSelector, _gridCreator.BlockedCells, _gridCreator.PathFinder, Side.Player, Side.Enemy);
         CellHighlighter _cellHighlighter = new(inputSorter, _gridCreator.HexGrid, _gridColorConfiguration);
         _ = new HexContentSwitcher(unitsGrid, _gridCreator.BlockedCells);
 
@@ -104,15 +104,15 @@ public class Root : MonoBehaviour
         //******** Wallet ***********
         Resource wallet = isLoaded ? new Resource(loadedGame.Wallet, int.MaxValue) : new Resource(_startGold, int.MaxValue);
         TaxSystem taxSystem = new TaxSystem(wallet, _citySpawner, _unitSpawner,
-            _levelConfiguration.GetCityConfiguration(currentLevel), _levelConfiguration.GetUnitConfiguration(currentLevel));
-        _walletView.Init(wallet);
+            _levelConfiguration.GetCityConfiguration(currentLevel), _levelConfiguration.GetUnitConfiguration(currentLevel), Side.Player);
+        AITaxSystem aITaxSystem = new AITaxSystem(_citySpawner, _unitSpawner, Side.Enemy);
         _cityShop.Init(_levelConfiguration.GetUnitConfiguration(currentLevel));
-        _incomeView.Init(taxSystem);
-        _incomeCompositionView.Init(taxSystem);
-        _bakruptView.Init(taxSystem);
+        EconomyFacade economyFacade = new EconomyFacade(_walletView, _incomeView, _incomeCompositionView, _bakruptView, wallet, taxSystem);
+        economyFacade.EnableControl();
 
         //********  Unit creation  ***********
-        UnitsActionsManager unitManager = new UnitsActionsManager(inputSorter, unitsGrid, _enemyBrain, _gridCreator.Clouds);
+        UnitsActionsManager unitManager = new UnitsActionsManager(inputSorter, unitsGrid, _enemyBrain,
+            new Dictionary<Side, HexGridXZ<ICloud>>() { { Side.Player, _gridCreator.Clouds } });
         _unitSpawner.Init(unitManager, wallet, _levelConfiguration.GetUnitConfiguration(currentLevel), unitsGrid, _gridCreator.BlockedCells, AddAudioSourceToMixer);
         CitiesActionsManager cityManager = new CitiesActionsManager(inputSorter, unitsGrid);
         _citySpawner.Init(_levelConfiguration.GetCitiesNames(currentLevel),
@@ -130,17 +130,16 @@ public class Root : MonoBehaviour
         EnemyWaveSpawner waveSpawner = new(cityManager.GetEnemyCitiesUnits(), _unitSpawner, _levelConfiguration.GetEnemyWaveConfiguration(currentLevel), daySystem);
         var citiesWithGuards = isLoaded ? loadedGame.CitiesWithAvailableSpawns : cityManager.GetEnemyCities();
         EnemyScaner scaner = new(citiesWithGuards, _unitSpawner, unitsGrid, _levelConfiguration.GetEnemySpawnerConfiguration(currentLevel));
-        cityManager.SetScaner(scaner);
 
         //******** FogOfWar *********
-        FogOfWar fogOfWar = new(_gridCreator.Clouds, unitsGrid, scaner);
+        FogOfWar fogOfWar = new(_gridCreator.Clouds, unitsGrid, scaner, new List<Side>() { Side.Enemy });
 
         if (isLoaded)
             fogOfWar.ApplyLoadedData(loadedGame.DiscoveredCells);
 
         //********* Game state machine *******
         _winLoseMonitor.Init(cityManager, saveLevelSystem, currentLevel);
-        var resettables = unitManager.Units.Append(taxSystem);
+        var resettables = unitManager.Units.Append(taxSystem).Append(aITaxSystem);
         resettables = resettables.Append(daySystem);
         List<IControllable> controllables = new List<IControllable>() { inputSorter, _saveSystemView };
         var stateMachine = _gameStateMachineCreator.Create(resettables, controllables,

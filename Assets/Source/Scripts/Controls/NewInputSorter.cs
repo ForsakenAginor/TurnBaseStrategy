@@ -18,13 +18,18 @@ public class NewInputSorter : IControllable, IWaitAnimation
     private List<Vector2Int> _possibleAttacks;
     private WalkableUnit _selectedUnit;
     private bool _isActive;
+    private Side _playerSide;
+    private Side _enemySide;
 
-    public NewInputSorter(HexGridXZ<Unit> grid, CellSelector selector, HexGridXZ<IHexOnScene> blockedCells, HexPathFinder pathFinder)
+    public NewInputSorter(HexGridXZ<Unit> grid, CellSelector selector, HexGridXZ<IHexOnScene> blockedCells, HexPathFinder pathFinder,
+        Side playerSide, Side enemySide)
     {
         _hexGrid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
         _blockedCells = blockedCells != null ? blockedCells : throw new ArgumentNullException(nameof(blockedCells));
         _cellSelector = selector != null ? selector : throw new ArgumentNullException(nameof(selector));
         _pathFinder = pathFinder != null ? pathFinder : throw new ArgumentNullException(nameof(pathFinder));
+        _playerSide = playerSide;
+        _enemySide = enemySide;
 
         _hexGrid.GridObjectChanged += OnGridObjectChanged;
     }
@@ -44,6 +49,11 @@ public class NewInputSorter : IControllable, IWaitAnimation
 
     public bool IsAnimationPlayed { get; private set; } = true;
 
+    public bool IsActive => _isActive;
+
+    public Side Enemy => _enemySide;
+
+    public Side ActiveSide => _playerSide;
 
     public void EnableControl()
     {
@@ -76,7 +86,7 @@ public class NewInputSorter : IControllable, IWaitAnimation
 
         if (unit == null)
             _pathFinder.MakeNodWalkable(position);
-        else if (unit.Side == Side.Enemy)
+        else if (unit.Side == _enemySide)
             _pathFinder.MakeNodUnwalkable(position);
         else
             _pathFinder.MakeNodWalkable(position);
@@ -90,7 +100,7 @@ public class NewInputSorter : IControllable, IWaitAnimation
         var unit = _hexGrid.GetGridObject(position);
 
         // Walkable friendly unit chosen
-        if (unit != null && unit.Side == Side.Player && unit is WalkableUnit selectedUnit)
+        if (unit != null && unit.Side == _playerSide && unit is WalkableUnit selectedUnit)
         {
             _selectedCell = position;
             _selectedUnit = selectedUnit;
@@ -109,7 +119,7 @@ public class NewInputSorter : IControllable, IWaitAnimation
             return;
         }
         // Friendly City chosen
-        else if (unit != null && unit.Side == Side.Player && unit is WalkableUnit == false)
+        else if (unit != null && unit.Side == _playerSide && unit is WalkableUnit == false)
         {
             _selectedCell = position;
             _possibleWays = null;
@@ -159,7 +169,7 @@ public class NewInputSorter : IControllable, IWaitAnimation
         }
 
         // if enemy selected
-        if (unit != null && unit.Side == Side.Enemy)
+        if (unit != null && unit.Side == _enemySide)
         {
             _selectedCell = position;
             _possibleWays = null;
@@ -239,13 +249,13 @@ public class NewInputSorter : IControllable, IWaitAnimation
     private bool IsCellContainEnemy(WalkableUnit unit, Vector2Int position)
     {
         var cell = _hexGrid.GetGridObject(position);
-        return unit.CanAttack && cell != null && cell.Side == Side.Enemy;
+        return unit.CanAttack && cell != null && cell.Side == _enemySide;
     }
 
     private bool IsCellContainAlly(WalkableUnit unit, Vector2Int position)
     {
         var cell = _hexGrid.GetGridObject(position);
-        return unit.CanAttack && cell != null && cell.Side == Side.Player;
+        return unit.CanAttack && cell != null && cell.Side == _playerSide;
     }
 }
 

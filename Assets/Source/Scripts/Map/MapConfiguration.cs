@@ -13,6 +13,7 @@ public class MapConfiguration
     [SerializeField] private SerializedPair<Vector2Int, string>[] _citiesNames;
     [SerializeField] private SerializedPair<Vector2Int, SerializedPair<Sprite, string>>[] _spawnMessages;
     [SerializeField] private Vector2Int _cameraStartPosition;
+    [SerializeField] private Vector2Int _cameraStartPositionSecondPlayer;
     [SerializeField] private UnitsConfiguration _unitConfiguration;
     [SerializeField] private CitiesConfiguration _cityConfiguration;
     [SerializeField] private EnemySpawnerConfiguration _enemySpawnerConfiguration;
@@ -38,6 +39,8 @@ public class MapConfiguration
     public SerializedPair<Vector2Int, SerializedPair<Sprite, string>>[] SpawnMessages => _spawnMessages;
 
     public Vector2Int CameraStartPosition => _cameraStartPosition;
+
+    public Vector2Int CameraStartPositionSecondPlayer => _cameraStartPositionSecondPlayer;
 
     public UnitsConfiguration UnitConfiguration => _unitConfiguration;
 

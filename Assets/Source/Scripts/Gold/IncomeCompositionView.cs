@@ -20,6 +20,9 @@ public class IncomeCompositionView : MonoBehaviour, IPointerEnterHandler, IPoint
 
     public void Init(IIncome income)
     {
+        if (_income != null)
+            _income.IncomeCompositionChanged -= OnIncomeChanged;
+
         _income = income != null ? income : throw new ArgumentNullException(nameof(income));
 
         _income.IncomeCompositionChanged += OnIncomeChanged;

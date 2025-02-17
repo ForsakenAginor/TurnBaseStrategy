@@ -9,6 +9,8 @@ public class LevelConfiguration : UpdatableConfiguration<GameLevel, MapConfigura
 {
     public Vector2Int GetCameraStartPosition(GameLevel level) => Content.First(o => o.Key == level).Value.CameraStartPosition;
 
+    public Vector2Int GetCameraStartPositionSecondPlayer(GameLevel level) => Content.First(o => o.Key == level).Value.CameraStartPositionSecondPlayer;
+
     public SerializedPair<Vector2Int, CitySize>[] GetEnemyCities(GameLevel level) =>
         Content.First(o => o.Key == level).Value.EnemyCities;
 
@@ -46,5 +48,5 @@ public class LevelConfiguration : UpdatableConfiguration<GameLevel, MapConfigura
     public Vector2 GetMinimumCameraPosition(GameLevel level)
     {
         return Content.First(o => o.Key == level).Value.CameraMin;
-    }    
+    }
 }
