@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d59980e31554d6b4e995d4e14ec2afd7, type: 3}
+  m_Name: Generator_2_graphicsSettings
+  m_EditorClassIdentifier: 
+  autoUpdate: 1
+  texture2D: {fileID: 2800000, guid: 6e38d14364116294c8c17e93c95b69f6, type: 2}
+  terrainMaterial: {fileID: 2100000, guid: 8960fa3df45003a45b117a60607f6236, type: 2}
+  waterMaterial: {fileID: 2100000, guid: 02eae94eb2f88ae439917c79e7db96f3, type: 2}
+  waterBaseColor: {r: 0.7830189, g: 0.2991723, b: 0.48029685, a: 1}
+  space: 1
+  baseDetailSeed: 0
+  fixedDetails: 0
+  baseDetailDensity: 0.5
+  baseDetailScale: 1
+  baseDetailNoiseScale: 50
+  detailOffset: {x: 0, y: 0}
+  gradient:
+    blendMode: 1
+    randomizeColor: 1
+    keys:
+    - biomeData: {fileID: 0}
+      color: {r: 1, g: 1, b: 1, a: 1}
+      time: 0.078947365
+    - biomeData: {fileID: 0}
+      color: {r: 0.30248073, g: 0.36862865, b: 0.37813872, a: 1}
+      time: 0.1513158
+    - biomeData: {fileID: 0}
+      color: {r: 0.5659602, g: 0.43354112, b: 0.59022933, a: 1}
+      time: 0.2680921
+    - biomeData: {fileID: 0}
+      color: {r: 0.9479413, g: 0.8753718, b: 0.6937317, a: 1}
+      time: 0.43914473
+    - biomeData: {fileID: 0}
+      color: {r: 0.78039134, g: 0.32232323, b: 0.33044222, a: 1}
+      time: 0.5575658
+    - biomeData: {fileID: 0}
+      color: {r: 0.41035885, g: 0.18214525, b: 0.18271865, a: 1}
+      time: 0.6447368
+    - biomeData: {fileID: 0}
+      color: {r: 0.56592053, g: 0.34028855, b: 0.6245933, a: 1}
+      time: 0.74013156
+    - biomeData: {fileID: 0}
+      color: {r: 0.09754361, g: 0.09871641, b: 0.1509434, a: 1}
+      time: 0.9259868

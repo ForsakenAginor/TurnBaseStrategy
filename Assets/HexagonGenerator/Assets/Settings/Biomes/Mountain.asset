@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1557bb42748dbe94996144c4a2829ffa, type: 3}
+  m_Name: Mountain
+  m_EditorClassIdentifier: 
+  biomeName: Mountain
+  biomeBaseColor: {r: 0.1981132, g: 0.15979886, b: 0.17529146, a: 1}
+  detailDensity: 0.24
+  biomeDetailScale: 1
+  biomeDetailNoiseScale: 1
+  details:
+  - randomizeRotation: 1
+    density: 0.154
+    detailScale: 1
+    variantOffset: 2
+    maxVariantCount: 4
+    detailPrefab: {fileID: 4243163745055163216, guid: 89093c18f4c00f74cbdc5279b49c5902,
+      type: 3}
+  - randomizeRotation: 1
+    density: 0.446
+    detailScale: 1
+    variantOffset: 1.5
+    maxVariantCount: 4
+    detailPrefab: {fileID: 6271115457056715062, guid: 78561c2010241314587e34f4c738e5e9,
+      type: 3}
+  - randomizeRotation: 1
+    density: 0.979
+    detailScale: 1
+    variantOffset: 1.5
+    maxVariantCount: 0
+    detailPrefab: {fileID: 1900397390738824163, guid: a2c4ce8b22cd4b14db8edfc534c48f14,
+      type: 3}

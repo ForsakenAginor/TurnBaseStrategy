@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1557bb42748dbe94996144c4a2829ffa, type: 3}
+  m_Name: IceSea
+  m_EditorClassIdentifier: 
+  autoUpdate: 1
+  biomeName: Sea
+  biomeBaseColor: {r: 0.6016376, g: 0.754717, b: 0.8784314, a: 1}
+  detailDensity: 0.32
+  biomeDetailScale: 1.24
+  biomeDetailNoiseScale: 1.9
+  details:
+  - randomizeRotation: 0
+    density: 0.396
+    detailScale: 0.869
+    variantOffset: 1.952
+    maxVariantCount: 0
+    detailPrefab: {fileID: 2404219639552082955, guid: 89605943366236848bc22d5fa46243db,
+      type: 3}
+  - randomizeRotation: 1
+    density: 0
+    detailScale: 0.863
+    variantOffset: 0.847
+    maxVariantCount: 0
+    detailPrefab: {fileID: 1568675060193968570, guid: 8093025c647a23d48ae9421bf8c2325e,
+      type: 3}
+  - randomizeRotation: 1
+    density: 0.888
+    detailScale: 0.441
+    variantOffset: 0
+    maxVariantCount: 0
+    detailPrefab: {fileID: 7753452232857657899, guid: 1d6a36c30825bb44faa6432f0d113d2f,
+      type: 3}

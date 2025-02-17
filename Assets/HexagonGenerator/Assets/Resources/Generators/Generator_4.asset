@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2c07693624584642b40216088002c90, type: 3}
+  m_Name: Generator_4
+  m_EditorClassIdentifier: 
+  generatorName: DryWorld
+  topografiaSettings: {fileID: 11400000, guid: 6bc91b958cd09f341b8b3319ccf894de, type: 2}
+  noiseSettings: {fileID: 11400000, guid: dc55d2e330468274b837fa70fe578f06, type: 2}
+  graphicsSettings: {fileID: 11400000, guid: f226f47bc1179f0458f44ab715ef2575, type: 2}
+  seed: 0
+  generateScripts: 1
+  generateTileColliders: 0
+  generateDetailColliders: 0
+  staticTiles: 1
+  staticDetails: 1
+  tileLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  detailLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  generatorFolderPath: Assets/POLYGEN - HexagonGenerator/Assets/Resources/Generators/Generator_4

@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d59980e31554d6b4e995d4e14ec2afd7, type: 3}
+  m_Name: Generator_4_graphicsSettings
+  m_EditorClassIdentifier: 
+  autoUpdate: 1
+  space: 1
+  texture2D: {fileID: 2800000, guid: ad37bea9a6ad8b34da8e77e89f94d9d4, type: 2}
+  terrainMaterial: {fileID: 2100000, guid: 37c3720f5c3e46a4bb6dcf00617989a6, type: 2}
+  waterMaterial: {fileID: 2100000, guid: 57e205d6ebfd341459c80b98fe4e0556, type: 2}
+  baseDetailSeed: 0
+  fixedDetails: 0
+  baseDetailDensity: 0.5
+  baseDetailScale: 1
+  baseDetailNoiseScale: 50
+  detailOffset: {x: 0, y: 0}
+  gradient:
+    blendMode: 0
+    randomizeColor: 1
+    keys:
+    - biomeData: {fileID: 11400000, guid: 4556aa9e1348c1b4d8ae78dbbaab8a2f, type: 2}
+      color: {r: 0.7735849, g: 0.573588, b: 0.3977394, a: 1}
+      time: 0.2462006
+    - biomeData: {fileID: 0}
+      color: {r: 1, g: 0.5836082, b: 0, a: 1}
+      time: 0.41641337
+    - biomeData: {fileID: 0}
+      color: {r: 0, g: 0, b: 0, a: 1}
+      time: 1
+  waterBaseColor: {r: 0.8490566, g: 0.6376658, b: 0.29236382, a: 1}
+  seaBiomeData: {fileID: 0}

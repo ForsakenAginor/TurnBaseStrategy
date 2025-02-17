@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1557bb42748dbe94996144c4a2829ffa, type: 3}
+  m_Name: Forest
+  m_EditorClassIdentifier: 
+  biomeName: Forest
+  biomeBaseColor: {r: 0.248309, g: 0.5660378, b: 0.25305125, a: 1}
+  detailDensity: 0.856
+  biomeDetailScale: 1
+  biomeDetailNoiseScale: 1
+  details:
+  - randomizeRotation: 1
+    density: 0.379
+    detailScale: 1
+    variantOffset: 1.28
+    maxVariantCount: 1
+    detailPrefab: {fileID: 424783300057600032, guid: a27d6dfb65e877c4b886284828227af9,
+      type: 3}
+  - randomizeRotation: 0
+    density: 0.579
+    detailScale: 1
+    variantOffset: 0.74
+    maxVariantCount: 3
+    detailPrefab: {fileID: 4639779762868685926, guid: c8bfd060ae57ba64b8168a63a6211227,
+      type: 3}
+  - randomizeRotation: 0
+    density: 0.697
+    detailScale: 1
+    variantOffset: 0.74
+    maxVariantCount: 10
+    detailPrefab: {fileID: 2544841569070045968, guid: b72c468b28f6a724fa4f6cfd497587ee,
+      type: 3}
