@@ -2,7 +2,7 @@
 
 public interface IUnitSpawner
 {
-    public event Action<Unit> UnitSpawned;
+    public event Action<Unit, string> UnitSpawned;
 }
 
 public interface IPlayerUnitSpawner

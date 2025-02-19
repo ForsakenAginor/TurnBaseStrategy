@@ -49,4 +49,9 @@ public class LevelConfiguration : UpdatableConfiguration<GameLevel, MapConfigura
     {
         return Content.First(o => o.Key == level).Value.CameraMin;
     }
+
+    public ICityUpgradesCostConfiguration GetCitiesUpgradeCost(GameLevel level)
+    {
+        return Content.First(o => o.Key == level).Value.CityUpgradesCostConfiguration;
+    }
 }

@@ -111,7 +111,7 @@ public class NewInputSorter : IControllable, IWaitAnimation
             var blockedCells = neighbours.Where(o => IsCellUnwalkable(o)).ToList();
             var friendlyCells = neighbours.Where(o => IsCellContainAlly(_selectedUnit, o)).ToList();
 
-            if (selectedUnit.UnitType == UnitType.Archer)
+            if (selectedUnit.UnitType == UnitType.Archer || selectedUnit.UnitType == UnitType.Wizard)
                 neighbours = _hexGrid.CashedFarNeighbours[position].Where(o => _hexGrid.IsValidGridPosition(o)).ToList();
 
             _possibleAttacks = neighbours.Where(o => IsCellContainEnemy(_selectedUnit, o)).ToList();

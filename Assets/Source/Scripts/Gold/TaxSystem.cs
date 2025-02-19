@@ -8,13 +8,13 @@ public class TaxSystem : IResetable, IIncome
     private readonly IUnitSpawner _citySpawner;
     private readonly IUnitSpawner _unitSpawner;
     private readonly Dictionary<Unit, int> _units = new();
-    private readonly Dictionary<Unit, int> _cities = new();
-    private readonly ICityEconomicInfoGetter _cityEconomicConfiguration;
+    private readonly Dictionary<Unit, KeyValuePair<string, int>> _cities = new();
+    private readonly ICityUpgradesCostConfiguration _cityEconomicConfiguration;
     private readonly IUnitCostGetter _unitConfiguration;
     private readonly Side _side;
 
     public TaxSystem(Resource wallet, IUnitSpawner citySpawner, IUnitSpawner unitSpawner,
-        ICityEconomicInfoGetter cityConfiguration, IUnitCostGetter unitConfiguration, Side side)
+        ICityUpgradesCostConfiguration cityConfiguration, IUnitCostGetter unitConfiguration, Side side)
     {
         _wallet = wallet != null ? wallet : throw new ArgumentNullException(nameof(wallet));
         _citySpawner = citySpawner != null ? citySpawner : throw new ArgumentNullException(nameof(citySpawner));
@@ -42,7 +42,7 @@ public class TaxSystem : IResetable, IIncome
     {
         //player logic
         foreach (var city in _cities.Keys)
-            _wallet.Add(_cities[city]);
+            _wallet.Add(_cities[city].Value);
 
         bool isBankrupt = false;
 
@@ -71,7 +71,7 @@ public class TaxSystem : IResetable, IIncome
         CalcIncome();
     }
 
-    private void OnUnitSpawned(Unit unit)
+    private void OnUnitSpawned(Unit unit, string _)
     {
         if (unit.Side != _side)
             return;
@@ -83,14 +83,14 @@ public class TaxSystem : IResetable, IIncome
         CalcIncome();
     }
 
-    private void OnCitySpawned(Unit unit)
+    private void OnCitySpawned(Unit unit, string name)
     {
         if (unit.Side != _side)
             return;
 
         unit.Destroyed += OnCityDestroyed;
         var city = unit as CityUnit;
-        _cities.Add(unit, _cityEconomicConfiguration.GetGoldIncome(city.CitySize));
+        _cities.Add(unit, new KeyValuePair<string, int>(name, _cityEconomicConfiguration.IncomeValue[city.Upgrades.Income]));
 
         CalcIncome();
     }
@@ -126,9 +126,9 @@ public class TaxSystem : IResetable, IIncome
 
         foreach (var city in _cities.Keys)
         {
-            income += _cities[city];
+            income += _cities[city].Value;
             var cityUnit = city as CityUnit;
-            incomeParts.Add(new KeyValuePair<string, int>(cityUnit.CitySize.ToString(), _cities[city]));
+            incomeParts.Add(new KeyValuePair<string, int>(_cities[city].Key, _cities[city].Value));
         }
 
         foreach (var unit in _units.Keys)
@@ -202,7 +202,7 @@ public class AITaxSystem : IResetable
         unit.Destroyed -= OnCityDestroyed;
     }
 
-    private void OnUnitSpawned(Unit unit)
+    private void OnUnitSpawned(Unit unit, string _)
     {
         if (unit.Side != _side)
             return;
@@ -212,7 +212,7 @@ public class AITaxSystem : IResetable
         _unitsAI.Add(walkableUnit);
     }
 
-    private void OnCitySpawned(Unit unit)
+    private void OnCitySpawned(Unit unit, string _)
     {
         if (unit.Side != _side)
             return;

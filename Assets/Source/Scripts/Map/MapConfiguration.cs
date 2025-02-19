@@ -19,6 +19,7 @@ public class MapConfiguration
     [SerializeField] private EnemySpawnerConfiguration _enemySpawnerConfiguration;
     [SerializeField] private EnemyWaveConfiguration _enemyWaveConfiguration;
     [SerializeField] private Vector2 _cameraMin = new (0, -2);
+    [SerializeField] private CityUpgradesCostConfiguration _cityUpgradesCostConfiguration;
 
     public int Width => _width;
 
@@ -49,4 +50,6 @@ public class MapConfiguration
     public EnemySpawnerConfiguration EnemySpawnerConfiguration => _enemySpawnerConfiguration;
 
     public EnemyWaveConfiguration EnemyWaveConfiguration => _enemyWaveConfiguration;
+
+    public ICityUpgradesCostConfiguration CityUpgradesCostConfiguration => _cityUpgradesCostConfiguration; 
 }

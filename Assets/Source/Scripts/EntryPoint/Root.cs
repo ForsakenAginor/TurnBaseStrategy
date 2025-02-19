@@ -100,9 +100,9 @@ public class Root : MonoBehaviour
         //******** Wallet ***********
         Resource wallet = isLoaded ? new Resource(loadedGame.Wallet, int.MaxValue) : new Resource(_startGold, int.MaxValue);
         TaxSystem taxSystem = new TaxSystem(wallet, _citySpawner, _unitSpawner,
-            _levelConfiguration.GetCityConfiguration(currentLevel), _levelConfiguration.GetUnitConfiguration(currentLevel), Side.Player);
+            _levelConfiguration.GetCitiesUpgradeCost(currentLevel), _levelConfiguration.GetUnitConfiguration(currentLevel), Side.Player);
         AITaxSystem aITaxSystem = new AITaxSystem(_citySpawner, _unitSpawner, Side.Enemy);
-        _cityShop.Init(_levelConfiguration.GetUnitConfiguration(currentLevel));
+        _cityShop.Init(_levelConfiguration.GetUnitConfiguration(currentLevel), _levelConfiguration.GetCitiesUpgradeCost(currentLevel));
         EconomyFacade economyFacade = new EconomyFacade(_walletView, _incomeView, _incomeCompositionView, _bakruptView, wallet, taxSystem);
         economyFacade.EnableControl();
 
@@ -112,7 +112,8 @@ public class Root : MonoBehaviour
         _unitSpawner.Init(unitManager, wallet, _levelConfiguration.GetUnitConfiguration(currentLevel), unitsGrid, _gridCreator.BlockedCells, AddAudioSourceToMixer);
         CitiesActionsManager cityManager = new CitiesActionsManager(inputSorter, unitsGrid);
         _citySpawner.Init(_levelConfiguration.GetCitiesNames(currentLevel),
-            cityManager, _unitSpawner, wallet, _levelConfiguration.GetCityConfiguration(currentLevel), unitsGrid, AddAudioSourceToMixer);
+            cityManager, _unitSpawner, wallet, _levelConfiguration.GetCityConfiguration(currentLevel), _levelConfiguration.GetCitiesUpgradeCost(currentLevel),
+            unitsGrid, AddAudioSourceToMixer);
         CityAtMapInitializer cityInitializer = new CityAtMapInitializer(currentLevel, _levelConfiguration, _citySpawner);
 
         //********* EnemyLogic ***************

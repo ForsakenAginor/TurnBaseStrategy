@@ -107,10 +107,10 @@ public class HotSitRoot : MonoBehaviour
         Resource wallet1 = isLoaded ? new Resource(loadedGame.Wallet, int.MaxValue) : new Resource(_startGold, int.MaxValue);
         Resource wallet2 = isLoaded ? new Resource(loadedGame.Wallet, int.MaxValue) : new Resource(_startGold, int.MaxValue);
         TaxSystem taxSystem1 = new TaxSystem(wallet1, _citySpawner, _unitSpawner,
-            _levelConfiguration.GetCityConfiguration(currentLevel), _levelConfiguration.GetUnitConfiguration(currentLevel), Side.Player);
+            _levelConfiguration.GetCitiesUpgradeCost(currentLevel), _levelConfiguration.GetUnitConfiguration(currentLevel), Side.Player);
         TaxSystem taxSystem2 = new TaxSystem(wallet2, _citySpawner, _unitSpawner,
-            _levelConfiguration.GetCityConfiguration(currentLevel), _levelConfiguration.GetUnitConfiguration(currentLevel), Side.Enemy);
-        _cityShop.Init(_levelConfiguration.GetUnitConfiguration(currentLevel));
+            _levelConfiguration.GetCitiesUpgradeCost(currentLevel), _levelConfiguration.GetUnitConfiguration(currentLevel), Side.Enemy);
+        _cityShop.Init(_levelConfiguration.GetUnitConfiguration(currentLevel), _levelConfiguration.GetCitiesUpgradeCost(currentLevel));
         EconomyFacade economyFacadeFirst = new EconomyFacade(_walletView, _incomeView, _incomeCompositionView, _bankruptView, wallet1, taxSystem1);
         EconomyFacade economyFacadeSecond = new EconomyFacade(_walletView, _incomeView, _incomeCompositionView, _bankruptView, wallet2, taxSystem2);
 
@@ -121,7 +121,8 @@ public class HotSitRoot : MonoBehaviour
         _unitSpawner.Init(unitManager, wallet1, _levelConfiguration.GetUnitConfiguration(currentLevel), unitsGrid, _gridCreator.BlockedCells, AddAudioSourceToMixer);
         CitiesActionsManager cityManager = new CitiesActionsManager(new List<NewInputSorter>() { player1InputSorter, player2InputSorter }, unitsGrid);
         _citySpawner.InitHotSit(_levelConfiguration.GetCitiesNames(currentLevel),
-            cityManager, _unitSpawner, wallet1, wallet2, _levelConfiguration.GetCityConfiguration(currentLevel), unitsGrid, AddAudioSourceToMixer);
+            cityManager, _unitSpawner, wallet1, wallet2, _levelConfiguration.GetCityConfiguration(currentLevel), _levelConfiguration.GetCitiesUpgradeCost(currentLevel),
+            unitsGrid, AddAudioSourceToMixer);
         CityAtMapInitializer cityInitializer = new CityAtMapInitializer(currentLevel, _levelConfiguration, _citySpawner);
 
         if (isLoaded)

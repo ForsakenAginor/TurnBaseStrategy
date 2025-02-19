@@ -1,12 +1,12 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!28 &-6354064263543437930
+--- !u!28 &-5118149242222187802
 Texture2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: z_ColorRampTexGradientTex{"mode":0,"colorKeys":[{"color":{"r":0.2401960790157318,"g":0.43927010893821719,"b":0.4901960790157318,"a":1.0},"time":0.0},{"color":{"r":1.0,"g":1.0,"b":1.0,"a":1.0},"time":1.0}],"alphaKeys":[{"alpha":1.0,"time":0.0},{"alpha":1.0,"time":1.0}]}
+  m_Name: z_ColorRampTexGradientTex{"mode":0,"colorKeys":[{"color":{"r":1.0,"g":0.40117257833480837,"b":0.0,"a":1.0},"time":0.0},{"color":{"r":1.0,"g":0.8475145697593689,"b":0.0,"a":1.0},"time":1.0}],"alphaKeys":[{"alpha":1.0,"time":0.0},{"alpha":1.0,"time":1.0}]}
   m_ImageContentsHash:
     serializedVersion: 2
     Hash: 00000000000000000000000000000000
@@ -40,7 +40,7 @@ Texture2D:
   m_ColorSpace: 0
   m_PlatformBlob: 
   image data: 256
-  _typelessdata: 3d707dff40727fff437581ff467783ff4a7985ff4d7b87ff507e89ff53808bff56828eff598490ff5c8792ff5f8994ff628b96ff658e98ff68909aff6b929cff6e949eff7297a0ff7599a2ff789ba4ff7b9da6ff7ea0a8ff81a2aaff84a4acff87a6afff8aa9b1ff8dabb3ff90adb5ff93b0b7ff96b2b9ff9ab4bbff9db6bdffa0b9bfffa3bbc1ffa6bdc3ffa9bfc5ffacc2c7ffafc4c9ffb2c6cbffb5c9cdffb8cbd0ffbbcdd2ffbecfd4ffc1d2d6ffc5d4d8ffc8d6daffcbd8dcffcedbdeffd1dde0ffd4dfe2ffd7e1e4ffdae4e6ffdde6e8ffe0e8eaffe3ebecffe6edeeffe9eff1ffedf1f3fff0f4f5fff3f6f7fff6f8f9fff9fafbfffcfdfdffffffffff
+  _typelessdata: ff6600ffff6800ffff6a00ffff6c00ffff6e00ffff6f00ffff7100ffff7300ffff7500ffff7700ffff7800ffff7a00ffff7c00ffff7e00ffff8000ffff8100ffff8300ffff8500ffff8700ffff8900ffff8a00ffff8c00ffff8e00ffff9000ffff9200ffff9300ffff9500ffff9700ffff9900ffff9b00ffff9c00ffff9e00ffffa000ffffa200ffffa400ffffa600ffffa700ffffa900ffffab00ffffad00ffffaf00ffffb000ffffb200ffffb400ffffb600ffffb800ffffb900ffffbb00ffffbd00ffffbf00ffffc100ffffc200ffffc400ffffc600ffffc800ffffca00ffffcb00ffffcd00ffffcf00ffffd100ffffd300ffffd500ffffd600ffffd800ff
   m_StreamData:
     serializedVersion: 2
     offset: 0
@@ -53,7 +53,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: 14_Base
+  m_Name: 14_Core 1
   m_Shader: {fileID: 4800000, guid: 6eb86e4931b506a408fd1477edec61ea, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -61,11 +61,9 @@ Material:
   - ADDITIVECONFIG_ON
   - COLORRAMPGRAD_ON
   - COLORRAMP_ON
-  - POLARUVDISTORT_ON
-  - POLARUV_ON
   - PREMULTIPLYCOLOR_ON
   - SHAPE1CONTRAST_ON
-  - SHAPE1DISTORT_ON
+  - SHAPE2CONTRAST_ON
   - SHAPE2_ON
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -83,7 +81,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ColorRampTexGradient:
-        m_Texture: {fileID: -6354064263543437930}
+        m_Texture: {fileID: -5118149242222187802}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DistNormalMap:
@@ -92,7 +90,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _DistortTex:
         m_Texture: {fileID: 2800000, guid: 48da24d771916524899d36e4bfe7f762, type: 3}
-        m_Scale: {x: 1, y: 1}
+        m_Scale: {x: 0.25, y: 0.25}
         m_Offset: {x: 0, y: 0}
     - _FadeBurnTex:
         m_Texture: {fileID: 0}
@@ -107,8 +105,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: fcb027caad6963b4a80539bbce0d10e9, type: 3}
-        m_Scale: {x: 1, y: 1}
+        m_Texture: {fileID: 2800000, guid: ef2d075270368e145ab4d78fbc5565bc, type: 3}
+        m_Scale: {x: 2, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskTex:
         m_Texture: {fileID: 2800000, guid: c644f12d7def3a543a6c3ec049bb87f9, type: 3}
@@ -123,7 +121,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Shape2Tex:
-        m_Texture: {fileID: 2800000, guid: 180c2751e46bf154aa1be4187f24096a, type: 3}
+        m_Texture: {fileID: 2800000, guid: d61bbffb09932ac49ad0346f284d95dc, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Shape3DistortTex:
@@ -135,7 +133,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ShapeDistortTex:
-        m_Texture: {fileID: 2800000, guid: e56d27cbfa142a04999ba84262ab1eb2, type: 3}
+        m_Texture: {fileID: 2800000, guid: 48da24d771916524899d36e4bfe7f762, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TrailWidthGradient:
@@ -171,9 +169,9 @@ Material:
     - _DepthGlowDist: 0.5
     - _DepthGlowGlobal: 1
     - _DepthGlowPow: 1
-    - _DistortAmount: 0.5
-    - _DistortTexXSpeed: 5
-    - _DistortTexYSpeed: 5
+    - _DistortAmount: 2.97
+    - _DistortTexXSpeed: -5
+    - _DistortTexYSpeed: -5
     - _DistortionBlend: 1
     - _DistortionPower: 5
     - _DistortionScrollXSpeed: 0
@@ -231,7 +229,7 @@ Material:
     - _ShakeUvY: 1
     - _Shape1MaskPow: 1
     - _Shape2AlphaWeight: 2
-    - _Shape2Brightness: 0
+    - _Shape2Brightness: -0.023
     - _Shape2ColorWeight: 2
     - _Shape2Contrast: 1
     - _Shape2DistortAmount: 0.5
@@ -253,16 +251,16 @@ Material:
     - _Shape3XSpeed: 0
     - _Shape3YSpeed: 0
     - _ShapeAlphaWeight: 1
-    - _ShapeBrightness: -0.429
+    - _ShapeBrightness: -0.421
     - _ShapeColorWeight: 1
     - _ShapeContrast: 1
-    - _ShapeDistortAmount: 0.3
+    - _ShapeDistortAmount: 0.5
     - _ShapeDistortXSpeed: 0.1
-    - _ShapeDistortYSpeed: 1
+    - _ShapeDistortYSpeed: 0.1
     - _ShapeRotationOffset: 0
     - _ShapeRotationSpeed: 0
     - _ShapeXSpeed: 0
-    - _ShapeYSpeed: 0.5
+    - _ShapeYSpeed: -0.5
     - _SoftFactor: 0.5
     - _SrcMode: 1
     - _TextureScrollXSpeed: 1
@@ -277,16 +275,16 @@ Material:
     - _VertOffsetPower: 1
     - _VertOffsetTexXSpeed: 0.1
     - _VertOffsetTexYSpeed: 0.1
-    - _WaveAmount: 25
+    - _WaveAmount: 7
     - _WaveSpeed: 10
-    - _WaveStrength: 25
+    - _WaveStrength: 7.5
     - _WaveX: 0
     - _WaveY: 0.5
     - _ZTestMode: 4
     - _ZWrite: 0
     - _ZoomAmount: 1.5
     m_Colors:
-    - _BackFaceTint: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _BackFaceTint: {r: 514.0079, g: 514.0079, b: 514.0079, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _ColorGradingDark: {r: 1, g: 1, b: 1, a: 1}
     - _ColorGradingLight: {r: 1, g: 1, b: 1, a: 1}

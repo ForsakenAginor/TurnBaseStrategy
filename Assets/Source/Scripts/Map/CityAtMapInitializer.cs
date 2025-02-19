@@ -21,10 +21,14 @@ public class CityAtMapInitializer
     {
         foreach (var city in cities)
         {
+            var data = city.Value;
+            CityUpgrades upgrades = new CityUpgrades(data.IsArchersUpgraded, data.IsSpearmenUpgraded, data.IsKnightsUpgraded, data.IsMagesUpgraded, data.Income);
+            //CityUpgrades upgrades = new CityUpgrades();
+
             if (unknownCities.Contains(city.Key))
-                _citySpawner.SpawnCity(city.Key, city.Value.Size, city.Value.Side, false, false, city.Value.Health);
+                _citySpawner.SpawnCity(city.Key, city.Value.Size, city.Value.Side, false, upgrades, false, city.Value.Health);
             else
-                _citySpawner.SpawnCity(city.Key, city.Value.Size, city.Value.Side, true, false, city.Value.Health);
+                _citySpawner.SpawnCity(city.Key, city.Value.Size, city.Value.Side, true, upgrades, false, city.Value.Health);
         }
     }
 

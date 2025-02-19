@@ -14,7 +14,7 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
     private Resource _walletFirstPlayer;
     private Resource _walletSecondPlayer;
 
-    public event Action<Unit> UnitSpawned;
+    public event Action<Unit, string> UnitSpawned;
     public event Action<UnitView> UnitViewSpawned;
 
     public Action<AudioSource> AudioSourceCallback;
@@ -96,7 +96,7 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
         var facade = Instantiate(prefab, _grid.GetCellWorldPosition(position), Quaternion.identity);
         facade.UnitView.Init(unit, AudioSourceCallback);
         _unitsManager.AddUnit(unit, facade);
-        UnitSpawned?.Invoke(unit);
+        UnitSpawned?.Invoke(unit, null);
 
         if (side == Side.Player)
             UnitViewSpawned?.Invoke(facade.UnitView);

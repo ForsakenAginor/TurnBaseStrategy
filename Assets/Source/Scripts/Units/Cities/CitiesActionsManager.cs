@@ -117,9 +117,12 @@ public class CitiesActionsManager : ICitiesGetter, ISavedCities
 
         if (isVisible)
             facade.UnitView.ShowTitle();
+
+        foreach (var input in _inputSorters)
+            input.Deselect();
     }
 
-    public void RemoveCity(CityUnit unit)
+    public CityUpgrades RemoveCity(CityUnit unit)
     {
         if (unit == null)
             throw new ArgumentNullException(nameof(unit));
@@ -127,8 +130,11 @@ public class CitiesActionsManager : ICitiesGetter, ISavedCities
         if (_cities.ContainsKey(unit) == false)
             throw new ArgumentException("City does not exist in dictionary");
 
+        CityUpgrades result = unit.Upgrades;
         OnUnitDied(unit);
         unit.DestroyCity();
+
+        return result;
     }
 
     private void OnCityCaptured(Unit unit)
