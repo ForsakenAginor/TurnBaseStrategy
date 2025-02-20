@@ -24,5 +24,5 @@ public class CityInfo
 
     public CityFacade EnemyPrefab => _enemyPrefab;
 
-    public CityFacade NeutralPrefab => _enemyPrefab;
+    public CityFacade NeutralPrefab => _neutralPrefab;
 }
