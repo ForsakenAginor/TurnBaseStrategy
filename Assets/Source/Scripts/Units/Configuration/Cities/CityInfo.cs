@@ -10,6 +10,7 @@ public class CityInfo
     [SerializeField] private int _upgradeCost;
     [SerializeField] private CityFacade _playerPrefab;
     [SerializeField] private CityFacade _enemyPrefab;
+    [SerializeField] private CityFacade _neutralPrefab;
 
     public int CounterAttack => _counterAttack;
 
@@ -22,4 +23,6 @@ public class CityInfo
     public CityFacade PlayerPrefab => _playerPrefab;
 
     public CityFacade EnemyPrefab => _enemyPrefab;
+
+    public CityFacade NeutralPrefab => _enemyPrefab;
 }

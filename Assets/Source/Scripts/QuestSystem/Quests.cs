@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Quests : MonoBehaviour
+public class Quests : MonoBehaviour, IControllable
 {
     [SerializeField] private QuestRecord _prefab;
     [SerializeField] private Transform _contentHolder;
@@ -15,20 +15,21 @@ public class Quests : MonoBehaviour
     private Dictionary<Vector2Int, string> _citiesNames;
     private bool _isInited;
     private List<QuestRecord> _quests = new List<QuestRecord>();
+    private Side _currentPlayer;
 
-    private void Awake()
+    public void EnableControl()
     {
-        _openButton.onClick.AddListener(FillQuestboard);    
+        _openButton.onClick.AddListener(FillQuestboard);
         _closeButton.onClick.AddListener(CleanQuestboard);
     }
 
-    private void OnDestroy()
+    public void DisableControl()
     {
         _openButton.onClick.RemoveListener(FillQuestboard);
         _closeButton.onClick.RemoveListener(CleanQuestboard);
     }
 
-    public void Init(ICitiesGetter citiesGetter, SerializedPair<Vector2Int, string>[] citiesNames)
+    public void Init(ICitiesGetter citiesGetter, SerializedPair<Vector2Int, string>[] citiesNames, Side player)
     {
         _citiesGetter = citiesGetter != null ? citiesGetter : throw new ArgumentNullException(nameof(citiesGetter));
 
@@ -37,6 +38,7 @@ public class Quests : MonoBehaviour
 
         _citiesNames = citiesNames.ToDictionary(key => key.Key, value => value.Value);
         _isInited = true;
+        _currentPlayer = player;
     }
 
     private void FillQuestboard()
@@ -50,7 +52,7 @@ public class Quests : MonoBehaviour
         {
             var record = Instantiate(_prefab, _contentHolder);
             _quests.Add(record);
-            bool isCompleted = cities[city] == Side.Player ? true : false;
+            bool isCompleted = cities[city] == _currentPlayer ? true : false;
             record.Init(_citiesNames[city], isCompleted);
         }
     }

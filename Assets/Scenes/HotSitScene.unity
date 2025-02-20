@@ -3958,7 +3958,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83aab8cede03d7742a2e67dcb2510beb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _levelConfiguration: {fileID: 11400000, guid: 2a62643fba9d1bc469c9a618808b6e78, type: 2}
+  _levelConfiguration: {fileID: 11400000, guid: ace2a70534b3c1645863f858f341ba50, type: 2}
   _gridColorConfiguration: {fileID: 11400000, guid: 93aa9c0e06490104ead3d1d722846c2d, type: 2}
   _gridCreator: {fileID: 994843276}
   _meshUpdater: {fileID: 994843272}
@@ -4006,6 +4006,7 @@ Transform:
   - {fileID: 1970488234}
   - {fileID: 1484917295}
   - {fileID: 1701537270}
+  - {fileID: 910303354}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &717580001
@@ -4091,14 +4092,13 @@ MonoBehaviour:
   _incomeView: {fileID: 1128542885}
   _incomeCompositionView: {fileID: 1201929325}
   _bankruptView: {fileID: 1128542886}
-  _enemyBrain: {fileID: 0}
   _camera: {fileID: 330585546}
   _leanSwipe: {fileID: 579213601}
   _pinchDetector: {fileID: 1755585574}
   _swipeInputReceiver: {fileID: 1484917296}
-  _dialogueView: {fileID: 0}
   _soundInitializer: {fileID: 2749841344956656380}
-  _quests: {fileID: 717580003}
+  _questsPlayer1: {fileID: 717580003}
+  _questsPlayer2: {fileID: 910303353}
   _dayView: {fileID: 1254421033}
   _saveSystemView: {fileID: 977130284}
   _tutorial: {fileID: 1970488235}
@@ -5612,6 +5612,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 876738277}
   m_CullTransparentMesh: 1
+--- !u!1 &910303352
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 910303354}
+  - component: {fileID: 910303353}
+  m_Layer: 0
+  m_Name: Quests
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &910303353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 910303352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 144a92ebedfa797459dec2663d90e55c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _prefab: {fileID: 4547039912868012999, guid: 68d5def1b133226469613913d5afdbdb, type: 3}
+  _contentHolder: {fileID: 1183011616}
+  _openButton: {fileID: 876738281}
+  _closeButton: {fileID: 2123829208}
+--- !u!4 &910303354
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 910303352}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 717580000}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &912296419
 GameObject:
   m_ObjectHideFlags: 0
@@ -12648,7 +12696,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbf51be86e70d7941bd40914206e4ddc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  translationName: CAPTURECITIES
+  translationName: CAPTURECITIES2
   FallbackText: ERROR
 --- !u!1 &2052519216
 GameObject:

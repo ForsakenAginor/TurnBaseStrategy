@@ -163,7 +163,8 @@ public class Root : MonoBehaviour
         else
             _unitSpawner.SpawnLoadedUnits(loadedGame.Units);
 
-        _quests.Init(cityManager, _levelConfiguration.GetCitiesNames(currentLevel));
+        _quests.Init(cityManager, _levelConfiguration.GetCitiesNames(currentLevel), Side.Player);
+        _quests.EnableControl();
         saveSystem.Init(fogOfWar, unitManager, cityManager, wallet, daySystem, currentLevel, scaner);
         _saveSystemView.Init(saveSystem);
 

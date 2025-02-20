@@ -169,7 +169,7 @@ public class NewInputSorter : IControllable, IWaitAnimation
         }
 
         // if enemy selected
-        if (unit != null && unit.Side == _enemySide)
+        if (unit != null && (unit.Side == _enemySide || unit.Side == Side.Neutral))
         {
             _selectedCell = position;
             _possibleWays = null;
@@ -249,7 +249,7 @@ public class NewInputSorter : IControllable, IWaitAnimation
     private bool IsCellContainEnemy(WalkableUnit unit, Vector2Int position)
     {
         var cell = _hexGrid.GetGridObject(position);
-        return unit.CanAttack && cell != null && cell.Side == _enemySide;
+        return unit.CanAttack && cell != null && (cell.Side == _enemySide || cell.Side == Side.Neutral);
     }
 
     private bool IsCellContainAlly(WalkableUnit unit, Vector2Int position)

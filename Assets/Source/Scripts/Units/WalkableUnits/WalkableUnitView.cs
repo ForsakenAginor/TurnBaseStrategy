@@ -77,7 +77,6 @@ public class WalkableUnitView : UnitView
                 break;
             default:
                 throw new Exception("Can't display remaining steps");
-                break;
         }
     }
 

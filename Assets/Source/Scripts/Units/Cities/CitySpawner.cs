@@ -128,8 +128,23 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
             throw new Exception("Can't create city: cell is not empty");
 
         var unit = _factory.Create(size, side, upgrades, mustCreateWithMaxHealth, health);
-        var facadePrefab = side == Side.Player ? _configuration.GetPlayerPrefab(size) : _configuration.GetEnemyPrefab(size);
+        CityFacade facadePrefab = null;
+
+        switch(side)
+        {
+            case Side.Player:
+                facadePrefab = _configuration.GetPlayerPrefab(size);
+                break;
+            case Side.Enemy:
+                facadePrefab = _configuration.GetEnemyPrefab(size);
+                break;
+            case Side.Neutral:
+                facadePrefab = _configuration.GetNeutralPrefab(size);
+                break;
+        }
+
         var facade = Instantiate(facadePrefab, _grid.GetCellWorldPosition(position), Quaternion.identity);
+
         ICityUpgrades upgrade = unit.Upgrades;
         
         facade.UnitView.Init(unit, AudioSourceCallback);

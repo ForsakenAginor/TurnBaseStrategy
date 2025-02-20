@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.HexGrid;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using UnityEngine;
 
@@ -74,6 +75,12 @@ public class CitiesActionsManager : ICitiesGetter, ISavedCities
         return _cities.Where(city => city.Key.Side == Side.Enemy).Select(city => _grid.GetXZ(city.Value.Position)).ToList();
     }
 
+    public IEnumerable<Vector2Int> GetNeutralities()
+    {
+        return _cities.Where(city => city.Key.Side == Side.Neutral).Select(city => _grid.GetXZ(city.Value.Position)).ToList();
+    }
+
+
     public IEnumerable<Vector2Int> GetPlayerCities()
     {
         return _cities.Where(city => city.Key.Side == Side.Player).Select(city => _grid.GetXZ(city.Value.Position)).ToList();
@@ -140,7 +147,24 @@ public class CitiesActionsManager : ICitiesGetter, ISavedCities
     private void OnCityCaptured(Unit unit)
     {
         unit.Captured -= OnCityCaptured;
-        Side side = unit.Side == Side.Player ? Side.Enemy : Side.Player;
+
+        Side side;
+
+        switch (unit.Side)
+        {
+            case Side.Player:
+                side = Side.Enemy;
+                break;
+            case Side.Enemy:
+                side = Side.Player;
+                break;
+            case Side.Neutral:
+                side = GetCurrentPlayerSide();
+                break;
+            default:
+                throw new Exception("Can't handle captured city side");
+        }
+
         Vector2Int position = _grid.GetXZ(_cities[unit as CityUnit].Position);
         RemoveCity(unit as CityUnit);
         CityCaptured?.Invoke(position, side);

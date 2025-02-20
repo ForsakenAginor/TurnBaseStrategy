@@ -47,4 +47,12 @@ public class CityAtMapInitializer
         foreach (var city in cities)
             _citySpawner.SpawnCity(city.Key, city.Value, Side.Enemy, false);
     }
+
+    public void SpawnNeutralCities()
+    {
+        var cities = _configuration.GetNeutralCities(_level);
+
+        foreach (var city in cities)
+            _citySpawner.SpawnCity(city.Key, city.Value, Side.Neutral, false);
+    }
 }

@@ -17,6 +17,9 @@ public class LevelConfiguration : UpdatableConfiguration<GameLevel, MapConfigura
     public SerializedPair<Vector2Int, CitySize>[] GetPlayerCities(GameLevel level) =>
         Content.First(o => o.Key == level).Value.PlayerCities;
 
+    public SerializedPair<Vector2Int, CitySize>[] GetNeutralCities(GameLevel level) =>
+        Content.First(o => o.Key == level).Value.NeutralCities;
+
     public SerializedPair<Vector2Int, string>[] GetCitiesNames(GameLevel level) =>
         Content.First(o => o.Key == level).Value.CitiesNames;
 

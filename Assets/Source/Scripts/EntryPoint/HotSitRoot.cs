@@ -3,6 +3,7 @@ using Assets.Scripts.HexGrid;
 using Assets.Scripts.Sound.AudioMixer;
 using Assets.Source.Scripts.GameLoop.StateMachine;
 using Lean.Touch;
+using Sirenix.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,21 +35,16 @@ public class HotSitRoot : MonoBehaviour
     [SerializeField] private IncomeCompositionView _incomeCompositionView;
     [SerializeField] private BunkruptView _bankruptView;
 
-    [Header("Enemy")]
-    [SerializeField] private EnemyBrain _enemyBrain;
-
     [Header("Camera")]
     [SerializeField] private Transform _camera;
     [SerializeField] private LeanFingerSwipe _leanSwipe;
     [SerializeField] private PinchDetector _pinchDetector;
     [SerializeField] private TouchInput _swipeInputReceiver;
 
-    [Header("Dialogue")]
-    [SerializeField] private DialogueView _dialogueView;
-
     [Header("Other")]
     [SerializeField] private SoundInitializer _soundInitializer;
-    [SerializeField] private Quests _quests;
+    [SerializeField] private Quests _questsPlayer1;
+    [SerializeField] private Quests _questsPlayer2;
     [SerializeField] private DayView _dayView;
     [SerializeField] private SaveSystemView _saveSystemView;
     [SerializeField] private Tutorial _tutorial;
@@ -134,10 +130,11 @@ public class HotSitRoot : MonoBehaviour
         {
             cityInitializer.SpawnPlayerCities();
             cityInitializer.SpawnEnemyCities();
+            cityInitializer.SpawnNeutralCities();
         }
 
-        CitySearcher scanerFirst = new CitySearcher(cityManager.GetEnemyCities(), unitsGrid, Side.Enemy);
-        CitySearcher scanerSecond = new CitySearcher(cityManager.GetPlayerCities(), unitsGrid, Side.Player);
+        CitySearcher scanerFirst = new CitySearcher(cityManager.GetEnemyCities().Union(cityManager.GetNeutralities()), unitsGrid, Side.Enemy);
+        CitySearcher scanerSecond = new CitySearcher(cityManager.GetPlayerCities().Union(cityManager.GetNeutralities()), unitsGrid, Side.Player);
 
         //******** FogOfWar *********
         FogOfWar fogOfWar = new(_gridCreator.Clouds, unitsGrid, scanerFirst, new List<Side>(){Side.Enemy });
@@ -175,7 +172,11 @@ public class HotSitRoot : MonoBehaviour
 
         //********* Other ************************
         TextureAtlasReader atlas = _meshUpdater.GetComponent<TextureAtlasReader>();
-        _quests.Init(cityManager, _levelConfiguration.GetCitiesNames(currentLevel));
+        _questsPlayer1.Init(cityManager, _levelConfiguration.GetCitiesNames(currentLevel), Side.Player);
+        _questsPlayer2.Init(cityManager, _levelConfiguration.GetCitiesNames(currentLevel), Side.Enemy);
+        controllables1.Add(_questsPlayer1);
+        controllables2.Add(_questsPlayer2);
+        _questsPlayer1.EnableControl();
         //saveSystem.Init(fogOfWar, unitManager, cityManager, wallet1, daySystem, currentLevel, scaner);
         //_saveSystemView.Init(saveSystem);
 

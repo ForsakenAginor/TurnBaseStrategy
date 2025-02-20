@@ -14,6 +14,11 @@ public class CitiesConfiguration : UpdatableConfiguration<CitySize, CityInfo>, I
         return Content.First(o => o.Key == size).Value.EnemyPrefab;
     }
 
+    public CityFacade GetNeutralPrefab(CitySize size)
+    {
+        return Content.First(o => o.Key == size).Value.NeutralPrefab;
+    }
+
     public (int counterAttack, int health) GetCityBattleInfo(CitySize size)
     {
         var value = Content.First(o => o.Key == size).Value;
