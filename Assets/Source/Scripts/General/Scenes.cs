@@ -5,5 +5,6 @@ namespace Assets.Scripts.General
         MenuScene,
         GameScene,
         HotSitScene,
+        PhotonScene,
     }
 }

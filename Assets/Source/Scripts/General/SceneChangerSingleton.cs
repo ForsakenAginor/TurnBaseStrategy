@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using DG.Tweening;
+using Photon.Pun;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -38,6 +39,14 @@ namespace Assets.Scripts.General
                 throw new ArgumentNullException(nameof(sceneName));
 
             _blackScreenImage.DOFade(1f, _animationDuration).OnComplete(() => StartCoroutine(LoadAsyncScene(sceneName)));
+        }
+
+        public void LoadSceneInMuliplayer(string sceneName)
+        {
+            if (string.IsNullOrEmpty(sceneName))
+                throw new ArgumentNullException(nameof(sceneName));
+
+            _blackScreenImage.DOFade(1f, _animationDuration).OnComplete(() => PhotonNetwork.LoadLevel(sceneName));
         }
 
         public void FadeOut()
