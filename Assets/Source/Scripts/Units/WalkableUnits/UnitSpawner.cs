@@ -13,11 +13,19 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
     private HexGridXZ<IHexOnScene> _landGrid;
     private Resource _walletFirstPlayer;
     private Resource _walletSecondPlayer;
+    private PhotonEventReceiver _photonEventReceiver;
 
     public event Action<Unit, string> UnitSpawned;
     public event Action<UnitView> UnitViewSpawned;
+    public event Action<Vector2Int, UnitType, Side> UnitHired; 
 
     public Action<AudioSource> AudioSourceCallback;
+
+    private void OnDestroy()
+    {
+        if(_photonEventReceiver != null)
+            _photonEventReceiver.UnitHiring -= UnitHired;
+    }
 
     public void Init(UnitsActionsManager manager, Resource wallet,
         UnitsConfiguration configuration, HexGridXZ<Unit> grid, HexGridXZ<IHexOnScene> landGrid, Action<AudioSource> callback)
@@ -42,6 +50,22 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
         _landGrid = landGrid != null ? landGrid : throw new ArgumentNullException(nameof(landGrid));
         AudioSourceCallback = callback != null ? callback : throw new ArgumentNullException(nameof(callback));
         _factory = new UnitFactory(configuration);
+    }
+
+    public void InitPUN(UnitsActionsManager manager, Resource walletFirstPlayer, Resource walletSecondPlayer,
+    UnitsConfiguration configuration, HexGridXZ<Unit> grid, HexGridXZ<IHexOnScene> landGrid, Action<AudioSource> callback, PhotonEventReceiver photonEventReceiver)
+    {
+        _unitsManager = manager != null ? manager : throw new ArgumentNullException(nameof(manager));
+        _walletFirstPlayer = walletFirstPlayer != null ? walletFirstPlayer : throw new ArgumentNullException(nameof(walletFirstPlayer));
+        _walletSecondPlayer = walletSecondPlayer != null ? walletSecondPlayer : throw new ArgumentNullException(nameof(walletSecondPlayer));
+        _configuration = configuration != null ? configuration : throw new ArgumentNullException(nameof(configuration));
+        _grid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
+        _landGrid = landGrid != null ? landGrid : throw new ArgumentNullException(nameof(landGrid));
+        AudioSourceCallback = callback != null ? callback : throw new ArgumentNullException(nameof(callback));
+        _factory = new UnitFactory(configuration);
+        _photonEventReceiver = photonEventReceiver != null ? photonEventReceiver : throw new ArgumentNullException(nameof(photonEventReceiver));
+
+        _photonEventReceiver.UnitHiring += UnitHired;
     }
 
     public bool TrySpawnUnit(Vector2Int cityPosition, UnitType type, Side side)
@@ -77,6 +101,7 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
             }
         }
 
+        UnitHired?.Invoke(cityPosition, type, side);
         CreateUnit(type, side, neighbours[0]);
 
         return true;

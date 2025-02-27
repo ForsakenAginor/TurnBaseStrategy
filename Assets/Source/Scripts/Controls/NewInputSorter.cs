@@ -41,7 +41,9 @@ public class NewInputSorter : IControllable, IWaitAnimation
 
     public event Action<Vector2Int, IEnumerable<IEnumerable<Vector2Int>>, IEnumerable<Vector2Int>, IEnumerable<Vector2Int>, IEnumerable<Vector2Int>> MovableUnitSelected;
     public event Action<WalkableUnit, Vector3, Unit, Action> UnitIsAttacking;
+    public event Action<Vector2Int, Vector3, Vector2Int> UnitIsAttackingPUN;
     public event Action<WalkableUnit, IEnumerable<Vector2Int>, Action> UnitIsMoving;
+    public event Action<Vector2Int, IEnumerable<Vector2Int>> UnitIsMovingPUN;
     public event Action<Vector2Int> FriendlyCitySelected;
     public event Action<Vector2Int> EnemySelected;
     public event Action BecomeInactive;
@@ -145,6 +147,7 @@ public class NewInputSorter : IControllable, IWaitAnimation
                     AnimationComplete?.Invoke();
                     OnCellClicked(worldPosition, position);
                 });
+            UnitIsMovingPUN?.Invoke(_selectedCell, path);
             return;
         }
 
@@ -165,6 +168,7 @@ public class NewInputSorter : IControllable, IWaitAnimation
                     AnimationComplete?.Invoke();
                     OnCellClicked(worldPosition, position);
                 });
+            UnitIsAttackingPUN?.Invoke(_selectedCell, worldPosition, position);
             return;
         }
 

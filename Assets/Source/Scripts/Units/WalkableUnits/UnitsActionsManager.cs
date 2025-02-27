@@ -9,7 +9,7 @@ public class UnitsActionsManager : IEnemyUnitOversight, ISavedUnits
     private readonly Dictionary<Unit, IUnitFacade> _units = new Dictionary<Unit, IUnitFacade>();
     private readonly IEnumerable<NewInputSorter> _inputSorters;
     private readonly HexGridXZ<Unit> _grid;
-    private readonly EnemyBrain _enemyBrain;
+    private readonly IUnitActionController _enemyBrain;
     private readonly Dictionary<Side, HexGridXZ<ICloud>> _fogOfWar;
     private readonly bool _isHotSitMode;
 
@@ -23,7 +23,7 @@ public class UnitsActionsManager : IEnemyUnitOversight, ISavedUnits
     /// <param name="enemyBrain"></param>
     /// <param name="cloudGrid"></param>
     /// <exception cref="ArgumentNullException"></exception>
-    public UnitsActionsManager(NewInputSorter inputSorter, HexGridXZ<Unit> grid, EnemyBrain enemyBrain, Dictionary<Side, HexGridXZ<ICloud>> cloudGrid)
+    public UnitsActionsManager(NewInputSorter inputSorter, HexGridXZ<Unit> grid, IUnitActionController enemyBrain, Dictionary<Side, HexGridXZ<ICloud>> cloudGrid)
     {
         _inputSorters = inputSorter != null ? new List<NewInputSorter>() { inputSorter } : throw new ArgumentNullException(nameof(inputSorter));
         _grid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));

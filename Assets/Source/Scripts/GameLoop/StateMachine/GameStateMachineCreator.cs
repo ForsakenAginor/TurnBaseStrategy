@@ -65,6 +65,59 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine
             return new GameStateMachine(playerTurn);
         }
 
+        public GameStateMachine CreateMultiplayer(PhotonEventReceiver photonEventReceiver, IEnumerable<IResetable> resetables, IEnumerable<IControllable> controllables,
+            IWaitAnimation waitAnimation, GameLevel level, bool isFirstPlayer)
+        {
+            if (waitAnimation == null)
+                throw new System.ArgumentNullException(nameof(waitAnimation));
+
+            if (resetables == null)
+                throw new System.ArgumentNullException(nameof(resetables));
+
+            if (controllables == null)
+                throw new System.ArgumentNullException(nameof(controllables));
+
+            if(photonEventReceiver == null)
+                throw new System.ArgumentNullException(nameof(photonEventReceiver));
+
+            //transitions
+            ToRemotePlayerTurnTransition toEnemyTurnTransition = new ToRemotePlayerTurnTransition();
+            ToLoseTransition toLoseTransition = new ToLoseTransition();
+            ToWinTransition toWinTransition = new ToWinTransition();
+            ToPlayerTurnTransition toPlayerTurnTransition = new ToPlayerTurnTransition();
+
+            //states
+            PlayerTurn playerTurn = new PlayerTurn(waitAnimation,
+                _nextTurnButton,
+                _winLoseMonitor,
+                resetables,
+                controllables,
+                new Transition[]
+                {
+                toEnemyTurnTransition,toLoseTransition,toWinTransition
+                });
+
+            RemotePlayerTurn enemyTurn = new RemotePlayerTurn(
+                photonEventReceiver,
+                _winLoseMonitor,
+                new Transition[]
+                {
+                toPlayerTurnTransition, toLoseTransition, toWinTransition
+                });
+
+            PlayerWon playerWon = new PlayerWon(_winScreen, _finishScreen, level);
+            PlayerLose playerLose = new PlayerLose(_loseScreen);
+
+            //transitions initialize
+            toPlayerTurnTransition.SetTargetState(playerTurn);
+            toEnemyTurnTransition.SetTargetState(enemyTurn);
+            toLoseTransition.SetTargetState(playerLose);
+            toWinTransition.SetTargetState(playerWon);
+
+            //create State machine
+            return isFirstPlayer ? new GameStateMachine(playerTurn) : new GameStateMachine(enemyTurn);
+        }
+
         public GameStateMachine CreateHotSit(IEnumerable<IResetable> resetables,
             IEnumerable<IControllable> controllables1, IWaitAnimation waitAnimation1,
             IEnumerable<IControllable> controllables2, IWaitAnimation waitAnimation2,

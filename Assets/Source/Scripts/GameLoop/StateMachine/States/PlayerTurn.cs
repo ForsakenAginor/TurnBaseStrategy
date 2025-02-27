@@ -157,6 +157,56 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
         }
     }
 
+    public class RemotePlayerTurn : State
+    {
+        private readonly IWinLoseEventThrower _winLoseMonitor;
+        private readonly PhotonEventReceiver _photonEventReceiver;
+
+        public RemotePlayerTurn(PhotonEventReceiver photonEventReceiver, IWinLoseEventThrower winLoseMonitor, Transition[] transitions) : base(transitions)
+        {
+            _winLoseMonitor = winLoseMonitor != null ?
+                winLoseMonitor :
+                throw new ArgumentNullException(nameof(winLoseMonitor));
+
+            _photonEventReceiver = photonEventReceiver != null ? 
+                photonEventReceiver :
+                throw new ArgumentNullException(nameof(photonEventReceiver));
+
+            _photonEventReceiver.TurnSkiping += OnTurnEnded;
+            _winLoseMonitor.PlayerLost += OnPlayerLost;
+            _winLoseMonitor.PlayerWon += OnPlayerWon;
+        }
+
+        ~RemotePlayerTurn()
+        {
+            _photonEventReceiver.TurnSkiping -= OnTurnEnded;
+            _winLoseMonitor.PlayerLost -= OnPlayerLost;
+            _winLoseMonitor.PlayerWon -= OnPlayerWon;
+        }
+
+        public override void DoThing()
+        {
+        }
+
+        private void OnPlayerWon()
+        {
+            Transitions.First(o => o is ToWinTransition).SetIsReady(true);
+            CallBecomeReadyToTransitEvent();
+        }
+
+        private void OnPlayerLost()
+        {
+            Transitions.First(o => o is ToLoseTransition).SetIsReady(true);
+            CallBecomeReadyToTransitEvent();
+        }
+
+        private void OnTurnEnded()
+        {
+            Transitions.First(o => o is ToPlayerTurnTransition).SetIsReady(true);
+            CallBecomeReadyToTransitEvent();
+        }
+    }
+
     public class PlayerWon : State
     {
         private readonly ISwitchableElement _winScreen;

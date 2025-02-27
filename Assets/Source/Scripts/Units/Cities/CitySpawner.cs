@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class CitySpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
 {
@@ -55,15 +56,20 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
     private Resource _secondWallet;
     private Dictionary<Vector2Int, string> _citiesNames = new();
     private bool _isHotsit;
+    private PhotonEventReceiver _photonEventReceiver;
 
     public event Action<Unit, string> UnitSpawned;
     public event Action<UnitView> UnitViewSpawned;
+    public event Action<Upgrades, Vector3> CityUpgraded;
 
     public Action<AudioSource> AudioSourceCallback;
 
     private void OnDestroy()
     {
         _unitsManager.CityCaptured -= OnCityCaptured;
+
+        if(_photonEventReceiver != null)
+            _photonEventReceiver.CityUpgrading -= OnPUNEventCityUpgrading;
     }
 
     public void Init(SerializedPair<Vector2Int, string>[] citiesNames, CitiesActionsManager manager, UnitSpawner unitSpawner, Resource wallet,
@@ -121,6 +127,38 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
         _isHotsit = true;
     }
 
+    public void InitPUN(SerializedPair<Vector2Int, string>[] citiesNames, CitiesActionsManager manager, UnitSpawner unitSpawner,
+    Resource firstWallet, Resource secondWallet,
+    CitiesConfiguration configuration, ICityUpgradesCostConfiguration economyConfiguration,
+    HexGridXZ<Unit> grid, Action<AudioSource> callback, PhotonEventReceiver photonEventReceiver)
+    {
+        _unitsManager = manager != null ? manager : throw new ArgumentNullException(nameof(manager));
+        _unitSpawner = unitSpawner != null ? unitSpawner : throw new ArgumentNullException(nameof(unitSpawner));
+        _firstWallet = firstWallet != null ? firstWallet : throw new ArgumentNullException(nameof(firstWallet));
+        _secondWallet = secondWallet != null ? secondWallet : throw new ArgumentNullException(nameof(secondWallet));
+        _configuration = configuration != null ? configuration : throw new ArgumentNullException(nameof(configuration));
+        _economyConfiguration = economyConfiguration != null ? economyConfiguration : throw new ArgumentNullException(nameof(economyConfiguration));
+        _grid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
+        AudioSourceCallback = callback != null ? callback : throw new ArgumentNullException(nameof(callback));
+        _factory = new CitiesFactory(configuration);
+        _photonEventReceiver = photonEventReceiver != null ? photonEventReceiver : throw new ArgumentNullException(nameof(photonEventReceiver));
+
+        if (citiesNames != null)
+        {
+            foreach (var item in citiesNames)
+                _citiesNames.Add(item.Key, item.Value);
+        }
+        else
+        {
+            throw new ArgumentNullException(nameof(citiesNames));
+        }
+
+        _unitsManager.CityCaptured += OnCityCaptured;
+        _photonEventReceiver.CityUpgrading += OnPUNEventCityUpgrading;
+        _isHotsit = true;
+    }
+
+
     public void SpawnCity(Vector2Int position, CitySize size, Side side, bool isVisible, CityUpgrades upgrades = null,
         bool mustCreateWithMaxHealth = true, int health = int.MinValue)
     {
@@ -164,6 +202,11 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
 
         if (side == Side.Player)
             UnitViewSpawned?.Invoke(facade.UnitView);
+    }
+
+    private void OnPUNEventCityUpgrading(Upgrades upgrades, Vector3 vector) 
+    {
+        TryUpgradeCity(upgrades, vector);
     }
 
     private void OnCityCaptured(Vector2Int cell, Side side)
@@ -228,6 +271,9 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
                 if (_firstWallet.TrySpent(cost) == false)
                     return false;
         }
+
+        //эвент вызывающий TryUpgradeCity(Upgrades upgradeType, Vector3 position) у второго клиента
+        CityUpgraded?.Invoke(upgradeType, position);
 
         if (upgradeType == Upgrades.Fortifications)
         {

@@ -27,7 +27,7 @@ public class CameraMover : IControllable
 
     public CameraMover(Transform camera, IZoomInputReceiver pinchDetector,
         GameLevel level, ICameraConfigurationGetter configuration, HexGridXZ<CellSprite> grid, ICitySearcher enemyScaner,
-        IEnemyUnitOversight enemyOversight, ITouchInputReceiver inputReceiver, ICameraFocusGetter raycaster)
+        IEnemyUnitOversight enemyOversight, ITouchInputReceiver inputReceiver, ICameraFocusGetter raycaster, bool isFirstPlayer = true)
     {
         _camera = camera != null ? camera : throw new ArgumentNullException(nameof(camera));
         _pinchDetector = pinchDetector != null ? pinchDetector : throw new ArgumentNullException(nameof(pinchDetector));
@@ -43,7 +43,7 @@ public class CameraMover : IControllable
         _cameraMin = new Vector3(configuration.GetMinimumCameraPosition(level).x, 0, configuration.GetMinimumCameraPosition(level).y);
         _cameraMax = new Vector3(configuration.GetMaximumCameraPosition(level).x, 0, configuration.GetMaximumCameraPosition(level).y);
 
-        var startedCell = configuration.GetCameraStartPosition(level);
+        var startedCell = isFirstPlayer ? configuration.GetCameraStartPosition(level) : configuration.GetCameraStartPositionSecondPlayer(level);
         FocusCameraOnCell(startedCell);
         Subscribe();
     }
@@ -58,8 +58,7 @@ public class CameraMover : IControllable
         Vector2Int currentPosition = _grid.GetXZ(_raycaster.GetCameraFocus());
 
         if (currentPosition != _savedPosition)
-            FocusCameraOnCell(_savedPosition);
-            
+            FocusCameraOnCell(_savedPosition);            
     }
 
     public void DisableControl()

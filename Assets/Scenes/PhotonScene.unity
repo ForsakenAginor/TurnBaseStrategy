@@ -3936,6 +3936,7 @@ GameObject:
   - component: {fileID: 717580000}
   - component: {fileID: 717579999}
   - component: {fileID: 717580004}
+  - component: {fileID: 717580005}
   - component: {fileID: 717580001}
   - component: {fileID: 717580002}
   - component: {fileID: 717580003}
@@ -4071,7 +4072,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 717579998}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 83c848a0f3e4652439ab32e1d3775c22, type: 3}
   m_Name: 
@@ -4103,6 +4104,46 @@ MonoBehaviour:
   _saveSystemView: {fileID: 977130284}
   _tutorial: {fileID: 1970488235}
   _enemyActivityMonitorView: {fileID: 1701537269}
+--- !u!114 &717580005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 717579998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e10dfa323e91a541903b6e2ee749ecf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _levelConfiguration: {fileID: 11400000, guid: ace2a70534b3c1645863f858f341ba50, type: 2}
+  _gridColorConfiguration: {fileID: 11400000, guid: 93aa9c0e06490104ead3d1d722846c2d, type: 2}
+  _gridCreator: {fileID: 994843276}
+  _meshUpdater: {fileID: 994843272}
+  _gridRaycaster: {fileID: 994843278}
+  _cellSelector: {fileID: 994843279}
+  _gameStateMachineCreator: {fileID: 1254421031}
+  _winLoseMonitor: {fileID: 1254421032}
+  _unitSpawner: {fileID: 840627873}
+  _citySpawner: {fileID: 840627874}
+  _startGold: 20
+  _walletView: {fileID: 1128542883}
+  _cityShop: {fileID: 717580002}
+  _incomeView: {fileID: 1128542885}
+  _incomeCompositionView: {fileID: 1201929325}
+  _bankruptView: {fileID: 1128542886}
+  _camera: {fileID: 330585546}
+  _leanSwipe: {fileID: 579213601}
+  _pinchDetector: {fileID: 1755585574}
+  _swipeInputReceiver: {fileID: 1484917296}
+  _soundInitializer: {fileID: 2749841344956656380}
+  _questsPlayer1: {fileID: 717580003}
+  _questsPlayer2: {fileID: 910303353}
+  _dayView: {fileID: 1254421033}
+  _saveSystemView: {fileID: 977130284}
+  _tutorial: {fileID: 1970488235}
+  _enemyActivityMonitorView: {fileID: 1701537269}
+  _nextTurnButton: {fileID: 6017171674611637207}
 --- !u!1 &717898072
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,13 +3,14 @@ using Assets.Scripts.HexGrid;
 using Assets.Scripts.Sound.AudioMixer;
 using Assets.Source.Scripts.GameLoop.StateMachine;
 using Lean.Touch;
-using Sirenix.Utilities;
+using Photon.Pun;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class HotSitRoot : MonoBehaviour
+public class PUNRoot : MonoBehaviour
 {
     [Header("Configurations")]
     [SerializeField] private LevelConfiguration _levelConfiguration;
@@ -49,9 +50,12 @@ public class HotSitRoot : MonoBehaviour
     [SerializeField] private SaveSystemView _saveSystemView;
     [SerializeField] private Tutorial _tutorial;
     [SerializeField] private EnemyActivityMonitorView _enemyActivityMonitorView;
+    [SerializeField] private Button _nextTurnButton;
 
     private void Start()
     {
+        bool isFirstPlayer = PhotonNetwork.IsMasterClient;
+
         //******** Load Data ***********
         GameLevel currentLevel;
         SaveLevelSystem saveLevelSystem = new SaveLevelSystem();
@@ -86,18 +90,23 @@ public class HotSitRoot : MonoBehaviour
             _soundInitializer.AddMusicSourceWithoutVolumeChanging(MusicSingleton.Instance.Music);
 
         //******** Init grid ***********
-        _gridCreator.InitHotSit(currentLevel, _levelConfiguration);
+        _gridCreator.Init(currentLevel, _levelConfiguration);
         _meshUpdater.Init(_gridCreator.HexGrid);
         _cellSelector.Init(_gridCreator.HexGrid, _gridRaycaster);
         var unitsGrid = _gridCreator.UnitsGrid;
-        NewInputSorter player1InputSorter = new NewInputSorter(unitsGrid, _cellSelector, _gridCreator.BlockedCells, _gridCreator.PathFinder, Side.Player, Side.Enemy);
-        NewInputSorter player2InputSorter = new NewInputSorter(unitsGrid, _cellSelector, _gridCreator.BlockedCells, _gridCreator.PathFinder, Side.Enemy, Side.Player);
-        CellHighlighter _cellHighlighterFirst = new(player1InputSorter, _gridCreator.HexGrid, _gridColorConfiguration);
-        CellHighlighter _cellHighlighterSecond = new(player2InputSorter, _gridCreator.HexGrid, _gridColorConfiguration);
+        NewInputSorter inputSorter;
+
+        if (isFirstPlayer)
+            inputSorter = new NewInputSorter(unitsGrid, _cellSelector, _gridCreator.BlockedCells, _gridCreator.PathFinder, Side.Player, Side.Enemy);
+        else
+            inputSorter = new NewInputSorter(unitsGrid, _cellSelector, _gridCreator.BlockedCells, _gridCreator.PathFinder, Side.Enemy, Side.Player);
+
+        CellHighlighter _cellHighlighterFirst = new(inputSorter, _gridCreator.HexGrid, _gridColorConfiguration);
         _ = new HexContentSwitcher(unitsGrid, _gridCreator.BlockedCells);
 
-        //******** Tutorial ***********
-        _tutorial.Init(_citySpawner, player1InputSorter, _unitSpawner);
+        //******** Network ***********
+        PhotonEventReceiver photonReceiver = new PhotonEventReceiver(unitsGrid);
+        PhotonEventSender photonSender = new PhotonEventSender(inputSorter, _citySpawner, _unitSpawner, _nextTurnButton);
 
         //******** Wallet ***********
         Resource wallet1 = isLoaded ? new Resource(loadedGame.Wallet, int.MaxValue) : new Resource(_startGold, int.MaxValue);
@@ -108,17 +117,17 @@ public class HotSitRoot : MonoBehaviour
             _levelConfiguration.GetCitiesUpgradeCost(currentLevel), _levelConfiguration.GetUnitConfiguration(currentLevel), Side.Enemy);
         _cityShop.Init(_levelConfiguration.GetUnitConfiguration(currentLevel), _levelConfiguration.GetCitiesUpgradeCost(currentLevel));
         EconomyFacade economyFacadeFirst = new EconomyFacade(_walletView, _incomeView, _incomeCompositionView, _bankruptView, wallet1, taxSystem1);
-        EconomyFacade economyFacadeSecond = new EconomyFacade(_walletView, _incomeView, _incomeCompositionView, _bankruptView, wallet2, taxSystem2);
+        //EconomyFacade economyFacadeSecond = new EconomyFacade(_walletView, _incomeView, _incomeCompositionView, _bankruptView, wallet2, taxSystem2);
 
         //********  Unit creation  ***********
-        UnitsActionsManager unitManager = new UnitsActionsManager(new List<NewInputSorter>() { player1InputSorter, player2InputSorter },
-            unitsGrid,
-            new Dictionary<Side, HexGridXZ<ICloud>>() { { Side.Player, _gridCreator.OtherPlayerClouds }, { Side.Enemy, _gridCreator.Clouds } });
-        _unitSpawner.Init(unitManager, wallet1, _levelConfiguration.GetUnitConfiguration(currentLevel), unitsGrid, _gridCreator.BlockedCells, AddAudioSourceToMixer);
-        CitiesActionsManager cityManager = new CitiesActionsManager(new List<NewInputSorter>() { player1InputSorter, player2InputSorter }, unitsGrid);
-        _citySpawner.InitHotSit(_levelConfiguration.GetCitiesNames(currentLevel),
+        UnitsActionsManager unitManager = new UnitsActionsManager(inputSorter, unitsGrid, photonReceiver,
+            new Dictionary<Side, HexGridXZ<ICloud>>() { { Side.Player, _gridCreator.Clouds } });
+        _unitSpawner.InitPUN(unitManager, wallet1, wallet2, _levelConfiguration.GetUnitConfiguration(currentLevel),
+            unitsGrid, _gridCreator.BlockedCells, AddAudioSourceToMixer, photonReceiver);
+        CitiesActionsManager cityManager = new CitiesActionsManager(inputSorter, unitsGrid);
+        _citySpawner.InitPUN(_levelConfiguration.GetCitiesNames(currentLevel),
             cityManager, _unitSpawner, wallet1, wallet2, _levelConfiguration.GetCityConfiguration(currentLevel), _levelConfiguration.GetCitiesUpgradeCost(currentLevel),
-            unitsGrid, AddAudioSourceToMixer);
+            unitsGrid, AddAudioSourceToMixer, photonReceiver);
         CityAtMapInitializer cityInitializer = new CityAtMapInitializer(currentLevel, _levelConfiguration, _citySpawner);
 
         if (isLoaded)
@@ -133,24 +142,28 @@ public class HotSitRoot : MonoBehaviour
             cityInitializer.SpawnNeutralCities();
         }
 
-        CitySearcher scanerFirst = new CitySearcher(cityManager.GetEnemyCities().Union(cityManager.GetNeutralities()), unitsGrid, Side.Enemy);
-        CitySearcher scanerSecond = new CitySearcher(cityManager.GetPlayerCities().Union(cityManager.GetNeutralities()), unitsGrid, Side.Player);
-
         //******** FogOfWar *********
-        FogOfWar fogOfWar = new(_gridCreator.Clouds, unitsGrid, scanerFirst, new List<Side>() { Side.Enemy });
-        FogOfWar fogOfWarSecond = new(_gridCreator.OtherPlayerClouds, unitsGrid, scanerSecond, new List<Side>() { Side.Player });
+        CitySearcher scaner;
+        FogOfWar fogOfWar;
 
-        fogOfWar.ApplyDiscoveredCells(cityManager.GetPlayerCities());
-        fogOfWarSecond.ApplyDiscoveredCells(cityManager.GetEnemyCities());
+        if (isFirstPlayer)
+        {
+            scaner = new CitySearcher(cityManager.GetEnemyCities().Union(cityManager.GetNeutralities()), unitsGrid, Side.Enemy);
+            fogOfWar = new(_gridCreator.Clouds, unitsGrid, scaner, new List<Side>() { Side.Enemy });
+            fogOfWar.ApplyDiscoveredCells(cityManager.GetPlayerCities());
+        }
+        else
+        {
+            scaner = new CitySearcher(cityManager.GetPlayerCities().Union(cityManager.GetNeutralities()), unitsGrid, Side.Player);
+            fogOfWar = new(_gridCreator.Clouds, unitsGrid, scaner, new List<Side>() { Side.Player });
+            fogOfWar.ApplyDiscoveredCells(cityManager.GetEnemyCities());
+        }
 
         //********* Game state machine *******
         _winLoseMonitor.Init(cityManager, saveLevelSystem, currentLevel);
         var resettables = unitManager.Units.Append(taxSystem1).Append(taxSystem2).Append(daySystem);
-        List<IControllable> controllables1 = new List<IControllable>() { player1InputSorter, _saveSystemView, fogOfWar, economyFacadeFirst };
-        List<IControllable> controllables2 = new List<IControllable>() { player2InputSorter, fogOfWarSecond, economyFacadeSecond };
-        var stateMachine = _gameStateMachineCreator.CreateHotSit(resettables, controllables1, player1InputSorter,
-            controllables2, player2InputSorter,
-            currentLevel);
+        List<IControllable> controllables = new List<IControllable>() { inputSorter, _saveSystemView, fogOfWar, economyFacadeFirst };
+        var stateMachine = _gameStateMachineCreator.CreateMultiplayer(photonReceiver, resettables, controllables, inputSorter, currentLevel, isFirstPlayer);
 
         //********* Camera control *********
         bool isMobile = Application.isMobilePlatform &&
@@ -159,24 +172,27 @@ public class HotSitRoot : MonoBehaviour
         _pinchDetector.Init(zoomInput);
         EnemyActivityMonitor activityMonitor = new(unitManager);
         _enemyActivityMonitorView.Init(activityMonitor);
-        HotSitCameraMover cameraMover1 = new HotSitCameraMover(_camera, _pinchDetector, currentLevel, _levelConfiguration,
-            _gridCreator.HexGrid, scanerFirst, unitManager, _swipeInputReceiver, _gridRaycaster, _enemyActivityMonitorView);
-        HotSitCameraMover cameraMover2 = new HotSitCameraMover(_camera, _pinchDetector, currentLevel, _levelConfiguration,
-            _gridCreator.HexGrid, scanerSecond, unitManager, _swipeInputReceiver, _gridRaycaster,
-            _enemyActivityMonitorView, true);
-
-        controllables1.Add(cameraMover1);
-        controllables1.Add(activityMonitor);
-        controllables2.Add(cameraMover2);
-        controllables2.Add(activityMonitor);
+        CameraMover cameraMover = new CameraMover(_camera, _pinchDetector, currentLevel, _levelConfiguration,
+            _gridCreator.HexGrid, scaner, unitManager, _swipeInputReceiver, _gridRaycaster, isFirstPlayer);
+        controllables.Add(cameraMover);
+        controllables.Add(activityMonitor);
 
         //********* Other ************************
         TextureAtlasReader atlas = _meshUpdater.GetComponent<TextureAtlasReader>();
         _questsPlayer1.Init(cityManager, _levelConfiguration.GetCitiesNames(currentLevel), Side.Player);
         _questsPlayer2.Init(cityManager, _levelConfiguration.GetCitiesNames(currentLevel), Side.Enemy);
-        controllables1.Add(_questsPlayer1);
-        controllables2.Add(_questsPlayer2);
-        _questsPlayer1.EnableControl();
+
+
+        if (isFirstPlayer)
+        {
+            controllables.Add(_questsPlayer1);
+            _questsPlayer1.EnableControl();
+        }
+        else
+        {
+            controllables.Add(_questsPlayer2);
+            _questsPlayer2.EnableControl();
+        }
         //saveSystem.Init(fogOfWar, unitManager, cityManager, wallet1, daySystem, currentLevel, scaner);
         //_saveSystemView.Init(saveSystem);
 

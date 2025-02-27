@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class EnemyBrain : MonoBehaviour, IControllable
+public class EnemyBrain : MonoBehaviour, IControllable, IUnitActionController
 {
     private readonly List<WalkableUnit> _units = new();
     private readonly List<Vector2Int> _targets = new();
@@ -185,4 +185,10 @@ public class EnemyBrain : MonoBehaviour, IControllable
         var unit = _unitGrid.GetGridObject(position);
         return unit != null && unit.Side == Side.Player;
     }
+}
+
+public interface IUnitActionController
+{
+    public event Action<WalkableUnit, IEnumerable<Vector2Int>, Action> UnitMoving;
+    public event Action<WalkableUnit, Vector3, Unit, Action> UnitAttacking;
 }
