@@ -24,7 +24,7 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
     private void OnDestroy()
     {
         if(_photonEventReceiver != null)
-            _photonEventReceiver.UnitHiring -= UnitHired;
+            _photonEventReceiver.UnitHiring -= HireUnit;
     }
 
     public void Init(UnitsActionsManager manager, Resource wallet,
@@ -65,7 +65,7 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
         _factory = new UnitFactory(configuration);
         _photonEventReceiver = photonEventReceiver != null ? photonEventReceiver : throw new ArgumentNullException(nameof(photonEventReceiver));
 
-        _photonEventReceiver.UnitHiring += UnitHired;
+        _photonEventReceiver.UnitHiring += HireUnit;
     }
 
     public bool TrySpawnUnit(Vector2Int cityPosition, UnitType type, Side side)
@@ -111,6 +111,11 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
     {
         foreach (var unit in units)
             CreateUnit(unit.Value.Type, unit.Value.Side, unit.Key, false, unit.Value.Health, unit.Value.Steps, unit.Value.CanAttack);
+    }
+
+    private void HireUnit(Vector2Int cityPosition, UnitType type, Side side)
+    {
+        TrySpawnUnit(cityPosition, type, side);
     }
 
     private void CreateUnit(UnitType type, Side side, Vector2Int position,

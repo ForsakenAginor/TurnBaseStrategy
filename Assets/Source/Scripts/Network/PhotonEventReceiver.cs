@@ -56,9 +56,9 @@ public class PhotonEventReceiver : IUnitActionController
     {
         object[] array = (object[])data;
 
-        Vector2Int position = (Vector2Int)array[0];
-        UnitType type = (UnitType)(int)array[1];
-        Side side = (Side)(int)array[2];
+        Vector2Int position = new Vector2Int((int)array[0], (int)array[1]);
+        UnitType type = (UnitType)(int)array[2];
+        Side side = (Side)(int)array[3];
 
         UnitHiring?.Invoke(position, type, side);
     }
@@ -78,8 +78,15 @@ public class PhotonEventReceiver : IUnitActionController
     {
         object[] array = (object[])data;
 
-        Vector2Int unitPosition = (Vector2Int)array[0];
-        Vector2Int[] path = (Vector2Int[])array[1];
+        Vector2Int unitPosition = new Vector2Int((int)array[0], (int)array[1]);
+
+        List<Vector2Int> path = new List<Vector2Int>();
+        int[] pathX = (int[])array[2];
+        int[] pathY = (int[])array[3];
+
+        for (int i = 0; i < pathX.Length; i++)
+            path.Add(new Vector2Int(pathX[i], pathY[i]));
+
         WalkableUnit unit = _grid.GetGridObject(unitPosition) as WalkableUnit;
 
         UnitMoving?.Invoke(unit, path, null);
@@ -89,9 +96,9 @@ public class PhotonEventReceiver : IUnitActionController
     {
         object[] array = (object[])data;
 
-        Vector2Int unitPosition = (Vector2Int)array[0];
-        Vector3 position = (Vector3)array[1];
-        Vector2Int targetPosition = (Vector2Int)array[2];
+        Vector2Int unitPosition = new Vector2Int((int)array[0], (int)array[1]);
+        Vector3 position = (Vector3)array[2];
+        Vector2Int targetPosition = new Vector2Int((int)array[3], (int)array[4]);
         WalkableUnit unit = _grid.GetGridObject(unitPosition) as WalkableUnit;
         Unit target = _grid.GetGridObject(targetPosition);
 
@@ -118,6 +125,7 @@ public class PhotonEventSender
         _input = input != null ? input : throw new ArgumentNullException(nameof(input));
         _citySpawner = citySpawner != null ? citySpawner : throw new ArgumentNullException(nameof(citySpawner));
         _unitSpawner = unitSpawner != null ? unitSpawner : throw new ArgumentNullException(nameof(unitSpawner));
+        _nextTurnButton = nextTurnButton != null ? nextTurnButton : throw new ArgumentNullException(nameof(nextTurnButton));
 
         _input.UnitIsMovingPUN += OnUnitMoving;
         _input.UnitIsAttackingPUN += OnUnitAttacking;
@@ -142,7 +150,7 @@ public class PhotonEventSender
 
     private void OnUnitHiring(Vector2Int position, UnitType type, Side side)
     {
-        object[] content = new object[] { position, (int)type, (int)side };
+        object[] content = new object[] { position.x, position.y, (int)type, (int)side };
 
         PhotonNetwork.RaiseEvent(CodeUnitHire, content, _eventOptions, SendOptions.SendReliable);
     }
@@ -156,14 +164,23 @@ public class PhotonEventSender
 
     private void OnUnitAttacking(Vector2Int unitPosition, Vector3 vector, Vector2Int targetPosition)
     {
-        object[] content = new object[] { unitPosition, vector, targetPosition};
+        object[] content = new object[] { unitPosition.x, unitPosition.y, vector, targetPosition.x, targetPosition.y};
 
         PhotonNetwork.RaiseEvent(CodeUnitAttack, content, _eventOptions, SendOptions.SendReliable);
     }
 
     private void OnUnitMoving(Vector2Int unitPosition, IEnumerable<Vector2Int> path)
     {
-        object[] content = new object[] { unitPosition, path.ToArray()};
+        List<int> pathX = new List<int>();
+        List<int> pathY = new List<int>();
+
+        foreach (var item in path)
+        {
+            pathX.Add(item.x);
+            pathY.Add(item.y);
+        }
+
+        object[] content = new object[] { unitPosition.x, unitPosition.y, pathX.ToArray(), pathY.ToArray()};
 
         PhotonNetwork.RaiseEvent(CodeUnitMove, content, _eventOptions, SendOptions.SendReliable);
     }

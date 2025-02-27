@@ -2,6 +2,7 @@ using Assets.Scripts.General;
 using NUnit.Framework;
 using Photon.Pun;
 using Photon.Realtime;
+using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -65,6 +66,7 @@ public class PhotonHost : MonoBehaviourPunCallbacks
         }
     }
 
+    [Button]
     public override void OnPlayerEnteredRoom(Player _)
     {
         if (_isActive)

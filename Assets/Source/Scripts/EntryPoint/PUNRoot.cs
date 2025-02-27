@@ -116,8 +116,17 @@ public class PUNRoot : MonoBehaviour
         TaxSystem taxSystem2 = new TaxSystem(wallet2, _citySpawner, _unitSpawner,
             _levelConfiguration.GetCitiesUpgradeCost(currentLevel), _levelConfiguration.GetUnitConfiguration(currentLevel), Side.Enemy);
         _cityShop.Init(_levelConfiguration.GetUnitConfiguration(currentLevel), _levelConfiguration.GetCitiesUpgradeCost(currentLevel));
-        EconomyFacade economyFacadeFirst = new EconomyFacade(_walletView, _incomeView, _incomeCompositionView, _bankruptView, wallet1, taxSystem1);
-        //EconomyFacade economyFacadeSecond = new EconomyFacade(_walletView, _incomeView, _incomeCompositionView, _bankruptView, wallet2, taxSystem2);
+
+        if (isFirstPlayer)
+        {
+            EconomyFacade economyFacadeFirst = new EconomyFacade(_walletView, _incomeView, _incomeCompositionView, _bankruptView, wallet1, taxSystem1);
+            economyFacadeFirst.EnableControl();
+        }
+        else
+        {
+            EconomyFacade economyFacadeSecond = new EconomyFacade(_walletView, _incomeView, _incomeCompositionView, _bankruptView, wallet2, taxSystem2);
+            economyFacadeSecond.EnableControl();
+        }
 
         //********  Unit creation  ***********
         UnitsActionsManager unitManager = new UnitsActionsManager(inputSorter, unitsGrid, photonReceiver,
@@ -162,7 +171,7 @@ public class PUNRoot : MonoBehaviour
         //********* Game state machine *******
         _winLoseMonitor.Init(cityManager, saveLevelSystem, currentLevel);
         var resettables = unitManager.Units.Append(taxSystem1).Append(taxSystem2).Append(daySystem);
-        List<IControllable> controllables = new List<IControllable>() { inputSorter, _saveSystemView, fogOfWar, economyFacadeFirst };
+        List<IControllable> controllables = new List<IControllable>() { inputSorter, _saveSystemView };
         var stateMachine = _gameStateMachineCreator.CreateMultiplayer(photonReceiver, resettables, controllables, inputSorter, currentLevel, isFirstPlayer);
 
         //********* Camera control *********
