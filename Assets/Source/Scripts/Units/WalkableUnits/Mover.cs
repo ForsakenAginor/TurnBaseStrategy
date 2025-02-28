@@ -21,7 +21,7 @@ public class Mover : MonoBehaviour
         if (target.Count() == 1)
         {
             _model.transform.LookAt(target.First());
-            transform.DOMove(target.First(), _movingTimePerCell).SetEase(Ease.Linear).OnComplete(() => { onComleteCallback.Invoke(); _controller.Stop(); });
+            transform.DOMove(target.First(), _movingTimePerCell).SetEase(Ease.Linear).OnComplete(() => StopMoving(onComleteCallback));
             _controller.Walk();
             _soundHandler.Walk();
         }
@@ -31,7 +31,7 @@ public class Mover : MonoBehaviour
             Sequence mySequence = DOTween.Sequence();
             mySequence.Append(transform.DOMove(target.First(), _movingTimePerCell).SetEase(Ease.Linear).OnComplete(() => _model.transform.LookAt(target.Last())));
             mySequence.Append(transform.DOMove(target.Last(), _movingTimePerCell).SetEase(Ease.Linear));
-            mySequence.AppendCallback(() => { onComleteCallback.Invoke(); _controller.Stop(); });
+            mySequence.AppendCallback(() => StopMoving(onComleteCallback));
             _controller.Walk();
             _soundHandler.Walk();
         }
@@ -43,7 +43,7 @@ public class Mover : MonoBehaviour
         if (target.Count() == 1)
         {
             _model.transform.LookAt(target.First());
-            transform.DOMove(target.First(), duration).SetEase(Ease.Linear).OnComplete(() => { onComleteCallback.Invoke(); _controller.Stop(); });
+            transform.DOMove(target.First(), duration).SetEase(Ease.Linear).OnComplete(() => StopMoving(onComleteCallback));
             _controller.Walk();
         }
         else if (target.Count() == 2)
@@ -52,8 +52,16 @@ public class Mover : MonoBehaviour
             Sequence mySequence = DOTween.Sequence();
             mySequence.Append(transform.DOMove(target.First(), duration).SetEase(Ease.Linear).OnComplete(() => _model.transform.LookAt(target.Last())));
             mySequence.Append(transform.DOMove(target.Last(), duration).SetEase(Ease.Linear));
-            mySequence.AppendCallback(() => { onComleteCallback.Invoke(); _controller.Stop(); });
+            mySequence.AppendCallback(() => StopMoving(onComleteCallback));
             _controller.Walk();
         }
+    }
+
+    private void StopMoving(Action callback)
+    {
+        _controller.Stop();
+
+        if(callback != null)
+            callback.Invoke();
     }
 }

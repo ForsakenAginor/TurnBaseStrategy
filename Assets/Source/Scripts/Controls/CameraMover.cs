@@ -45,6 +45,7 @@ public class CameraMover : IControllable
 
         var startedCell = isFirstPlayer ? configuration.GetCameraStartPosition(level) : configuration.GetCameraStartPositionSecondPlayer(level);
         FocusCameraOnCell(startedCell);
+        _savedPosition = startedCell;
         Subscribe();
     }
 

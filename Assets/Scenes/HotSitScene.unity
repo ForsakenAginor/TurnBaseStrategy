@@ -3972,7 +3972,7 @@ MonoBehaviour:
   _walletView: {fileID: 1128542883}
   _cityShop: {fileID: 717580002}
   _incomeView: {fileID: 1128542885}
-  _incomeCompositionView: {fileID: 1201929325}
+  _incomeCompositionView: {fileID: 992865773}
   _bakruptView: {fileID: 1128542886}
   _enemyBrain: {fileID: 0}
   _camera: {fileID: 330585546}
@@ -4090,7 +4090,7 @@ MonoBehaviour:
   _walletView: {fileID: 1128542883}
   _cityShop: {fileID: 717580002}
   _incomeView: {fileID: 1128542885}
-  _incomeCompositionView: {fileID: 1201929325}
+  _incomeCompositionView: {fileID: 992865773}
   _bankruptView: {fileID: 1128542886}
   _camera: {fileID: 330585546}
   _leanSwipe: {fileID: 579213601}
@@ -6168,6 +6168,7 @@ GameObject:
   - component: {fileID: 992865770}
   - component: {fileID: 992865772}
   - component: {fileID: 992865771}
+  - component: {fileID: 992865773}
   m_Layer: 5
   m_Name: Gold
   m_TagString: Untagged
@@ -6232,6 +6233,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 992865769}
   m_CullTransparentMesh: 1
+--- !u!114 &992865773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 992865769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b54ea745110e644a92cd29a33d0a305, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _leftTextField: {fileID: 574767629}
+  _rightTextField: {fileID: 2017780949}
+  _tooltip: {fileID: 1229675448}
 --- !u!1 &994843270
 GameObject:
   m_ObjectHideFlags: 0
@@ -7940,7 +7956,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1201929324}
-  - component: {fileID: 1201929325}
   m_Layer: 5
   m_Name: Gold
   m_TagString: Untagged
@@ -7971,21 +7986,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -20}
   m_SizeDelta: {x: 400, y: 200}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &1201929325
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1201929323}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b54ea745110e644a92cd29a33d0a305, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _leftTextField: {fileID: 574767629}
-  _rightTextField: {fileID: 2017780949}
-  _tooltip: {fileID: 1229675448}
 --- !u!1 &1214077057
 GameObject:
   m_ObjectHideFlags: 0

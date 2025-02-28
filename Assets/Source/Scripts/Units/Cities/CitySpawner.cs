@@ -69,7 +69,7 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
         _unitsManager.CityCaptured -= OnCityCaptured;
 
         if(_photonEventReceiver != null)
-            _photonEventReceiver.CityUpgrading -= OnPUNEventCityUpgrading;
+            _photonEventReceiver.CityUpgrading -= UpgradeCity;
     }
 
     public void Init(SerializedPair<Vector2Int, string>[] citiesNames, CitiesActionsManager manager, UnitSpawner unitSpawner, Resource wallet,
@@ -154,7 +154,7 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
         }
 
         _unitsManager.CityCaptured += OnCityCaptured;
-        _photonEventReceiver.CityUpgrading += OnPUNEventCityUpgrading;
+        _photonEventReceiver.CityUpgrading += UpgradeCity;
         _isHotsit = true;
     }
 
@@ -202,11 +202,6 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
 
         if (side == Side.Player)
             UnitViewSpawned?.Invoke(facade.UnitView);
-    }
-
-    private void OnPUNEventCityUpgrading(Upgrades upgrades, Vector3 vector) 
-    {
-        TryUpgradeCity(upgrades, vector);
     }
 
     private void OnCityCaptured(Vector2Int cell, Side side)
@@ -291,6 +286,74 @@ public class CitySpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
             SpawnCity(cell, size, side, true, upgrades, false, health);
             _buttonCanvas.Disable();
             return true;
+        }
+    }
+
+    private void UpgradeCity(Upgrades upgradeType, Vector3 position)
+    {
+        var city = _grid.GetGridObject(position) as CityUnit;
+        Side side = city.Side;
+        CitySize size = city.CitySize;
+        Vector2Int cell = _grid.GetXZ(position);
+        int cost;
+
+        switch (upgradeType)
+        {
+            case Upgrades.Archers:
+                cost = _economyConfiguration.ArcherCost;
+                break;
+
+            case Upgrades.Spearmen:
+                cost = _economyConfiguration.SpearmanCost;
+                break;
+
+            case Upgrades.Knights:
+                cost = _economyConfiguration.KnightCost;
+                break;
+
+            case Upgrades.Mages:
+                cost = _economyConfiguration.MageCost;
+                break;
+
+            case Upgrades.Income:
+                cost = _economyConfiguration.IncomeCost[city.Upgrades.Income];
+                break;
+
+            case Upgrades.Fortifications:
+                cost = _economyConfiguration.FortificationCost[size];
+                break;
+
+            default:
+                throw new Exception("Upgrade type not representing in CitySpawner switch module");
+        }
+
+        if (_isHotsit)
+        {
+            if (side == Side.Player)
+                _firstWallet.TrySpent(cost);                
+            else if (side == Side.Enemy)
+                _secondWallet.TrySpent(cost);
+        }
+        else
+        {
+            if (side == Side.Player)
+                _firstWallet.TrySpent(cost);
+        }
+
+        if (upgradeType == Upgrades.Fortifications)
+        {
+            CityUpgrades upgrades = _unitsManager.RemoveCity(city);
+            size++;
+            SpawnCity(cell, size, side, true, upgrades);
+            _buttonCanvas.Disable();
+        }
+        else
+        {
+            CityUpgrades upgrades = _unitsManager.RemoveCity(city);
+            upgrades.Upgrade(upgradeType);
+            int health = city.Health;
+            SpawnCity(cell, size, side, true, upgrades, false, health);
+            _buttonCanvas.Disable();
         }
     }
 

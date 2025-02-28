@@ -161,8 +161,12 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
     {
         private readonly IWinLoseEventThrower _winLoseMonitor;
         private readonly PhotonEventReceiver _photonEventReceiver;
+        private readonly IEnumerable<IResetable> _resetables;
 
-        public RemotePlayerTurn(PhotonEventReceiver photonEventReceiver, IWinLoseEventThrower winLoseMonitor, Transition[] transitions) : base(transitions)
+        private bool _isFirstCycle = true;
+
+        public RemotePlayerTurn(IEnumerable<IResetable> resetables, PhotonEventReceiver photonEventReceiver,
+            IWinLoseEventThrower winLoseMonitor, Transition[] transitions) : base(transitions)
         {
             _winLoseMonitor = winLoseMonitor != null ?
                 winLoseMonitor :
@@ -171,6 +175,10 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
             _photonEventReceiver = photonEventReceiver != null ? 
                 photonEventReceiver :
                 throw new ArgumentNullException(nameof(photonEventReceiver));
+
+            _resetables = resetables != null ?
+                resetables :
+                throw new ArgumentNullException(nameof(resetables));
 
             _photonEventReceiver.TurnSkiping += OnTurnEnded;
             _winLoseMonitor.PlayerLost += OnPlayerLost;
@@ -186,6 +194,14 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine.States
 
         public override void DoThing()
         {
+            if (_isFirstCycle)
+            {
+                _isFirstCycle = false;
+                return;
+            }
+
+            foreach (var resetable in _resetables)
+                resetable.Reset();
         }
 
         private void OnPlayerWon()

@@ -113,9 +113,30 @@ public class UnitSpawner : MonoBehaviour, IUnitSpawner, IPlayerUnitSpawner
             CreateUnit(unit.Value.Type, unit.Value.Side, unit.Key, false, unit.Value.Health, unit.Value.Steps, unit.Value.CanAttack);
     }
 
-    private void HireUnit(Vector2Int cityPosition, UnitType type, Side side)
+    public void HireUnit(Vector2Int cityPosition, UnitType type, Side side)
     {
-        TrySpawnUnit(cityPosition, type, side);
+        var neighbours = _grid.CashedNeighbours[cityPosition].
+            Where(o => _grid.IsValidGridPosition(o) && _grid.GetGridObject(o) == null && _landGrid.GetGridObject(o).IsBlocked == false).
+            ToList();
+
+        int cost = _configuration.GetUnitCost(type);
+
+        //if normal game
+        if (_walletSecondPlayer == null)
+        {
+            if (side == Side.Player)
+                _walletFirstPlayer.TrySpent(cost);
+        }
+        //if hotsit
+        else
+        {
+            if (side == Side.Player)
+                _walletFirstPlayer.TrySpent(cost);
+            else if (side == Side.Enemy)
+                _walletSecondPlayer.TrySpent(cost);            
+        }
+
+        CreateUnit(type, side, neighbours[0]);
     }
 
     private void CreateUnit(UnitType type, Side side, Vector2Int position,

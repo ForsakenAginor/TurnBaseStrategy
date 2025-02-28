@@ -236,7 +236,7 @@ public class UnitsActionsManager : IEnemyUnitOversight, ISavedUnits
     private Side GetCurrentPlayerSide()
     {
         if (_inputSorters.Count() == 1)
-            return Side.Player;
+            return _inputSorters.First().ActiveSide;
 
         return _inputSorters.First(o => o.IsActive).ActiveSide;
     }

@@ -86,11 +86,26 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine
             ToWinTransition toWinTransition = new ToWinTransition();
             ToPlayerTurnTransition toPlayerTurnTransition = new ToPlayerTurnTransition();
 
+            IEnumerable<IResetable> playerResettables;
+            IEnumerable<IResetable> remotePlayerResettables;
+
+            if(isFirstPlayer)
+            {
+                playerResettables = resetables;
+                remotePlayerResettables = new List<IResetable>();
+            }
+            else
+            {
+                playerResettables = new List<IResetable>();
+                remotePlayerResettables = resetables;
+                _nextTurnButton.interactable = false;
+            }
+
             //states
             PlayerTurn playerTurn = new PlayerTurn(waitAnimation,
                 _nextTurnButton,
                 _winLoseMonitor,
-                resetables,
+                playerResettables,
                 controllables,
                 new Transition[]
                 {
@@ -98,6 +113,7 @@ namespace Assets.Source.Scripts.GameLoop.StateMachine
                 });
 
             RemotePlayerTurn enemyTurn = new RemotePlayerTurn(
+                remotePlayerResettables,
                 photonEventReceiver,
                 _winLoseMonitor,
                 new Transition[]
