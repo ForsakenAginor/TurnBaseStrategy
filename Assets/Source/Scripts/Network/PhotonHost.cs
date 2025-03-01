@@ -1,4 +1,5 @@
 using Assets.Scripts.General;
+using Lean.Localization;
 using Photon.Pun;
 using Photon.Realtime;
 using Sirenix.OdinInspector;
@@ -57,7 +58,8 @@ public class PhotonHost : MonoBehaviourPunCallbacks
     {
         if (_isActive)
         {
-            _connectingStatusTextField.text = $"Room created\n{_roomName}";
+            string status = LeanLocalization.GetTranslationText("RoomCreated");
+            _connectingStatusTextField.text = $"{status}\n{_roomName}";
             _isRoomCreated = true;
             PhotonNetwork.AutomaticallySyncScene = false;
             PhotonNetwork.SendRate = 10;
@@ -77,12 +79,16 @@ public class PhotonHost : MonoBehaviourPunCallbacks
     public override void OnDisconnected(DisconnectCause cause)
     {
         if (_isActive)
-            _connectingStatusTextField.text = "Disconnected";
+        {
+            string status = LeanLocalization.GetTranslationText("Disconnected");
+            _connectingStatusTextField.text = status;
+        }
     }
 
     private void CreateRoom()
     {
-        _connectingStatusTextField.text = "Creating room...";
+        string status = LeanLocalization.GetTranslationText("CreatingRoom");
+        _connectingStatusTextField.text = status;
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.IsVisible = false;
         roomOptions.MaxPlayers = 2;
@@ -95,7 +101,8 @@ public class PhotonHost : MonoBehaviourPunCallbacks
         _isActive = true;
         _holderWindow.Disable();
         _createRoomWindow.Enable();
-        _connectingStatusTextField.text = "Connecting...";
+        string status = LeanLocalization.GetTranslationText("Connecting");
+        _connectingStatusTextField.text = status;
         PhotonNetwork.ConnectUsingSettings();
     }
 

@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.General;
+using Lean.Localization;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
@@ -40,7 +41,8 @@ public class PhotonConnect : MonoBehaviourPunCallbacks
     {
         if (_isActive)
         {
-            _connectingStatusTextField.text = "Enter room code";
+            string status = LeanLocalization.GetTranslationText("EnterRoomCode");
+            _connectingStatusTextField.text = status;
             _enterToRoomButton.interactable = true;
             _enterToRoomButton.onClick.AddListener(OnEnterButtonClick);
         }
@@ -71,7 +73,10 @@ public class PhotonConnect : MonoBehaviourPunCallbacks
     public override void OnDisconnected(DisconnectCause cause)
     {
         if (_isActive)
-            _connectingStatusTextField.text = "Disconnected";
+        {
+            string status = LeanLocalization.GetTranslationText("Disconnected");
+            _connectingStatusTextField.text = status;
+        }
     }
 
     private void OnEnterButtonClick()
@@ -87,7 +92,8 @@ public class PhotonConnect : MonoBehaviourPunCallbacks
         _isActive = true;
         _holderWindow.Disable();
         _connectRoomWindow.Enable();
-        _connectingStatusTextField.text = "Connecting...";
+        string status = LeanLocalization.GetTranslationText("Connecting");
+        _connectingStatusTextField.text = status;
         PhotonNetwork.ConnectUsingSettings();
     }
 

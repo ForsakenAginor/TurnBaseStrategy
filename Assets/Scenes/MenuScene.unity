@@ -1528,6 +1528,10 @@ PrefabInstance:
       propertyPath: m_enableAutoSizing
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1211026933975885077, guid: 91937bd4d63227e40861c272b374c4f8, type: 3}
+      propertyPath: translationName
+      value: Connect
+      objectReference: {fileID: 0}
     - target: {fileID: 3160191855381485567, guid: 91937bd4d63227e40861c272b374c4f8, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1635,6 +1639,22 @@ PrefabInstance:
     - target: {fileID: 6515574188235926855, guid: 91937bd4d63227e40861c272b374c4f8, type: 3}
       propertyPath: m_Name
       value: NetworkConnect
+      objectReference: {fileID: 0}
+    - target: {fileID: 7188945090646471664, guid: 91937bd4d63227e40861c272b374c4f8, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.95
+      objectReference: {fileID: 0}
+    - target: {fileID: 7188945090646471664, guid: 91937bd4d63227e40861c272b374c4f8, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 7188945090646471664, guid: 91937bd4d63227e40861c272b374c4f8, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7188945090646471664, guid: 91937bd4d63227e40861c272b374c4f8, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7552284026201192089, guid: 91937bd4d63227e40861c272b374c4f8, type: 3}
       propertyPath: _audio
@@ -2042,6 +2062,26 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 100
       objectReference: {fileID: 0}
+    - target: {fileID: 5780909658762853498, guid: 03f12922d4f994743bbbcc1011f764b4, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: ab09d43b06a990c438b631aaa0d785f9, type: 2}
+    - target: {fileID: 8341808908106189714, guid: 03f12922d4f994743bbbcc1011f764b4, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8341808908106189714, guid: 03f12922d4f994743bbbcc1011f764b4, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8341808908106189714, guid: 03f12922d4f994743bbbcc1011f764b4, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8341808908106189714, guid: 03f12922d4f994743bbbcc1011f764b4, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8614701612778283140, guid: 03f12922d4f994743bbbcc1011f764b4, type: 3}
       propertyPath: m_fontSize
       value: 45
@@ -2141,6 +2181,25 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &642909063 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2588454036936948230, guid: c5e6bd5d9e790a5418fb876dc52ab4e4, type: 3}
+  m_PrefabInstance: {fileID: 1873552998}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &642909064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 642909063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbf51be86e70d7941bd40914206e4ddc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  translationName: Connect
+  FallbackText: Error
 --- !u!1 &694791376
 GameObject:
   m_ObjectHideFlags: 0
@@ -4796,6 +4855,22 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 100
       objectReference: {fileID: 0}
+    - target: {fileID: 5783636420298731488, guid: c5e6bd5d9e790a5418fb876dc52ab4e4, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.95
+      objectReference: {fileID: 0}
+    - target: {fileID: 5783636420298731488, guid: c5e6bd5d9e790a5418fb876dc52ab4e4, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 5783636420298731488, guid: c5e6bd5d9e790a5418fb876dc52ab4e4, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5783636420298731488, guid: c5e6bd5d9e790a5418fb876dc52ab4e4, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6301839925416422301, guid: c5e6bd5d9e790a5418fb876dc52ab4e4, type: 3}
       propertyPath: m_Name
       value: Network
@@ -4823,7 +4898,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3417565129560730476, guid: c5e6bd5d9e790a5418fb876dc52ab4e4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1873553004}
+    - targetCorrespondingSourceObject: {fileID: 2588454036936948230, guid: c5e6bd5d9e790a5418fb876dc52ab4e4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 642909064}
   m_SourcePrefab: {fileID: 100100000, guid: c5e6bd5d9e790a5418fb876dc52ab4e4, type: 3}
 --- !u!224 &1873552999 stripped
 RectTransform:
@@ -4863,6 +4944,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1873553003 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3417565129560730476, guid: c5e6bd5d9e790a5418fb876dc52ab4e4, type: 3}
+  m_PrefabInstance: {fileID: 1873552998}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1873553004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1873553003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbf51be86e70d7941bd40914206e4ddc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  translationName: CreateGame
+  FallbackText: ERROR
 --- !u!1 &1874211676
 GameObject:
   m_ObjectHideFlags: 0
