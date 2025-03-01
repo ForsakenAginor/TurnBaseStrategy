@@ -13,6 +13,7 @@ public class MainMenuRoot : MonoBehaviour
     [SerializeField] private Button _continueButton;
     [SerializeField] private SwitchableElement _attentionPanel;
     [SerializeField] private SwitchableElement _menuPanel;
+    [SerializeField] private Button _hotsit;
 
     [Header("Localization")]
     private readonly string _russian = "Russian";
@@ -46,6 +47,7 @@ public class MainMenuRoot : MonoBehaviour
         }
 
         _confirmNewGameButton.onClick.AddListener(CreateNewGame);
+        _hotsit.onClick.AddListener(OnHotsitButtonClick);
 
         LoadGameSingleton.Instance.Init();
         _continueButton.onClick.AddListener(OnContinueButtonClick);
@@ -57,12 +59,18 @@ public class MainMenuRoot : MonoBehaviour
 
     private void OnDestroy()
     {
+        _hotsit.onClick.RemoveListener(OnHotsitButtonClick);
         _newGameButton.onClick.RemoveAllListeners();
         _confirmNewGameButton.onClick.RemoveListener(CreateNewGame);
         _continueButton.onClick.RemoveListener(OnContinueButtonClick);
         _toEnglish.onClick.RemoveListener(ChangeLanguageToEnglish);
         _toRussian.onClick.RemoveListener(ChangeLanguageToRussian);
         _toTurkish.onClick.RemoveListener(ChangeLanguageToTurkish);
+    }
+
+    private void OnHotsitButtonClick()
+    {
+        SceneChangerSingleton.Instance.LoadScene(Scenes.HotSitScene.ToString());
     }
 
     private void OpenAttentionWindow()

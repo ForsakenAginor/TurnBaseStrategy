@@ -114,7 +114,7 @@ public class HotSitRoot : MonoBehaviour
         UnitsActionsManager unitManager = new UnitsActionsManager(new List<NewInputSorter>() { player1InputSorter, player2InputSorter },
             unitsGrid,
             new Dictionary<Side, HexGridXZ<ICloud>>() { { Side.Player, _gridCreator.OtherPlayerClouds }, { Side.Enemy, _gridCreator.Clouds } });
-        _unitSpawner.Init(unitManager, wallet1, _levelConfiguration.GetUnitConfiguration(currentLevel), unitsGrid, _gridCreator.BlockedCells, AddAudioSourceToMixer);
+        _unitSpawner.InitHotSit(unitManager, wallet1, wallet2, _levelConfiguration.GetUnitConfiguration(currentLevel), unitsGrid, _gridCreator.BlockedCells, AddAudioSourceToMixer);
         CitiesActionsManager cityManager = new CitiesActionsManager(new List<NewInputSorter>() { player1InputSorter, player2InputSorter }, unitsGrid);
         _citySpawner.InitHotSit(_levelConfiguration.GetCitiesNames(currentLevel),
             cityManager, _unitSpawner, wallet1, wallet2, _levelConfiguration.GetCityConfiguration(currentLevel), _levelConfiguration.GetCitiesUpgradeCost(currentLevel),
