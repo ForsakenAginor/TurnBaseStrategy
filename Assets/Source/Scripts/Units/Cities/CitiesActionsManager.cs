@@ -159,7 +159,7 @@ public class CitiesActionsManager : ICitiesGetter, ISavedCities
                 side = Side.Player;
                 break;
             case Side.Neutral:
-                side = GetCurrentPlayerSide();
+                side = GetCapturedCitySide();
                 break;
             default:
                 throw new Exception("Can't handle captured city side");
@@ -219,6 +219,16 @@ public class CitiesActionsManager : ICitiesGetter, ISavedCities
     {
         if (_inputSorters.Count() == 1)
             return _inputSorters.First().ActiveSide;
+
+        return _inputSorters.First(o => o.IsActive).ActiveSide;
+    }
+
+    private Side GetCapturedCitySide()
+    {
+        if ((_inputSorters.Count() == 1) && _inputSorters.First().IsActive)
+            return _inputSorters.First().ActiveSide;
+        else if ((_inputSorters.Count() == 1) && _inputSorters.First().IsActive == false)
+            return _inputSorters.First().Enemy;
 
         return _inputSorters.First(o => o.IsActive).ActiveSide;
     }

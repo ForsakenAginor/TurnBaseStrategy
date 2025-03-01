@@ -30,7 +30,7 @@ public class UnitsActionsManager : IEnemyUnitOversight, ISavedUnits
         _enemyBrain = enemyBrain != null ? enemyBrain : throw new ArgumentNullException(nameof(enemyBrain));
         _fogOfWar = cloudGrid != null ? cloudGrid : throw new ArgumentNullException(nameof(cloudGrid));
 
-        foreach(var input in _inputSorters)
+        foreach (var input in _inputSorters)
         {
             input.MovableUnitSelected += OnUnitSelected;
             input.FriendlyCitySelected += OnCitySelected;
@@ -199,9 +199,11 @@ public class UnitsActionsManager : IEnemyUnitOversight, ISavedUnits
                 if (cloud == null || cloud.IsDissappeared == true)
                 {
                     facade.Mover.Move(way, callback);
-                    EnemyDoSomething?.Invoke(target.Last());
+
+                    if (_isHotSitMode || unit.Side == GetCurrentEnemySide())
+                        EnemyDoSomething?.Invoke(target.Last());
                 }
-                else if(_isHotSitMode)
+                else if (_isHotSitMode)
                 {
                     facade.Mover.Move(way, callback);
                 }
@@ -228,7 +230,7 @@ public class UnitsActionsManager : IEnemyUnitOversight, ISavedUnits
     private Side GetCurrentEnemySide()
     {
         if (_inputSorters.Count() == 1)
-            return Side.Enemy;
+            return _inputSorters.First().Enemy;
 
         return _inputSorters.First(o => o.IsActive).Enemy;
     }

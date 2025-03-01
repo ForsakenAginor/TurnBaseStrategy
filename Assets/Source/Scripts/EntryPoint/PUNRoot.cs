@@ -95,6 +95,7 @@ public class PUNRoot : MonoBehaviour
         _cellSelector.Init(_gridCreator.HexGrid, _gridRaycaster);
         var unitsGrid = _gridCreator.UnitsGrid;
         NewInputSorter inputSorter;
+        Side playerSide = isFirstPlayer ? Side.Player : Side.Enemy;
 
         if (isFirstPlayer)
             inputSorter = new NewInputSorter(unitsGrid, _cellSelector, _gridCreator.BlockedCells, _gridCreator.PathFinder, Side.Player, Side.Enemy);
@@ -130,7 +131,7 @@ public class PUNRoot : MonoBehaviour
 
         //********  Unit creation  ***********
         UnitsActionsManager unitManager = new UnitsActionsManager(inputSorter, unitsGrid, photonReceiver,
-            new Dictionary<Side, HexGridXZ<ICloud>>() { { Side.Player, _gridCreator.Clouds } });
+            new Dictionary<Side, HexGridXZ<ICloud>>() { { playerSide, _gridCreator.Clouds } });
         _unitSpawner.InitPUN(unitManager, wallet1, wallet2, _levelConfiguration.GetUnitConfiguration(currentLevel),
             unitsGrid, _gridCreator.BlockedCells, AddAudioSourceToMixer, photonReceiver);
         CitiesActionsManager cityManager = new CitiesActionsManager(inputSorter, unitsGrid);

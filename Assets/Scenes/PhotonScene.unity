@@ -4365,9 +4365,11 @@ MonoBehaviour:
   _loseButton: {fileID: 1042135142}
   _finishButton: {fileID: 859478934}
   _winButton: {fileID: 1628177097}
+  _disconnectedButton: {fileID: 1818563260}
   _winScene: 0
   _finishScene: 0
   _loseScene: 0
+  _menuScene: 0
 --- !u!114 &717580002
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4497,6 +4499,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _disconectionWindow: {fileID: 878404944}
+  _exitButtons:
+  - {fileID: 1226058460497688721}
+  - {fileID: 1628177097}
+  - {fileID: 1042135142}
+  - {fileID: 859478934}
+  - {fileID: 1818563260}
 --- !u!1 &717898072
 GameObject:
   m_ObjectHideFlags: 0
