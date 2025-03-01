@@ -9,11 +9,16 @@ public class LevelConfiguration : UpdatableConfiguration<GameLevel, MapConfigura
 {
     public Vector2Int GetCameraStartPosition(GameLevel level) => Content.First(o => o.Key == level).Value.CameraStartPosition;
 
+    public Vector2Int GetCameraStartPositionSecondPlayer(GameLevel level) => Content.First(o => o.Key == level).Value.CameraStartPositionSecondPlayer;
+
     public SerializedPair<Vector2Int, CitySize>[] GetEnemyCities(GameLevel level) =>
         Content.First(o => o.Key == level).Value.EnemyCities;
 
     public SerializedPair<Vector2Int, CitySize>[] GetPlayerCities(GameLevel level) =>
         Content.First(o => o.Key == level).Value.PlayerCities;
+
+    public SerializedPair<Vector2Int, CitySize>[] GetNeutralCities(GameLevel level) =>
+        Content.First(o => o.Key == level).Value.NeutralCities;
 
     public SerializedPair<Vector2Int, string>[] GetCitiesNames(GameLevel level) =>
         Content.First(o => o.Key == level).Value.CitiesNames;
@@ -46,5 +51,10 @@ public class LevelConfiguration : UpdatableConfiguration<GameLevel, MapConfigura
     public Vector2 GetMinimumCameraPosition(GameLevel level)
     {
         return Content.First(o => o.Key == level).Value.CameraMin;
-    }    
+    }
+
+    public ICityUpgradesCostConfiguration GetCitiesUpgradeCost(GameLevel level)
+    {
+        return Content.First(o => o.Key == level).Value.CityUpgradesCostConfiguration;
+    }
 }

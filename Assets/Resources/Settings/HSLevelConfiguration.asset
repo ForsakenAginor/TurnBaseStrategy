@@ -1,0 +1,89 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eae88547c0846ab459b65c21fba9f7ad, type: 3}
+  m_Name: HSLevelConfiguration
+  m_EditorClassIdentifier: 
+  _content:
+  - Key: 0
+    Value:
+      _width: 21
+      _height: 21
+      _prefab: {fileID: 2534081639474016792, guid: 772769209908d844ebc640a9f41759f2, type: 3}
+      _enemyCities:
+      - Key: {x: 18, y: 18}
+        Value: 0
+      _playerCities:
+      - Key: {x: 2, y: 2}
+        Value: 0
+      _neutralCities:
+      - Key: {x: 4, y: 8}
+        Value: 1
+      - Key: {x: 11, y: 2}
+        Value: 1
+      - Key: {x: 2, y: 18}
+        Value: 1
+      - Key: {x: 9, y: 15}
+        Value: 1
+      - Key: {x: 18, y: 2}
+        Value: 1
+      - Key: {x: 18, y: 10}
+        Value: 1
+      _citiesNames:
+      - Key: {x: 4, y: 8}
+        Value: EnemyVillage
+      - Key: {x: 2, y: 18}
+        Value: NorthCity2
+      - Key: {x: 9, y: 15}
+        Value: NorthCity1
+      - Key: {x: 11, y: 2}
+        Value: Haven
+      - Key: {x: 18, y: 2}
+        Value: City1
+      - Key: {x: 18, y: 10}
+        Value: City2
+      - Key: {x: 18, y: 18}
+        Value: CapitalCIty
+      - Key: {x: 2, y: 2}
+        Value: PlayerCity
+      _spawnMessages:
+      - Key: {x: 2, y: 18}
+        Value:
+          Key: {fileID: 21300000, guid: c7c0ea33234b0a74bb4acf1e2b8ce17d, type: 3}
+          Value: MagePhrase1
+      - Key: {x: 9, y: 15}
+        Value:
+          Key: {fileID: 21300000, guid: a9544dcead6e0b34e999695edeb0139d, type: 3}
+          Value: LordPhrase1
+      - Key: {x: 11, y: 2}
+        Value:
+          Key: {fileID: 21300000, guid: 7df3c8a766b06d74ea7710bd47367bd2, type: 3}
+          Value: LordPhrase2
+      - Key: {x: 18, y: 2}
+        Value:
+          Key: {fileID: 21300000, guid: 76aa4adc83b388d4a92b14f2fbececd8, type: 3}
+          Value: MagePhrase2
+      - Key: {x: 18, y: 10}
+        Value:
+          Key: {fileID: 21300000, guid: 6264562dab6fb6f4ab85361ef90be378, type: 3}
+          Value: MagePhrase3
+      - Key: {x: 18, y: 18}
+        Value:
+          Key: {fileID: 21300000, guid: 4158eecbdb569c948858710c165a756e, type: 3}
+          Value: KingPhrase
+      _cameraStartPosition: {x: 2, y: 2}
+      _cameraStartPositionSecondPlayer: {x: 18, y: 18}
+      _unitConfiguration: {fileID: 11400000, guid: a69ff3f980d4c224c99d63b31004266b, type: 2}
+      _cityConfiguration: {fileID: 11400000, guid: 7bae7d8d6a0f82a4dad7cb959e2df015, type: 2}
+      _enemySpawnerConfiguration: {fileID: 11400000, guid: 1839e44a4b792d14b9ba27888635a4d0, type: 2}
+      _enemyWaveConfiguration: {fileID: 11400000, guid: d7c3f52a3aa9d1445b02147bf024f368, type: 2}
+      _cameraMin: {x: 0, y: -2}
+      _cityUpgradesCostConfiguration: {fileID: 11400000, guid: 8aa41e260578a844c80c6fbbbd6e59f0, type: 2}

@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class WalkableUnitView : UnitView
 {
-    [SerializeField] private TMP_Text _attack;
     [SerializeField] private SwitchableElement _oneStep;
     [SerializeField] private SwitchableElement _twoStep;
     [SerializeField] private UnitAnimationController _unitController;
@@ -24,7 +23,6 @@ public class WalkableUnitView : UnitView
             throw new ArgumentException("Wrong Type of unit");
 
         _unit = unit as WalkableUnit;
-        _attack.text = _unit.AttackPower.ToString();
         _remainingSteps = _unit.RemainingSteps;
         ShowRemainingSteps();
 
@@ -79,7 +77,6 @@ public class WalkableUnitView : UnitView
                 break;
             default:
                 throw new Exception("Can't display remaining steps");
-                break;
         }
     }
 

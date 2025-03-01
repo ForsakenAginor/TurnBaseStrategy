@@ -108,7 +108,7 @@ public class HexContentSwitcher
 
         if (unit is CityUnit city)
         {
-            if (city.Side == Side.Enemy)
+            if (city.Side == Side.Enemy || city.Side == Side.Neutral)
             {
                 foreach (var convertedCell in GetConvertedCells(cell))
                     _contentGrid.GetGridObject(convertedCell).SwtichToGood();

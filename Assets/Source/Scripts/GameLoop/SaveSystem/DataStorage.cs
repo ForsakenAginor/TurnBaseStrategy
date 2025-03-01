@@ -109,7 +109,10 @@ public class SavedData
 
         Cities = cities.
             Select(o =>
-                new SerializedPair<Vector2Int, CityData>(o.Key, new CityData(o.Value.Health, o.Value.Side, o.Value.CitySize))).
+                new SerializedPair<Vector2Int, CityData>(o.Key,
+                    new CityData(o.Value.Health, o.Value.Side, o.Value.CitySize,
+                    o.Value.Upgrades.Income, o.Value.Upgrades.IsArcherUpgrade, o.Value.Upgrades.IsSpearmanUpgrade,
+                    o.Value.Upgrades.IsKnightUpgrade, o.Value.Upgrades.IsMageUpgrade))).
             ToArray();
     }
 
@@ -138,12 +141,23 @@ public class SavedData
         public readonly int Health;
         public readonly Side Side;
         public readonly CitySize Size;
+        public readonly IncomeGrade Income;
+        public readonly bool IsArchersUpgraded;
+        public readonly bool IsSpearmenUpgraded;
+        public readonly bool IsKnightsUpgraded;
+        public readonly bool IsMagesUpgraded;
 
-        public CityData(int health, Side side, CitySize size)
+        public CityData(int health, Side side, CitySize size, IncomeGrade income,
+            bool isArchersUpgraded, bool isSpearmenUpgraded, bool isKnightsUpgraded, bool isMagesUpgraded)
         {
             Health = health;
             Side = side;
             Size = size;
+            Income = income;
+            IsArchersUpgraded = isArchersUpgraded;
+            IsSpearmenUpgraded = isSpearmenUpgraded;
+            IsKnightsUpgraded = isKnightsUpgraded;
+            IsMagesUpgraded = isMagesUpgraded;
         }
     }
 }

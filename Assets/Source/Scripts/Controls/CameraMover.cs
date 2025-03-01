@@ -15,7 +15,7 @@ public class CameraMover : IControllable
     private readonly IZoomInputReceiver _pinchDetector;
     private readonly float _speed = 1f;
     private readonly HexGridXZ<CellSprite> _grid;
-    private readonly EnemyScaner _enemyScaner;
+    private readonly ICitySearcher _enemyScaner;
     private readonly IEnemyUnitOversight _enemyOversight;
     private readonly ITouchInputReceiver _inputReceiver;
     private readonly ICameraFocusGetter _raycaster;
@@ -26,7 +26,7 @@ public class CameraMover : IControllable
     private Vector2Int _savedPosition;
 
     public CameraMover(Transform camera, IZoomInputReceiver pinchDetector,
-        GameLevel level, ICameraConfigurationGetter configuration, HexGridXZ<CellSprite> grid, EnemyScaner enemyScaner,
+        GameLevel level, ICameraConfigurationGetter configuration, HexGridXZ<CellSprite> grid, ICitySearcher enemyScaner,
         IEnemyUnitOversight enemyOversight, ITouchInputReceiver inputReceiver, ICameraFocusGetter raycaster)
     {
         _camera = camera != null ? camera : throw new ArgumentNullException(nameof(camera));
@@ -59,6 +59,7 @@ public class CameraMover : IControllable
 
         if (currentPosition != _savedPosition)
             FocusCameraOnCell(_savedPosition);
+            
     }
 
     public void DisableControl()
@@ -71,7 +72,7 @@ public class CameraMover : IControllable
         _inputReceiver.TouchInputReceived -= OnTouchInputReceived;
         _inputReceiver.TouchInputStopped -= OnTouchInputStopped;
         _pinchDetector.GotPinchInput -= OnPinch;
-        _enemyScaner.DefendersSpawned -= FocusCameraOnCell;
+        _enemyScaner.CityFound -= FocusCameraOnCell;
         _enemyOversight.EnemyDoSomething -= FocusCameraOnCell;
     }
 
@@ -80,7 +81,7 @@ public class CameraMover : IControllable
         _inputReceiver.TouchInputStopped += OnTouchInputStopped;
         _inputReceiver.TouchInputReceived += OnTouchInputReceived;
         _pinchDetector.GotPinchInput += OnPinch;
-        _enemyScaner.DefendersSpawned += FocusCameraOnCell;
+        _enemyScaner.CityFound += FocusCameraOnCell;
         _enemyOversight.EnemyDoSomething += FocusCameraOnCell;
     }
 

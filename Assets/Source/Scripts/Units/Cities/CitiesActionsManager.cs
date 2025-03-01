@@ -1,37 +1,68 @@
 ﻿using Assets.Scripts.HexGrid;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using UnityEngine;
 
 public class CitiesActionsManager : ICitiesGetter, ISavedCities
 {
     private readonly Dictionary<CityUnit, ICityFacade> _cities = new Dictionary<CityUnit, ICityFacade>();
-    private readonly NewInputSorter _inputSorter;
+    private readonly IEnumerable<NewInputSorter> _inputSorters;
     private readonly HexGridXZ<Unit> _grid;
 
-    private EnemyScaner _enemyScaner;
     private ISwitchableElement _selectedUnit;
     private ISwitchableElement _selectedUnitMenu;
 
+    /// <summary>
+    /// Normal game constructor
+    /// </summary>
+    /// <param name="inputSorter"></param>
+    /// <param name="grid"></param>
+    /// <exception cref="ArgumentNullException"></exception>
     public CitiesActionsManager(NewInputSorter inputSorter, HexGridXZ<Unit> grid)
     {
-        _inputSorter = inputSorter != null ? inputSorter : throw new System.ArgumentNullException(nameof(inputSorter));
-        _grid = grid != null ? grid : throw new System.ArgumentNullException(nameof(grid));
+        _inputSorters = inputSorter != null ? new List<NewInputSorter>() { inputSorter } : throw new ArgumentNullException(nameof(inputSorter));
+        _grid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
 
-        _inputSorter.MovableUnitSelected += OnUnitSelected;
-        _inputSorter.FriendlyCitySelected += OnCitySelected;
-        _inputSorter.EnemySelected += OnCitySelected;
-        _inputSorter.BecomeInactive += OnDeselect;
+        foreach (var input in _inputSorters)
+        {
+            input.MovableUnitSelected += OnUnitSelected;
+            input.FriendlyCitySelected += OnCitySelected;
+            input.EnemySelected += OnCitySelected;
+            input.BecomeInactive += OnDeselect;
+        }
+    }
+
+    /// <summary>
+    /// HotSit constructor
+    /// </summary>
+    /// <param name="inputSorters"></param>
+    /// <param name="grid"></param>
+    /// <exception cref="ArgumentNullException"></exception>
+    public CitiesActionsManager(IEnumerable<NewInputSorter> inputSorters, HexGridXZ<Unit> grid)
+    {
+        _inputSorters = inputSorters != null ? inputSorters : throw new ArgumentNullException(nameof(inputSorters));
+        _grid = grid != null ? grid : throw new ArgumentNullException(nameof(grid));
+
+        foreach (var input in _inputSorters)
+        {
+            input.MovableUnitSelected += OnUnitSelected;
+            input.FriendlyCitySelected += OnCitySelected;
+            input.EnemySelected += OnCitySelected;
+            input.BecomeInactive += OnDeselect;
+        }
     }
 
     ~CitiesActionsManager()
     {
-        _inputSorter.MovableUnitSelected += OnUnitSelected;
-        _inputSorter.FriendlyCitySelected -= OnCitySelected;
-        _inputSorter.EnemySelected -= OnCitySelected;
-        _inputSorter.BecomeInactive -= OnDeselect;
-        _enemyScaner.DefendersSpawned -= OnDefendersSpawned;
+        foreach (var input in _inputSorters)
+        {
+            input.MovableUnitSelected -= OnUnitSelected;
+            input.FriendlyCitySelected -= OnCitySelected;
+            input.EnemySelected -= OnCitySelected;
+            input.BecomeInactive -= OnDeselect;
+        }
     }
 
     public event Action<Vector2Int, Side> CityCaptured;
@@ -42,6 +73,17 @@ public class CitiesActionsManager : ICitiesGetter, ISavedCities
     public IEnumerable<Vector2Int> GetEnemyCities()
     {
         return _cities.Where(city => city.Key.Side == Side.Enemy).Select(city => _grid.GetXZ(city.Value.Position)).ToList();
+    }
+
+    public IEnumerable<Vector2Int> GetNeutralities()
+    {
+        return _cities.Where(city => city.Key.Side == Side.Neutral).Select(city => _grid.GetXZ(city.Value.Position)).ToList();
+    }
+
+
+    public IEnumerable<Vector2Int> GetPlayerCities()
+    {
+        return _cities.Where(city => city.Key.Side == Side.Player).Select(city => _grid.GetXZ(city.Value.Position)).ToList();
     }
 
     public IEnumerable<(Vector2Int position, CitySize size, CityUnit unit)> GetEnemyCitiesUnits()
@@ -57,12 +99,6 @@ public class CitiesActionsManager : ICitiesGetter, ISavedCities
     public Dictionary<Vector2Int, CityUnit> GetInfo()
     {
         return _cities.ToDictionary(key => _grid.GetXZ(key.Value.Position), value => value.Key);
-    }
-
-    public void SetScaner(EnemyScaner scaner)
-    {
-        _enemyScaner = scaner != null ? scaner : throw new ArgumentNullException(nameof(scaner));
-        _enemyScaner.DefendersSpawned += OnDefendersSpawned;
     }
 
     public void AddCity(CityUnit unit, ICityFacade facade, bool isVisible = false)
@@ -88,9 +124,12 @@ public class CitiesActionsManager : ICitiesGetter, ISavedCities
 
         if (isVisible)
             facade.UnitView.ShowTitle();
+
+        foreach (var input in _inputSorters)
+            input.Deselect();
     }
 
-    public void RemoveCity(CityUnit unit)
+    public CityUpgrades RemoveCity(CityUnit unit)
     {
         if (unit == null)
             throw new ArgumentNullException(nameof(unit));
@@ -98,14 +137,34 @@ public class CitiesActionsManager : ICitiesGetter, ISavedCities
         if (_cities.ContainsKey(unit) == false)
             throw new ArgumentException("City does not exist in dictionary");
 
+        CityUpgrades result = unit.Upgrades;
         OnUnitDied(unit);
         unit.DestroyCity();
+
+        return result;
     }
 
     private void OnCityCaptured(Unit unit)
     {
         unit.Captured -= OnCityCaptured;
-        Side side = unit.Side == Side.Player ? Side.Enemy : Side.Player;
+
+        Side side;
+
+        switch (unit.Side)
+        {
+            case Side.Player:
+                side = Side.Enemy;
+                break;
+            case Side.Enemy:
+                side = Side.Player;
+                break;
+            case Side.Neutral:
+                side = GetCurrentPlayerSide();
+                break;
+            default:
+                throw new Exception("Can't handle captured city side");
+        }
+
         Vector2Int position = _grid.GetXZ(_cities[unit as CityUnit].Position);
         RemoveCity(unit as CityUnit);
         CityCaptured?.Invoke(position, side);
@@ -136,7 +195,7 @@ public class CitiesActionsManager : ICitiesGetter, ISavedCities
         _selectedUnitMenu = _cities[city].Menu;
         _selectedUnit.Enable();
 
-        if (city.Side == Side.Player)
+        if (city.Side == GetCurrentPlayerSide())
             _selectedUnitMenu.Enable();
     }
 
@@ -154,6 +213,14 @@ public class CitiesActionsManager : ICitiesGetter, ISavedCities
     {
         var city = _grid.GetGridObject(position) as CityUnit;
         _cities[city].UnitView.ShowTitle();
+    }
+
+    private Side GetCurrentPlayerSide()
+    {
+        if (_inputSorters.Count() == 1)
+            return Side.Player;
+
+        return _inputSorters.First(o => o.IsActive).ActiveSide;
     }
 }
 

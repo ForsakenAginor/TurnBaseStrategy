@@ -76,7 +76,7 @@ public class EnemyBrain : MonoBehaviour, IControllable
         }
     }
 
-    private void OnUnitSpawned(Unit unit)
+    private void OnUnitSpawned(Unit unit, string _)
     {
         if (unit.Side != Side.Enemy)
             return;

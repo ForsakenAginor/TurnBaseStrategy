@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Button))]
@@ -6,18 +7,14 @@ public class HireButton : MonoBehaviour
 {
     [SerializeField] private Image _coinImage;
     [SerializeField] private Image _unitIcon;
+    [SerializeField] private Button _button;
 
-    private Button _button;
     private Color _hideColor = new(0.8f, 0.8f, 0.8f, 0.6f);
     private Color _color = Color.white;
 
     public Button HireUnitButton => _button;
 
-    private void Awake()
-    {
-        _button = GetComponent<Button>();
-    }
-
+    [Button]
     public void DeActivate()
     {
         _button.interactable = false;
@@ -25,6 +22,7 @@ public class HireButton : MonoBehaviour
         _unitIcon.color = _hideColor;
     }
 
+    [Button]
     public void Activate()
     {
         _button.interactable = true;
