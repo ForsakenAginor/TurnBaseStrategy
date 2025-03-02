@@ -162,7 +162,8 @@ public class UnitsActionsManager : IEnemyUnitOversight, ISavedUnits
             {
                 facade.Attacker.Attack(targetPosition, callback, () => unit1.TryAttack(unit2));
 
-                if (unit1.Side == enemy || (_isHotSitMode && unit2.Side != Side.Neutral))
+                if ((unit1.Side == enemy && unit2.Side != Side.Neutral)
+                    || (_isHotSitMode && unit2.Side != Side.Neutral))
                     EnemyDoSomething?.Invoke(_grid.GetXZ(targetPosition));
             }
             else

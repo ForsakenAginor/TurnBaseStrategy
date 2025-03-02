@@ -19,6 +19,7 @@ public class CameraMover : IControllable
     private readonly IEnemyUnitOversight _enemyOversight;
     private readonly ITouchInputReceiver _inputReceiver;
     private readonly ICameraFocusGetter _raycaster;
+    private readonly IEnemyActivityMonitorOrderReceiver _enemyActivity;
 
     private float _cameraYDefault = 5;
     private Tween _tween;
@@ -27,7 +28,8 @@ public class CameraMover : IControllable
 
     public CameraMover(Transform camera, IZoomInputReceiver pinchDetector,
         GameLevel level, ICameraConfigurationGetter configuration, HexGridXZ<CellSprite> grid, ICitySearcher enemyScaner,
-        IEnemyUnitOversight enemyOversight, ITouchInputReceiver inputReceiver, ICameraFocusGetter raycaster, bool isFirstPlayer = true)
+        IEnemyUnitOversight enemyOversight, ITouchInputReceiver inputReceiver, ICameraFocusGetter raycaster, bool isFirstPlayer = true,
+        IEnemyActivityMonitorOrderReceiver enemyActivity = null)
     {
         _camera = camera != null ? camera : throw new ArgumentNullException(nameof(camera));
         _pinchDetector = pinchDetector != null ? pinchDetector : throw new ArgumentNullException(nameof(pinchDetector));
@@ -36,6 +38,7 @@ public class CameraMover : IControllable
         _enemyOversight = enemyOversight != null ? enemyOversight : throw new ArgumentNullException(nameof(enemyOversight));
         _inputReceiver = inputReceiver != null ? inputReceiver : throw new ArgumentNullException(nameof(inputReceiver));
         _raycaster = raycaster != null ? raycaster : throw new ArgumentNullException(nameof(raycaster));
+        _enemyActivity = enemyActivity;
 
         if (configuration == null)
             throw new ArgumentNullException(nameof(configuration));
@@ -74,6 +77,9 @@ public class CameraMover : IControllable
         _pinchDetector.GotPinchInput -= OnPinch;
         _enemyScaner.CityFound -= FocusCameraOnCell;
         _enemyOversight.EnemyDoSomething -= FocusCameraOnCell;
+
+        if (_enemyActivity != null)
+            _enemyActivity.ShowEnemyActivityOrderReceived -= FocusCameraOnCell;
     }
 
     private void Subscribe()
@@ -83,6 +89,9 @@ public class CameraMover : IControllable
         _pinchDetector.GotPinchInput += OnPinch;
         _enemyScaner.CityFound += FocusCameraOnCell;
         _enemyOversight.EnemyDoSomething += FocusCameraOnCell;
+
+        if (_enemyActivity != null)
+            _enemyActivity.ShowEnemyActivityOrderReceived += FocusCameraOnCell;
     }
 
     private void OnTouchInputStopped()

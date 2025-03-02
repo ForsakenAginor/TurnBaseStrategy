@@ -43,6 +43,8 @@ public class PUNRoot : MonoBehaviour
     [SerializeField] private TouchInput _swipeInputReceiver;
 
     [Header("Other")]
+    [SerializeField] private SwitchableElement[] _enabledWindows;
+    [SerializeField] private SwitchableElement[] _disabledWindows;
     [SerializeField] private SoundInitializer _soundInitializer;
     [SerializeField] private Quests _questsPlayer1;
     [SerializeField] private Quests _questsPlayer2;
@@ -170,9 +172,10 @@ public class PUNRoot : MonoBehaviour
         }
 
         //********* Game state machine *******
+        TurnDependantWindowSwitcher turnDependantWindowSwitcher = new (_enabledWindows, _disabledWindows);
         _winLoseMonitor.Init(cityManager, saveLevelSystem, currentLevel);
         var resettables = unitManager.Units.Append(taxSystem1).Append(taxSystem2).Append(daySystem);
-        List<IControllable> controllables = new List<IControllable>() { inputSorter, _saveSystemView };
+        List<IControllable> controllables = new List<IControllable>() { inputSorter, _saveSystemView, turnDependantWindowSwitcher };
         var stateMachine = _gameStateMachineCreator.CreateMultiplayer(photonReceiver, resettables, controllables, inputSorter, currentLevel, isFirstPlayer);
 
         //********* Camera control *********
