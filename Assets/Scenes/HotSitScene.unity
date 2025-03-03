@@ -4024,9 +4024,11 @@ MonoBehaviour:
   _loseButton: {fileID: 1042135142}
   _finishButton: {fileID: 859478934}
   _winButton: {fileID: 1628177097}
+  _disconnectedButton: {fileID: 0}
   _winScene: 0
   _finishScene: 0
   _loseScene: 0
+  _menuScene: 0
 --- !u!114 &717580002
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14414,7 +14416,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: 844f21f3967a05847818e9c995496401, type: 3}
   m_Resource: {fileID: 8300000, guid: 844f21f3967a05847818e9c995496401, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.4
   m_Pitch: 1.5
   Loop: 0
   Mute: 0
