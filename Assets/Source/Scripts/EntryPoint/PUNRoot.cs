@@ -186,7 +186,7 @@ public class PUNRoot : MonoBehaviour
         EnemyActivityMonitor activityMonitor = new(unitManager);
         _enemyActivityMonitorView.Init(activityMonitor);
         CameraMover cameraMover = new CameraMover(_camera, _pinchDetector, currentLevel, _levelConfiguration,
-            _gridCreator.HexGrid, scaner, unitManager, _swipeInputReceiver, _gridRaycaster, isFirstPlayer);
+            _gridCreator.HexGrid, scaner, unitManager, _swipeInputReceiver, _gridRaycaster, isFirstPlayer, _enemyActivityMonitorView);
         controllables.Add(cameraMover);
         controllables.Add(activityMonitor);
 
